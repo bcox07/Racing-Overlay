@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using NLog;
 
 namespace IRacing_Standings
 {
@@ -15,6 +16,8 @@ namespace IRacing_Standings
         public TelemetryData LastSample { get; set; }
 
         private Telemetry _feedTelemetry;
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public Telemetry FeedTelemetry 
         { 
             get
@@ -58,7 +61,7 @@ namespace IRacing_Standings
                     allResultsPositions = CurrentSession.ResultsPositions.ToList();
                 }
 
-                if (allResultsPositions.Count == 0 && CurrentSession?.IsRace == true)
+                if (allResultsPositions.Count == 0 && CurrentSession?.IsRace == true && FeedSessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.ToUpper().Contains("QUALI")) != null)
                 {
                     allResultsPositions = FeedSessionData.SessionInfo.Sessions.Where(s => s.SessionType.ToUpper().Contains("QUALI")).First().ResultsPositions.ToList();
                 }
@@ -230,6 +233,7 @@ namespace IRacing_Standings
                         IsConnected = data.IsConnected;
                         if (IsConnected)
                         {
+                            Trace.WriteLine("Connected...");
                             LastValidConnection = DateTime.UtcNow;
                             CollectData(data);
                             CollectPositions();
@@ -241,7 +245,8 @@ namespace IRacing_Standings
                             {
                                 ClearData();
                             }
-                            Trace.WriteLine("No connection to IRacing. Retrying in 5 seconds...");
+
+                            Logger.Info("No connection to IRacing. Retrying in 5 seconds...");
                             Thread.Sleep(5000);
                         }
                     }
@@ -282,15 +287,15 @@ namespace IRacing_Standings
                 Name = d.UserName,
                 iRating = (int)d.IRating,
                 SafetyRating = d.LicString,
-                FastestLap = p.FastestTime > 0 ? (double?)p.FastestTime : null,
-                LastLap = p.LastTime > 0 ? (double?)p.LastTime : null,
-                LapsComplete = (int)p.LapsComplete,
+                FastestLap = GetFastestLap(p),
+                LastLap = ((float[])FeedTelemetry["CarIdxLastLapTime"])[d.CarIdx] > 0 ? (double?)((float[])FeedTelemetry["CarIdxLastLapTime"])[d.CarIdx] : null,
+                LapsComplete = (int)FeedTelemetry.CarIdxLap[d.CarIdx],
                 PosOnTrack = FeedTelemetry.CarIdxLapDistPct[d.CarIdx] * TrackLength,
                 Distance = FeedTelemetry.CarIdxDistance[d.CarIdx] * TrackLength,
                 InPit = FeedTelemetry.CarIdxOnPitRoad[d.CarIdx]
             }).ToList();
 
-            foreach (var driver in AllDrivers.OrderByDescending(d => d.IRating).Where(d => !d.IsPaceCar))
+            foreach (var driver in AllDrivers.OrderByDescending(d => d.IRating).Where(d => !d.IsPaceCar && d.CarIsPaceCar <= 0))
             {
                 if (!preCorrectedPositions.Select(p => p.CarId).Contains((int)driver.CarIdx))
                 {
@@ -331,6 +336,7 @@ namespace IRacing_Standings
                     }
                 }
             }
+
             AllPositions = correctedPositions;
             StopWatch.Restart();
         }
@@ -345,11 +351,25 @@ namespace IRacing_Standings
             Dictionary<int, List<Driver>> correctedSortedPostions = new Dictionary<int, List<Driver>>();
             foreach (var positionGroup in preCorrectedSortedPositions)
             {
-                var sortedUnplacedDrivers = SortUnplacedDrivers(positionGroup);
+
+                var sortedUnplacedDrivers = new KeyValuePair<int, List<Driver>>(positionGroup.Key, positionGroup.Value.OrderBy(s => s.ClassPosition).ToList());
+
+                if (IsRace)
+                {
+                    sortedUnplacedDrivers = new KeyValuePair<int, List<Driver>>(positionGroup.Key, positionGroup.Value.OrderByDescending(s => s.Distance).ToList());
+                }
+                sortedUnplacedDrivers = SortUnplacedDrivers(positionGroup);
+
+                var i = 1;
                 foreach (var position in sortedUnplacedDrivers.Value)
                 {
+                    if (FeedTelemetry.IsReplayPlaying)
+                    {
+                        position.ClassPosition = IsRace? i : position.ClassPosition == 0 ? i : position.ClassPosition;
+                    }
                     position.TimeBehindLeader = FeedTelemetry.CarIdxF2Time[position.CarId];
                     position.FastestLapDelta = GetFastestLapDelta(position, positionGroup.Value.Where(p => p.PosOnTrack > 0).FirstOrDefault());
+                    i++;
 
                     AllPositions.Where(p => p.CarId == position.CarId).First().TimeBehindLeader = position.TimeBehindLeader;
                     AllPositions.Where(p => p.CarId == position.CarId).First().FastestLapDelta = position.FastestLapDelta;
@@ -404,15 +424,15 @@ namespace IRacing_Standings
             }
         }
 
-        public double GetRelativeDelta(Driver listedDriver, Driver targetDriver, double trackLength)
+        public double GetRelativeDelta(Driver viewedDriver, Driver targetDriver, double trackLength)
         {
-            var distanceBetweenDrivers = targetDriver.PosOnTrack - listedDriver.PosOnTrack;
+            var distanceBetweenDrivers = targetDriver.PosOnTrack - viewedDriver.PosOnTrack;
             var averageSpeed = 45.0;
             var delta = 0.0;
-            var listedCarSpeedData = SavedSpeedData.Where(s => s.Key == listedDriver.ClassId).First().Value.Where(s => s.Key == listedDriver.CarPath).First().Value;
+            var listedCarSpeedData = SavedSpeedData.Where(s => s.Key == viewedDriver.ClassId).First().Value.Where(s => s.Key == viewedDriver.CarPath).First().Value;
             if (listedCarSpeedData == null)
             {
-                listedCarSpeedData = SavedSpeedData.Where(s => s.Key == listedDriver.ClassId).First().Value.FirstOrDefault(s => s.Value != null).Value;
+                listedCarSpeedData = SavedSpeedData.Where(s => s.Key == viewedDriver.ClassId).First().Value.FirstOrDefault(s => s.Value != null).Value;
             }
             var targetCarSpeedData = SavedSpeedData.Where(s => s.Key == targetDriver.ClassId).First().Value.Where(s => s.Key == targetDriver.CarPath).First().Value;
             if (targetCarSpeedData == null)
@@ -423,31 +443,31 @@ namespace IRacing_Standings
             if (Math.Abs(distanceBetweenDrivers) > (TrackLength / 2))
             {
                 //If target driver is on first half of track and the listed driver (viewed driver) is within half a track behind
-                if (targetDriver.PosOnTrack - trackLength < -(TrackLength / 2) && listedDriver.PosOnTrack - trackLength > (-(TrackLength / 2) + targetDriver.PosOnTrack))
+                if (targetDriver.PosOnTrack - trackLength < -(TrackLength / 2) && viewedDriver.PosOnTrack - trackLength > (-(TrackLength / 2) + targetDriver.PosOnTrack))
                 {
-                    distanceBetweenDrivers = trackLength - listedDriver.PosOnTrack + targetDriver.PosOnTrack;
+                    distanceBetweenDrivers = trackLength - viewedDriver.PosOnTrack + targetDriver.PosOnTrack;
                     delta = distanceBetweenDrivers / averageSpeed;
                     if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                     {
-                        delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(listedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
+                        delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     }
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                     {
-                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(listedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
+                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(viewedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     }
                 }
                 //If listed driver is on first half of track and the target driver is within half a track behind
-                else if (listedDriver.PosOnTrack - trackLength < -(TrackLength / 2) && targetDriver.PosOnTrack - trackLength > (-(TrackLength / 2) + listedDriver.PosOnTrack))
+                else if (viewedDriver.PosOnTrack - trackLength < -(TrackLength / 2) && targetDriver.PosOnTrack - trackLength > (-(TrackLength / 2) + viewedDriver.PosOnTrack))
                 {
-                    distanceBetweenDrivers = trackLength - targetDriver.PosOnTrack + listedDriver.PosOnTrack;
+                    distanceBetweenDrivers = trackLength - targetDriver.PosOnTrack + viewedDriver.PosOnTrack;
                     delta = distanceBetweenDrivers / averageSpeed * -1;
                     if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                     {
-                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(listedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(viewedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                     }
                     else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                     {
-                        delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(listedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                        delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(viewedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                     }
                 }
             }
@@ -458,11 +478,11 @@ namespace IRacing_Standings
                 {
                     if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                     {
-                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(listedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                     }
                     else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                     {
-                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(listedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                     }
                 }
                 else
@@ -470,11 +490,11 @@ namespace IRacing_Standings
                     //Try and get speed data from viewed car first, then target car if it doesn't exist
                     if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                     {
-                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(listedDriver.PosOnTrack) && s.Meter <= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
+                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(viewedDriver.PosOnTrack) && s.Meter <= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     }
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                     {
-                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(listedDriver.PosOnTrack) || s.Meter <= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
+                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(viewedDriver.PosOnTrack) && s.Meter <= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     }
                 }
                 
@@ -496,23 +516,41 @@ namespace IRacing_Standings
             return delta;
         }
 
+        private double? GetFastestLap(SessionData._SessionInfo._Sessions._ResultsPositions driver)
+        {
+            return ((float[])FeedTelemetry["CarIdxBestLapTime"])[driver.CarIdx] > 0 ? (double?)((float[])FeedTelemetry["CarIdxBestLapTime"])[driver.CarIdx] : driver.FastestTime > 0 ? (double?)driver.FastestTime : null;
+        }
+
         private KeyValuePair<int, List<Driver>> SortUnplacedDrivers(KeyValuePair<int, List<Driver>> driverClassGroup)
         {
-            var unplacedDriversInClass = driverClassGroup.Value.Where(d => !d.ClassPosition.HasValue).OrderByDescending(d => d.iRating).ToList();
-            var placedDriversInClass = driverClassGroup.Value.Where(d => d.ClassPosition.HasValue).OrderBy(d => d.ClassPosition).ToList();
+            var unplacedDriversInClass = driverClassGroup.Value.Where(d => d.ClassPosition == null).OrderByDescending(d => d.iRating).ToList();
+            var placedDriversInClass = driverClassGroup.Value.Where(d => d.ClassPosition != null).OrderBy(d => d.ClassPosition).ToList();
+
+            if (IsRace && FeedTelemetry.RaceLaps > 0)
+            {
+                placedDriversInClass = placedDriversInClass.OrderByDescending(d => d.Distance).ToList();
+            }
+
             var driversInClass = new List<Driver>();
+
             driversInClass.AddRange(placedDriversInClass);
-            driversInClass.AddRange(unplacedDriversInClass);
-            //var driversInClass = driverClassGroup.Value.OrderBy(d => d.ClassPosition.HasValue).ThenByDescending(d => d.ClassPosition).ThenByDescending(d => d.iRating).ToList();
-            var lastDriver = driversInClass.First();
-            foreach (var driver in driversInClass)
+            var lastClassPosition = 0;
+
+            if (driversInClass.Count > 0)
+            {
+                lastClassPosition = driversInClass.Last().ClassPosition ?? 0;
+            }
+
+            foreach (var driver in unplacedDriversInClass)
             {
                 if (driver.ClassPosition == null)
                 {
-                    driver.ClassPosition = lastDriver.ClassPosition == null ? 1 : lastDriver.ClassPosition + 1;
+                    driver.ClassPosition = lastClassPosition + 1;
                 }
-                lastDriver = driver;
+                lastClassPosition++;
             }
+            driversInClass.AddRange(unplacedDriversInClass);
+            
             return new KeyValuePair<int, List<Driver>>(driverClassGroup.Key, driversInClass);
         }
     }

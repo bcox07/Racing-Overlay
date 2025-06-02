@@ -40,12 +40,6 @@ namespace IRacing_Standings
             Top = double.Parse(mainWindow.WindowSettings.FuelSettings["YPos"]);
             _TelemetryData = telemetryData;
             LastLapFuelLevel = _TelemetryData.FeedTelemetry.FuelLevel;
-            Dispatcher.Invoke(() =>
-            {
-                Topmost = false;
-                Topmost = true;
-                Background = Brushes.Transparent;
-            });
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -57,8 +51,14 @@ namespace IRacing_Standings
             }
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData)
-        {
+        public void UpdateTelemetryData(TelemetryData telemetryData, bool isOpen)
+        {   
+            Dispatcher.Invoke(() =>
+            {
+                Topmost = false;
+                Topmost = true;
+                Background = Brushes.Transparent;
+            });
             _TelemetryData = telemetryData;
 
             if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
@@ -66,6 +66,10 @@ namespace IRacing_Standings
             {
                 Dispatcher.Invoke(() =>
                 {
+                    if (!System.Windows.Application.Current.Windows.OfType<FuelWindow>().Any())
+                    {
+                        return;
+                    }
                     Hide();
                 });
             }
@@ -73,11 +77,15 @@ namespace IRacing_Standings
             {
                 Dispatcher.Invoke(() =>
                 {
+                    if (!System.Windows.Application.Current.Windows.OfType<FuelWindow>().Any())
+                    {
+                        return;
+                    }
                     Show();
                 });
             }
             FuelRemaining = _TelemetryData.FeedTelemetry.FuelLevel;
-            LapsToEnd = _TelemetryData.FeedTelemetry.SessionTimeRemain / (_TelemetryData.FeedSessionData.DriverInfo.DriverCarEstLapTime * 1.07);
+            LapsToEnd = _TelemetryData.FeedTelemetry.SessionTimeRemain / (_TelemetryData.CurrentSession.ResultsFastestLap[0].FastestTime * 1.01);
             if (FuelUseList.Count >= 2)
             {
                 FuelToAdd = LapsToEnd * AvgFuelUsage - FuelRemaining;

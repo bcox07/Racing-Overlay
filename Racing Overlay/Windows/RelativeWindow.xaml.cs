@@ -127,7 +127,7 @@ namespace IRacing_Standings
                 if (rowIndex >= RelativeGrid.RowDefinitions.Count)
                 {
                     var rowDef = new RowDefinition();
-                    rowDef.Height = new GridLength(30);
+                    rowDef.Height = new GridLength(27);
                     RelativeGrid.RowDefinitions.Add(rowDef);
                 }
 
@@ -139,7 +139,7 @@ namespace IRacing_Standings
                     UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData);
                     posNumber.TextAlignment = TextAlignment.Center;
                     posNumber.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    posNumber.Padding = new Thickness(3.5);
+                    posNumber.Padding = new Thickness(2);
                     posNumber.Text = driver.ClassPosition.ToString();
                     RelativeGrid.Children.Add(posNumber);
                 }
@@ -149,7 +149,7 @@ namespace IRacing_Standings
                     UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData);
                     posNumber.TextAlignment = TextAlignment.Center;
                     posNumber.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    posNumber.Padding = new Thickness(3.5);
+                    posNumber.Padding = new Thickness(2);
                     posNumber.Text = driver.ClassPosition.ToString();
                 }
                 Grid.SetColumnSpan(posNumber, 3);
@@ -164,7 +164,7 @@ namespace IRacing_Standings
                     classColor.Tag = "ClassColor";
                     UpdateDriverCell(classColor, rowIndex, driver, viewedDriver, telemetryData);
                     classColor.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    classColor.Padding = new Thickness(3.5);
+                    classColor.Padding = new Thickness(2);
                     var test = driver.ClassColor.Replace("0x", "#");
                     classColor.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(test);
                     RelativeGrid.Children.Add(classColor);
@@ -190,7 +190,7 @@ namespace IRacing_Standings
                     driverName = new TextBlock();
                     driverName.Tag = "DriverName";
                     UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData);
-                    driverName.Padding = new Thickness(5, 3.5, 0, 3.5);
+                    driverName.Padding = new Thickness(5, 2, 0, 3.5);
                     driverName.HorizontalAlignment = HorizontalAlignment.Stretch;
                     driverName.TextTrimming = TextTrimming.CharacterEllipsis;
                     RelativeGrid.Children.Add(driverName);
@@ -199,7 +199,7 @@ namespace IRacing_Standings
                 {
                     driverName.Tag = "DriverName";
                     UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData);
-                    driverName.Padding = new Thickness(5, 3.5, 0, 3.5);
+                    driverName.Padding = new Thickness(5, 2, 0, 3.5);
                     driverName.TextAlignment = TextAlignment.Left;
                     driverName.HorizontalAlignment = HorizontalAlignment.Stretch;
                     driverName.TextTrimming = TextTrimming.CharacterEllipsis;
@@ -220,7 +220,7 @@ namespace IRacing_Standings
                     iRating.Tag = "IRating";
                     UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData);
                     iRating.HorizontalAlignment = HorizontalAlignment.Center;
-                    iRating.Padding = new Thickness(12, 3.5, 12, 3.5);
+                    iRating.Padding = new Thickness(12, 32, 12, 3.5);
                     RelativeGrid.Children.Add(iRating);
                 }
                 else
@@ -228,7 +228,7 @@ namespace IRacing_Standings
                     iRating.Tag = "IRating";
                     UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData);
                     iRating.HorizontalAlignment = HorizontalAlignment.Center;
-                    iRating.Padding = new Thickness(12, 3.5, 12, 3.5);
+                    iRating.Padding = new Thickness(12, 2, 12, 3.5);
                     if (iRating.Text != $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k")
                     {
                         iRating.Text = $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k";
@@ -254,7 +254,7 @@ namespace IRacing_Standings
                     delta.Tag = "Delta";
                     UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData);
                     delta.HorizontalAlignment = HorizontalAlignment.Center;
-                    delta.Padding = new Thickness(25, 3.5, 25, 3.5);
+                    delta.Padding = new Thickness(25, 2, 25, 3.5);
                     RelativeGrid.Children.Add(delta);
                 }
                 else
@@ -270,7 +270,7 @@ namespace IRacing_Standings
                     delta.Tag = "Delta";
                     UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData);
                     delta.HorizontalAlignment = HorizontalAlignment.Center;
-                    delta.Padding = new Thickness(25, 3.5, 25, 3.5);
+                    delta.Padding = new Thickness(25, 2, 25, 3.5);
                 }
                 Grid.SetColumn(delta, 25);
                 Grid.SetColumnSpan(delta, 5);
@@ -311,11 +311,11 @@ namespace IRacing_Standings
                             {
                                 textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#998100");
                             }
-                            else if (position.Distance - viewedCar.Distance > telemetryData.TrackLength - 1000)
+                            else if (position.Distance - viewedCar.Distance > telemetryData.TrackLength * 0.75)
                             {
                                 textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#5c0000");
                             }
-                            else if (viewedCar.Distance - telemetryData.TrackLength + 1000 > position.Distance)
+                            else if (viewedCar.Distance - telemetryData.TrackLength * 0.75 > position.Distance)
                             {
                                 textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#006385");
                             }
@@ -323,15 +323,15 @@ namespace IRacing_Standings
                         else
                         {
                             textBlock.Foreground = Brushes.White;
-                            if (position.CarId == viewedCar.CarId)
+                            if (position.CarId == viewedCar.CarId) 
                             {
                                 textBlock.Foreground = Brushes.Gold;
                             }
-                            else if (position.Distance - viewedCar.Distance > telemetryData.TrackLength - 1000)
+                            else if (position.Distance - viewedCar.Distance > telemetryData.TrackLength * 0.75)
                             {
                                 textBlock.Foreground = Brushes.Red;
                             }
-                            else if (viewedCar.Distance - telemetryData.TrackLength + 1000 > position.Distance)
+                            else if (viewedCar.Distance - (telemetryData.TrackLength * 0.75) > position.Distance)
                             {
                                 textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#00bfff");
                             }

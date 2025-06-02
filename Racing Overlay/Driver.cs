@@ -25,6 +25,7 @@ namespace IRacing_Standings
         public double? FastestLapDelta { get; set; }
         public double? LastLap { get; set; }
         public int? LapsComplete { get; set; }
+        //public Dictionary<int, double> LapHistory { get; set; }  
         public double SecondsSinceLastLap { get; set; }
         public bool InPit { get; set; }
     }

@@ -22,7 +22,9 @@ namespace IRacing_Standings
         {
             StandingsSettings = new Dictionary<string, string>() { { "XPos", "0" }, { "YPos", "0" }, { "Locked", "false" } },
             RelativeSettings = new Dictionary<string, string>() { { "XPos", "0" }, { "YPos", "0" }, { "Locked", "false" } },
-            FuelSettings = new Dictionary<string, string>() { { "XPos", "0" }, { "YPos", "0" }, { "Locked", "false" } }
+            FuelSettings = new Dictionary<string, string>() { { "XPos", "0" }, { "YPos", "0" }, { "Locked", "false" } },
+            TireSettings = new Dictionary<string, string>() { { "XPos", "0" }, { "YPos", "0" }, { "Locked", "false" } },
+            LiveTrackSettings = new Dictionary<string, string>() { { "XPos", "0" }, { "YPos", "0" }, { "Locked", "false" } }
         };
         WindowSettings settings;
 

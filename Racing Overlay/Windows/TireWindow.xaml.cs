@@ -21,19 +21,24 @@ namespace IRacing_Standings
     public partial class TireWindow : Window
     {
         TelemetryData LocalTelemetry;
+        public bool Locked = false;
         public TireWindow(TelemetryData telemetryData)
         {
             LocalTelemetry = telemetryData;
             InitializeComponent();
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            Locked = bool.Parse(mainWindow.WindowSettings.TireSettings["Locked"] ?? "false");
+            Left = double.Parse(mainWindow.WindowSettings.TireSettings["XPos"] ?? "0");
+            Top = double.Parse(mainWindow.WindowSettings.TireSettings["YPos"] ?? "0");
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            //if (!Locked)
-            //{
+            if (!Locked)
+            {
                 base.OnMouseLeftButtonDown(e);
                 DragMove();
-            //}
+            }
         }
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
@@ -43,7 +48,6 @@ namespace IRacing_Standings
                 Topmost = false;
                 Topmost = true;
             });
-            
             LocalTelemetry = telemetryData;
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
@@ -59,27 +63,31 @@ namespace IRacing_Standings
             var rRTireData = new TireData();
 
             lFTireData.Temp = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.LFtempCL, LocalTelemetry.FeedTelemetry.LFtempCM, LocalTelemetry.FeedTelemetry.LFtempCR);
-            lFTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.LFwearL, LocalTelemetry.FeedTelemetry.LFwearM, LocalTelemetry.FeedTelemetry.LFwearR);
+            lFTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.LFwearL * 100, LocalTelemetry.FeedTelemetry.LFwearM * 100, LocalTelemetry.FeedTelemetry.LFwearR * 100);
 
             rFTireData.Temp = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.RFtempCL, LocalTelemetry.FeedTelemetry.RFtempCM, LocalTelemetry.FeedTelemetry.RFtempCR);
-            rFTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.RFwearL, LocalTelemetry.FeedTelemetry.RFwearM, LocalTelemetry.FeedTelemetry.RFwearR);
+            rFTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.RFwearL * 100, LocalTelemetry.FeedTelemetry.RFwearM * 100, LocalTelemetry.FeedTelemetry.RFwearR * 100);
 
             lRTireData.Temp = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.LRtempCL, LocalTelemetry.FeedTelemetry.LRtempCM, LocalTelemetry.FeedTelemetry.LRtempCR);
-            lRTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.LRwearL, LocalTelemetry.FeedTelemetry.LRwearM, LocalTelemetry.FeedTelemetry.LRwearR);
+            lRTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.LRwearL * 100, LocalTelemetry.FeedTelemetry.LRwearM * 100, LocalTelemetry.FeedTelemetry.LRwearR * 100);
 
             rRTireData.Temp = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.RRtempCL, LocalTelemetry.FeedTelemetry.RRtempCM, LocalTelemetry.FeedTelemetry.RRtempCR);
-            rRTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.RRwearL, LocalTelemetry.FeedTelemetry.RRwearM, LocalTelemetry.FeedTelemetry.RRwearR);
+            rRTireData.Wear = new Tuple<double, double, double>(LocalTelemetry.FeedTelemetry.RRwearL * 100, LocalTelemetry.FeedTelemetry.RRwearM * 100, LocalTelemetry.FeedTelemetry.RRwearR * 100);
 
             Dispatcher.Invoke(() =>
             {
-                this.LFTireBox.Text = lFTireData.Temp.Item2.ToString("N2");
-                SetTireColor(this.LFTireBox, lFTireData);
-                this.RFTireBox.Text = rFTireData.Temp.Item2.ToString("N2");
-                SetTireColor(this.RFTireBox, rFTireData);
-                this.LRTireBox.Text = lRTireData.Temp.Item2.ToString("N2");
-                SetTireColor(this.LRTireBox, lRTireData);
-                this.RRTireBox.Text = rRTireData.Temp.Item2.ToString("N2");
-                SetTireColor(this.RRTireBox, rRTireData);
+                LFTemp.Text = $"{lFTireData.Temp.Item2:N1}°";
+                LFWear.Text = $"{lFTireData.Wear.Item2:N0}%";
+                SetTireColor(LFTemp, lFTireData);
+                RFTemp.Text = $"{rFTireData.Temp.Item2:N1}°";
+                RFWear.Text = $"{rFTireData.Wear.Item2:N0}%";
+                SetTireColor(RFTemp, rFTireData);
+                LRTemp.Text = $"{lRTireData.Temp.Item2:N1}°";
+                LRWear.Text = $"{lRTireData.Wear.Item2:N0}%";
+                SetTireColor(LRTemp, lRTireData);
+                RRTemp.Text = $"{rRTireData.Temp.Item2:N1}°";
+                RRWear.Text = $"{rRTireData.Wear.Item2:N0}%";
+                SetTireColor(RRTemp, rRTireData);
             });
         }
         

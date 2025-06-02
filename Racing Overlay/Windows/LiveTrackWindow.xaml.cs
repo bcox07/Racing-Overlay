@@ -20,22 +20,35 @@ namespace IRacing_Standings.Windows
     /// <summary>
     /// Interaction logic for LiveTrackWindow.xaml
     /// </summary>
+    /// 
+   
     public partial class LiveTrackWindow : Window
     {
         TelemetryData LocalTelemetry;
+        public bool Locked = false;
         public LiveTrackWindow(TelemetryData telemetryData)
         {
             LocalTelemetry = telemetryData;
             InitializeComponent();
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            Locked = bool.Parse(mainWindow.WindowSettings.LiveTrackSettings["Locked"] ?? "false");
+            Left = double.Parse(mainWindow.WindowSettings.LiveTrackSettings["XPos"] ?? "0");
+            Top = double.Parse(mainWindow.WindowSettings.LiveTrackSettings["YPos"] ?? "0");
+
+            for (int i= 0; i < 1; i++)
+            {
+                var colDef = new ColumnDefinition();
+                colDef.Width = new GridLength(1500);
+            }
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            //if (!Locked)
-            //{
-            base.OnMouseLeftButtonDown(e);
-            DragMove();
-            //}
+            if (!Locked)
+            {
+                base.OnMouseLeftButtonDown(e);
+                DragMove();
+            }
         }
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
@@ -54,24 +67,60 @@ namespace IRacing_Standings.Windows
         }
 
         private void DisplayTrackMap()
-        {
-            var speedJsonString = File.ReadAllText("..\\..\\TrackMaps\\roadamerica\\roadamerica.json");
-            var trackData = JsonSerializer.Deserialize<Dictionary<string, List<int>>>(speedJsonString);
-            
-            var location = (int)(LocalTelemetry.FeedTelemetry.CarIdxLapDistPct[LocalTelemetry.FeedSessionData.DriverInfo.DriverCarIdx] * LocalTelemetry.TrackLength);
-            var closestPosition = 0;
-            if (location % 10 != 0)
+        {            
+
+            foreach(var driver in LocalTelemetry.AllPositions)
             {
-                closestPosition = location - location % 10;
+                Dispatcher.Invoke(() =>
+                {
+                    var textBox = new TextBox();
+                    textBox.Visibility = Visibility.Visible;
+                    textBox.Text = driver.ClassPosition.ToString();
+                    textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
+                    textBox.Width = 30;
+                    textBox.Height = 30;
+                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1500 - 15, 1.65, 0, 0);
+                    textBox.FontWeight = FontWeights.Bold;
+                    textBox.FontSize = 16;
+                    textBox.TextAlignment = TextAlignment.Center;
+                    textBox.HorizontalAlignment = HorizontalAlignment.Left;
+                    textBox.Padding = new Thickness(0, 4, 0, 0);
+                    textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
+                    textBox.Foreground = Brushes.Black;
+                    textBox.Resources = Player.Resources;
+                    textBox.BorderThickness = new Thickness(0);
+                    Canvas.SetZIndex(textBox, 99 - (driver.OverallPosition ?? 99));
+
+                    if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx) 
+                    {
+                        textBox.BorderBrush = Brushes.LawnGreen;
+                        textBox.BorderThickness = new Thickness(4);
+                        textBox.Padding = new Thickness(-1, 0, 0, 0);
+                        Canvas.SetZIndex(textBox, 99);
+                    }
+ 
+
+                   List<UIElement> elementsToRemove = new List<UIElement>();
+                    foreach (UIElement uiElement in this. TrackCanvas.Children.OfType<TextBox>())
+                    { 
+                        var element = (TextBox) uiElement;
+                        if (element.Uid == textBox.Uid)//) && element.Margin != textBox.Margin)
+                        {
+                            elementsToRemove.Add(uiElement);
+                        }
+                    }
+
+                    foreach (var element in elementsToRemove)
+                    {
+                        TrackCanvas.Children.Remove(element);
+                    }
+
+                    if (driver.PosOnTrack > 0) 
+                    {
+                        TrackCanvas.Children.Add(textBox);
+                    }
+                });
             }
-            var value = new List<int> { 0, 0 };
-            var test = trackData.TryGetValue(closestPosition.ToString(), out value);
-            var marginLeft = value?[0] ?? 0;
-            var marginTop = value?[1] ?? 0;
-            Dispatcher.Invoke(() =>
-            {
-                this.Player.Margin = new Thickness(marginLeft, marginTop, 0, 0);
-            });
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IRacing_Standings.Windows;
+using iRacingSDK;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text.Json;
 using System.Threading;
 using System.Windows;
@@ -19,14 +21,16 @@ namespace IRacing_Standings
     public partial class MainWindow : Window
     {
         Thread thread;
+        Thread thread2;
         StandingsWindow StandingsWindow;
         FuelWindow FuelWindow;
         RelativeWindow RelativeWindow;
         TireWindow TireWindow;
-        LiveTrackWindow TrackMapWindow;
+        LiveTrackWindow LiveTrackWindow;
         TelemetryData telemetryData;
         public WindowSettings WindowSettings;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
+        Timer timer;
         public MainWindow(WindowSettings windowSettings)
         {
             InitializeComponent();
@@ -37,8 +41,18 @@ namespace IRacing_Standings
             standingsLock.Content = bool.Parse(WindowSettings.StandingsSettings["Locked"]) ? "Unlock" : "Lock";
             relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? "Unlock" : "Lock";
             fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? "Unlock" : "Lock";
-            
-            StartOperation(CheckIRacingConnection);
+            tiresLock.Content = WindowSettings.TireSettings.ContainsKey("Locked") ? bool.Parse(WindowSettings.TireSettings["Locked"]) ? "Unlock" : "Lock" : "Lock";
+            liveTrackLock.Content = WindowSettings.LiveTrackSettings.ContainsKey("Locked") ? bool.Parse(WindowSettings.LiveTrackSettings["Locked"]) ? "Unlock" : "Lock" : "Lock";
+
+            StartOperation(CheckIRacingConnection, thread);
+            try
+            {
+                StartOperation(UpdateLapData, thread2);
+            }
+            catch (Exception ex) 
+            {
+                Trace.WriteLine(ex);
+            }
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -47,7 +61,7 @@ namespace IRacing_Standings
             DragMove();
         }
 
-        private void StartOperation(Action action)
+        private void StartOperation(Action action, Thread thread)
         {
             if (thread != null)
                 thread.Abort();
@@ -81,7 +95,14 @@ namespace IRacing_Standings
                         {
                             break;
                         }
-                        StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        try
+                        {
+                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine(ex);
+                        }
                     }
                     if (FuelWindow == null)
                     {
@@ -101,7 +122,14 @@ namespace IRacing_Standings
                         {
                             break;
                         }
-                        FuelWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        try
+                        {
+                            FuelWindow.UpdateTelemetryData(new TelemetryData(telemetryData), false);
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine(ex);
+                        }
                     }
                     if (RelativeWindow == null)
                     {
@@ -121,7 +149,14 @@ namespace IRacing_Standings
                         {
                             break;
                         }
-                        RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        try
+                        {
+                            RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine(ex);
+                        }
                     }
                     if (TireWindow == null)
                     {
@@ -144,8 +179,7 @@ namespace IRacing_Standings
                         TireWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                     }
 
-                    /*
-                    if (TrackMapWindow == null)
+                    if (LiveTrackWindow == null)
                     {
                         if (tokenSource.IsCancellationRequested)
                         {
@@ -153,8 +187,8 @@ namespace IRacing_Standings
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            TrackMapWindow = new LiveTrackWindow(new TelemetryData(telemetryData));
-                            TrackMapWindow.Show();
+                            LiveTrackWindow = new LiveTrackWindow(new TelemetryData(telemetryData));
+                            LiveTrackWindow.Show();
                         });
                     }
                     else
@@ -163,9 +197,15 @@ namespace IRacing_Standings
                         {
                             break;
                         }
-                        TrackMapWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        try
+                        {
+                            LiveTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine(ex);
+                        }
                     }
-                    */
                 }
                 else
                 {
@@ -176,50 +216,38 @@ namespace IRacing_Standings
             }
         }
 
+        private void UpdateLapData()
+        {
+            while (true)
+            {
+                var sessionFastestLap = telemetryData.LapList?.Where(l => l.ValidLap)?.OrderBy(l => l.SpeedData.OrderBy(m => m.Meter).Last().TimeInSeconds)?.FirstOrDefault();
+
+                if (sessionFastestLap != null) 
+                {
+                    var carPath = telemetryData.FeedSessionData.DriverInfo.Drivers.First(d => d.CarIdx == telemetryData.FeedSessionData.DriverInfo.DriverCarIdx).CarPath;
+                    var carClass = telemetryData.FeedSessionData.DriverInfo.Drivers.First(d => d.CarIdx == telemetryData.FeedSessionData.DriverInfo.DriverCarIdx).CarClassID;
+
+                    var fastestLap = telemetryData.SavedSpeedData?.FirstOrDefault(f => f.Key == (int)carClass).Value?.FirstOrDefault(c => c.Key == carPath).Value;
+
+                    if (!sessionFastestLap.CheckFastestLapExists(fastestLap))
+                    {
+                        sessionFastestLap.SaveLap();
+                        Trace.WriteLine("New Fastest Lap Saved: " + sessionFastestLap.SpeedData.OrderBy(s => s.TimeInSeconds).First().TimeInSeconds);
+                    }
+                }
+                
+                Thread.Sleep(1000 * 60);
+            }
+        }
+
         private void fuelButton_Click(object sender, RoutedEventArgs e)
         {
             if (FuelWindow == null)
             {
-                FuelWindow = new FuelWindow(telemetryData);
+                FuelWindow = new FuelWindow(telemetryData); 
                 FuelWindow.Show();
             }
         }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            var sessionFastestLap = telemetryData.LapList?.Where(l => l.ValidLap)?.OrderBy(l => l.SpeedData.OrderBy(m => m.Meter).Last().TimeInSeconds)?.FirstOrDefault();
-
-            if (sessionFastestLap == null) { return; }
-            var carPath = telemetryData.FeedSessionData.DriverInfo.Drivers.First(d => d.CarIdx == telemetryData.FeedSessionData.DriverInfo.DriverCarIdx).CarPath;
-            var carClass = telemetryData.FeedSessionData.DriverInfo.Drivers.First(d => d.CarIdx == telemetryData.FeedSessionData.DriverInfo.DriverCarIdx).CarClassID;
-
-            sessionFastestLap.CheckFastestLap(telemetryData.SavedSpeedData.FirstOrDefault(s => s.Key == (int)carClass).Value.FirstOrDefault(s => s.Key == carPath).Value);
-        }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            var test = Lap.GetSpeedData(144, "dallarap217");
-        }
-
-        private void standingsLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (StandingsWindow != null)
-            {
-                standingsLock.Content = StandingsWindow.Locked ? "Lock" : "Unlock";
-                StandingsWindow.Locked = !StandingsWindow.Locked;
-                WindowSettings.StandingsSettings["Locked"] = (StandingsWindow.Locked).ToString();
-            }
-        }
-
-        private void standingsSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (StandingsWindow != null)
-            {
-                WindowSettings.StandingsSettings["XPos"] = StandingsWindow.Left.ToString();
-                WindowSettings.StandingsSettings["YPos"] = StandingsWindow.Top.ToString();
-            }
-        }
-
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             CloseAllWindows();
@@ -227,6 +255,10 @@ namespace IRacing_Standings
             {
                 tokenSource.Cancel();
             }
+        }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            //Environment.Exit(0);
         }
 
         private void CloseAllWindows()
@@ -267,14 +299,42 @@ namespace IRacing_Standings
                     TireWindow = null;
                 });
             }
-            if (TrackMapWindow != null)
+            if (LiveTrackWindow != null)
             {
                 if (tokenSource.IsCancellationRequested) { return; }
                 Dispatcher.Invoke(() =>
                 {
-                    TrackMapWindow.Close();
-                    TrackMapWindow = null;
+                    LiveTrackWindow.Close();
+                    LiveTrackWindow = null;
                 });
+            }
+        }
+
+        private void standingsLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (StandingsWindow != null)
+            {
+                standingsLock.Content = StandingsWindow.Locked ? "Lock" : "Unlock";
+                StandingsWindow.Locked = !StandingsWindow.Locked;
+                WindowSettings.StandingsSettings["Locked"] = (StandingsWindow.Locked).ToString();
+            }
+        }
+
+        private void standingsSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (StandingsWindow != null)
+            {
+                WindowSettings.StandingsSettings["XPos"] = StandingsWindow.Left.ToString();
+                WindowSettings.StandingsSettings["YPos"] = StandingsWindow.Top.ToString();
+            }
+        }
+
+        private void standingsReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (StandingsWindow != null)
+            {
+                StandingsWindow.Left = 0;
+                StandingsWindow.Top = 0;
             }
         }
 
@@ -297,6 +357,15 @@ namespace IRacing_Standings
             }
         }
 
+        private void relativeReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (RelativeWindow != null)
+            {
+                RelativeWindow.Left = 0;
+                RelativeWindow.Top = 0;
+            }
+        }
+
         private void fuelLock_Click(object sender, RoutedEventArgs e)
         {
             if (FuelWindow != null)
@@ -313,6 +382,71 @@ namespace IRacing_Standings
             {
                 WindowSettings.FuelSettings["XPos"] = FuelWindow.Left.ToString();
                 WindowSettings.FuelSettings["YPos"] = FuelWindow.Top.ToString();
+            }
+        }
+
+        private void fuelReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (FuelWindow != null)
+            {
+                FuelWindow.Left = 0;
+                FuelWindow.Top = 0;
+            }
+        }
+
+        private void tiresLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (TireWindow != null)
+            {
+                tiresLock.Content = TireWindow.Locked ? "Lock" : "Unlock";
+                TireWindow.Locked = !TireWindow.Locked;
+                WindowSettings.TireSettings["Locked"] = (TireWindow.Locked).ToString();
+            }
+        }
+
+        private void tiresSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (TireWindow != null)
+            {
+                WindowSettings.TireSettings["XPos"] = TireWindow.Left.ToString();
+                WindowSettings.TireSettings["YPos"] = TireWindow.Top.ToString();
+            }
+        }
+
+        private void tiresReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (TireWindow != null)
+            {
+                TireWindow.Left = 0;
+                TireWindow.Top = 0;
+            }
+        }
+
+        private void liveTrackLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (LiveTrackWindow != null)
+            {
+                liveTrackLock.Content = LiveTrackWindow.Locked ? "Lock" : "Unlock";
+                LiveTrackWindow.Locked = !LiveTrackWindow.Locked;
+                WindowSettings.LiveTrackSettings["Locked"] = (LiveTrackWindow.Locked).ToString();
+            }
+        }
+
+        private void liveTrackSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (LiveTrackWindow != null)
+            {
+                WindowSettings.LiveTrackSettings["XPos"] = LiveTrackWindow.Left.ToString();
+                WindowSettings.LiveTrackSettings["YPos"] = LiveTrackWindow.Top.ToString();
+            }
+        }
+
+        private void liveTrackReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (LiveTrackWindow != null)
+            {
+                LiveTrackWindow.Left = 0;
+                LiveTrackWindow.Top = 0;
             }
         }
     }

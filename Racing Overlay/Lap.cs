@@ -1,12 +1,14 @@
 ﻿using iRacingSDK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using NLog;
 
 namespace IRacing_Standings
 {
@@ -19,16 +21,15 @@ namespace IRacing_Standings
         public int LapNumber { get; set; }
         public double EstLapTime { get; set; }
         public List<Speed> SpeedData { get; set; }
-        public bool ValidLap 
-        { 
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public bool LapLengthValid
+        {
             get
             {
-                if (SpeedData != null 
-                    && SpeedData.Count >= TrackLength * 0.86
-                    && SpeedData.All(s => s.Location == TrackLocation.OnTrack)
-                    && SpeedData.OrderBy(s => s.Meter).Last().TimeInSeconds <= EstLapTime * 1.2
-                    && SpeedData.OrderBy(s => s.Meter).Last().TimeInSeconds >= EstLapTime
-                    && SpeedData.OrderBy(s => s.Meter).Last().Meter >= TrackLength - 20)
+                var speedDataCopy = new List<Speed>(SpeedData);
+                if (speedDataCopy != null && speedDataCopy.Count >= TrackLength  * 0.80)
                 {
                     return true;
                 }
@@ -36,17 +37,71 @@ namespace IRacing_Standings
             }
         }
 
+        public bool OnTrack
+        {
+            get
+            {
+                var speedDataCopy = new List<Speed>(SpeedData);
+                if (speedDataCopy != null && speedDataCopy.Count(s => s.Location != TrackLocation.OnTrack) < 10)
+                {
+                    return true;
+                }
+                else { return false; }
+            }
+        }
+
+        public bool LapTimeReasonable
+        {
+            get
+            {
+                var speedDataCopy = new List<Speed>(SpeedData);
+                if (speedDataCopy != null && speedDataCopy.OrderBy(s => s.Meter).Last().TimeInSeconds <= EstLapTime * 1.2 && speedDataCopy.OrderBy(s => s.Meter).Last().TimeInSeconds >= EstLapTime * 0.95)
+                {
+                    return true;
+                }
+                else { return false; }
+            }
+        }
+        public bool ValidLap 
+        { 
+            get
+            {
+                try
+                {
+                    var speedDataCopy = new List<Speed>(SpeedData);
+                    if (LapLengthValid && OnTrack && LapTimeReasonable && speedDataCopy.OrderBy(s => s.Meter).Last().Meter >= TrackLength - 20)
+                    {
+                        return true;
+                    }
+                    else { return false; }
+                }
+                catch (Exception ex) 
+                {
+                    Logger.Error(ex);
+                    return false;
+                }
+            }
+        }
+
         public static List<Speed> GetSpeedData(int trackId, string carPath)
         {
             List<Speed> speedData = null;
-            var trackDirectory = Directory.GetDirectories($"..\\..\\Speed Files", $"{trackId}-*").FirstOrDefault();
+            var trackDirectory = Directory.GetDirectories($"..\\..\\SpeedFiles", $"{trackId}-*").FirstOrDefault();
             if (trackDirectory != null)
             {
                 var speedFile = $"{trackDirectory}\\{carPath}.json";
                 if (File.Exists(speedFile))
                 {
-                    var speedJsonString = File.ReadAllText(speedFile);
-                    speedData = JsonSerializer.Deserialize<List<Speed>>(speedJsonString);
+                    try
+                    {
+                        var speedJsonString = File.ReadAllText(speedFile);
+                        speedData = JsonSerializer.Deserialize<List<Speed>>(speedJsonString);
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.Error(ex);
+                        Trace.WriteLine(ex);
+                    }
                 }
             }
            
@@ -55,12 +110,13 @@ namespace IRacing_Standings
 
         public void FillMissingSpeedData()
         {
-            var lastDataPoint = SpeedData[0];
+            var speedDataCopy = new List<Speed>(SpeedData);
+            var lastDataPoint = speedDataCopy[0];
             for (int i = 0; i <= TrackLength; i++)
             {
-                if (!SpeedData.Select(s => s.Meter).Contains(i))
+                if (!speedDataCopy.Select(s => s.Meter).Contains(i))
                 {
-                    SpeedData.Add(new Speed
+                    speedDataCopy.Add(new Speed
                     {
                         Meter = i,
                         SpeedMS = lastDataPoint.SpeedMS,
@@ -68,25 +124,24 @@ namespace IRacing_Standings
                         Location = TrackLocation.OnTrack
                     });
                 }
-                lastDataPoint = SpeedData.Where(s => s.Meter == i).First();
+                lastDataPoint = speedDataCopy.Where(s => s.Meter == i).First();
             }
-            SpeedData = SpeedData.OrderBy(s => s.Meter).ToList();
+            SpeedData = speedDataCopy.OrderBy(s => s.Meter).ToList();
         }
 
         //Save fastest lap from session if it is faster than the current recorded file's lap
-        public void CheckFastestLap(List<Speed> savedSpeedData)
+        public bool CheckFastestLapExists(List<Speed> savedSpeedData)
         {
-            //var fastestLap = false;
             if (savedSpeedData == null || savedSpeedData.Count == 0 || savedSpeedData.OrderBy(s => s.Meter).Last().TimeInSeconds > SpeedData.OrderBy(s => s.Meter).Last().TimeInSeconds)
             {
-                //fastestLap = true;
-                SaveLap();
+                return false;
             }
+            return true;
         }
 
         public void SaveLap()
         {
-            var parentDirectory = $"..\\..\\Speed Files\\{TrackId}-{TrackName.Replace(" ", "").ToLower()}";
+            var parentDirectory = $"..\\..\\SpeedFiles\\{TrackId}-{TrackName.Replace(" ", "").ToLower()}";
             var fileLocation = $"{parentDirectory}\\{CarPath}.json";
             if (!Directory.Exists(parentDirectory))
             {
@@ -94,15 +149,38 @@ namespace IRacing_Standings
             }
 
             FillMissingSpeedData();
-            using (StreamWriter writer = new StreamWriter(fileLocation))
+
+            if (!IsFileLocked(fileLocation))
             {
-                var options = new JsonSerializerOptions()
+                using (StreamWriter writer = new StreamWriter(fileLocation))
                 {
-                    WriteIndented = true
-                };
-                var timesJson = JsonSerializer.Serialize(SpeedData, options);
-                writer.Write(timesJson);
+                    var options = new JsonSerializerOptions()
+                    {
+                        WriteIndented = true
+                    };
+                    var timesJson = JsonSerializer.Serialize(SpeedData, options);
+                    writer.Write(timesJson);
+                }
+
+                Logger.Info($"New Fastest Lap Recorded for {CarPath} at {TrackName} : {SpeedData.Last().TimeInSeconds}");
             }
         }
+
+        private static bool IsFileLocked(string fileLocation)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(fileLocation))
+                {
+                    //Use this for only detecting IO Exception
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

@@ -27,14 +27,21 @@ namespace IRacing_Standings
         private List<Driver> CachedAllPositions = new List<Driver>();
         private int CellIndex = 0;
         public TelemetryData _TelemetryData;
-        private const int SecondsForReset = 20;
+        private const int SecondsForReset = 30;
         public bool Locked = false;
 
         public StandingsWindow(TelemetryData telemetryData)
         {
             InitializeComponent();
             InitializeOverlay();
-            UpdateTelemetryData(telemetryData);
+            try
+            {
+                UpdateTelemetryData(telemetryData);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -86,14 +93,10 @@ namespace IRacing_Standings
             var sessionType = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionType;
             var sessionTime = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum]._SessionTime;
             var viewedCar = telemetryData.AllPositions.Where(p => p.CarId == telemetryData.FeedTelemetry.CamCarIdx).FirstOrDefault() ?? telemetryData.AllPositions.FirstOrDefault() ?? new Driver();
-            var sessionLapsTotal = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps;
+            var sessionLapsTotal = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps == "unlimited" ? 0 : long.Parse(telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps);
             var viewedCarPosition = telemetryData.AllResultsPositions?.FirstOrDefault(r => r.CarIdx == viewedCar.CarId) ?? telemetryData.AllResultsPositions.FirstOrDefault() ?? new SessionData._SessionInfo._Sessions._ResultsPositions();
-            var sessionLapsDriven = Math.Floor(viewedCarPosition.LapsDriven);
+            var sessionLapCurrent = viewedCarPosition.LapsComplete + 1;
             var driverClasses = telemetryData.SortedPositions.Select(s => s.Key);
-
-            Trace.WriteLine($"Session Time: {sessionTimeString1}");
-            Trace.WriteLine($"Session Time: {sessionTime}");
-            Trace.WriteLine($"Session Laps: {sessionLapsTotal}");
 
             var rowIndex = 0;
             CellIndex = 0;
@@ -103,13 +106,13 @@ namespace IRacing_Standings
                 {
                     RowDefinition rowDefinition = new RowDefinition();
                     rowDefinition.Name = "SessionTitle";
-                    rowDefinition.Height = new GridLength(30);
+                    rowDefinition.Height = new GridLength(25);
                     standingsGrid.RowDefinitions.Add(rowDefinition);
                 }
                 else if (standingsGrid.RowDefinitions[rowIndex].Name != "SessionTitle")
                 {
                     standingsGrid.RowDefinitions[rowIndex].Name = "SessionTitle";
-                    standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(30);
+                    standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                 }
 
                 TextBlock title = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : new TextBlock();
@@ -134,7 +137,7 @@ namespace IRacing_Standings
                     title = new TextBlock();
                     if (sessionTimeString1 == "unlimited")
                     {
-                        title.Text = $"{sessionType} - {sessionLapsDriven} / {sessionLapsTotal}";
+                        title.Text = $"{sessionType} - {sessionLapCurrent} / {sessionLapsTotal}";
                     }
                     else
                     {
@@ -151,13 +154,13 @@ namespace IRacing_Standings
                 }
                 else if (!title.Text.Contains($"{sessionType}"))
                 {
-                    if (sessionTimeString1 == "unlimited")
+                    if (sessionTimeString1 == "unlimited" || sessionLapsTotal > 0)
                     {
-                        title.Text = $"{sessionType} - {sessionLapsDriven} / {sessionLapsTotal}";
+                        title.Text = $"{sessionType} - {sessionLapCurrent} / {sessionLapsTotal}";
                     }
                     else
                     {
-                        title.Text = $"{sessionType} - {sessionLapsDriven} / {sessionTimeString}";
+                        title.Text = $"{sessionType} - {elapsedTimeString} / {sessionTimeString}";
                     }
                     title.FontSize = 20;
                     title.Height = 30;
@@ -168,9 +171,9 @@ namespace IRacing_Standings
                 }
                 else
                 {
-                    if (sessionTimeString1 == "unlimited")
+                    if (sessionTimeString1 == "unlimited" || sessionLapsTotal > 0)
                     {
-                        title.Text = $"{sessionType} - {sessionLapsDriven} / {sessionLapsTotal}";
+                        title.Text = $"{sessionType} - {sessionLapCurrent} / {sessionLapsTotal}";
                     }
                     else
                     {
@@ -215,7 +218,26 @@ namespace IRacing_Standings
         private int UpdateRow(KeyValuePair<int, List<Driver>> driverClassGroup, Driver viewedCar, int rowIndex)
         {
             var viewedClassGroup = driverClassGroup.Key == viewedCar.ClassId;
-            var surroundingPositions = driverClassGroup.Value.Where(p => p.ClassPosition != null && (Math.Abs( p.ClassPosition.Value - viewedCar.ClassPosition.Value) < 3 && viewedClassGroup) || p.ClassPosition < 4).ToList();
+            var surroundingPositions = driverClassGroup.Value.Where(
+                p => p.ClassPosition != null 
+                && (Math.Abs( p.ClassPosition.Value - viewedCar.ClassPosition.Value) < 4 
+                && viewedClassGroup) || p.ClassPosition < 4).ToList();
+
+            if (viewedCar.ClassPosition < 4 && viewedClassGroup)
+            {
+                surroundingPositions = driverClassGroup.Value.Where(
+                p => p.ClassPosition < 7 && viewedClassGroup).ToList();
+            }
+
+            Driver classFastestDriver = null;
+            if (driverClassGroup.Value.Where(p => p.ClassPosition != null && viewedClassGroup && p.FastestLap != null).Count() > 0)
+            {
+                classFastestDriver = driverClassGroup.Value.Where(p => p.ClassPosition != null && viewedClassGroup && p.FastestLap != null).OrderBy(p => p.FastestLap).First();
+            }
+            else
+            {
+                classFastestDriver = driverClassGroup.Value.Where(p => p.ClassPosition != null).OrderBy(p => p.FastestLap).First();
+            }
 
             Dispatcher.Invoke(() =>
             {
@@ -242,27 +264,23 @@ namespace IRacing_Standings
                 var classTitle = standingsGrid.Children.Count > CellIndex ? (TextBlock)standingsGrid.Children[CellIndex] : null;
                 if (classTitle == null || classTitle.Text != carClassName)
                 {
-                    if (classTitle == null)
+                    var newCell = classTitle == null;
+                    classTitle = classTitle != null ? classTitle : new TextBlock();
+                    classTitle.FontSize = 14;
+                    classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                    classTitle.Foreground = Brushes.Black;
+                    classTitle.FontWeight = FontWeights.Bold;
+                    classTitle.TextAlignment = TextAlignment.Left;
+                    classTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
+                    classTitle.Padding = new Thickness(5, 0, 0, 0);
+
+                    if (newCell)
                     {
-                        classTitle = new TextBlock();
-                        classTitle.FontSize = 14;
-                        classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                        classTitle.Foreground = Brushes.Black;
-                        classTitle.FontWeight = FontWeights.Bold;
-                        classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
-                        classTitle.Padding = new Thickness(5, 0, 0, 0);                    
                         standingsGrid.Children.Add(classTitle);
                     }
                     else
                     {
-                        classTitle.FontSize = 14;
-                        classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                        classTitle.Foreground = Brushes.Black;
-                        classTitle.FontWeight = FontWeights.Bold;
-                        classTitle.TextAlignment = TextAlignment.Left;
-                        classTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
-                        classTitle.Padding = new Thickness(5, 0, 0, 0);
                         standingsGrid.Children[CellIndex] = classTitle;
                     }
                 }
@@ -332,13 +350,13 @@ namespace IRacing_Standings
                     {
                         RowDefinition rowDef = new RowDefinition();
                         rowDef.Name = $"Driver{position.CarId}";
-                        rowDef.Height = new GridLength(30);
+                        rowDef.Height = new GridLength(25);
                         standingsGrid.RowDefinitions.Add(rowDef);
                     }
                     else if (standingsGrid.RowDefinitions[rowIndex]?.Name != $"Driver{position.CarId}")
                     {
                         standingsGrid.RowDefinitions[rowIndex].Name = $"Driver{position.CarId}";
-                        standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(30);
+                        standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                     }
 
                     var posNumber = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
@@ -420,13 +438,13 @@ namespace IRacing_Standings
                     if (fastestLap == null)
                     {
                         fastestLap = new TextBlock();
-                        UpdateFastestLapCell(fastestLap, position, classFastestLap);
+                        UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
                         UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
                         standingsGrid.Children.Add(fastestLap);
                     }
                     else
                     {
-                        UpdateFastestLapCell(fastestLap, position, classFastestLap);
+                        UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
                         UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
                     }
                     Grid.SetColumn(fastestLap, 18);
@@ -499,14 +517,14 @@ namespace IRacing_Standings
             textBlock.Tag = "PosNumber";
             textBlock.TextAlignment = TextAlignment.Center;
             textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
-            textBlock.Padding = new Thickness(3.5);
+            textBlock.Padding = new Thickness(1);
             textBlock.Text = position.ClassPosition.ToString();
         }
 
         private void UpdateDriverNameCell(TextBlock textBlock, Driver position)
         {
             textBlock.Tag = "DriverName";
-            textBlock.Padding = new Thickness(5, 3.5, 0, 3.5);
+            textBlock.Padding = new Thickness(5, 1, 0, 3.5);
             textBlock.TextAlignment = TextAlignment.Left;
             textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
             textBlock.TextTrimming = TextTrimming.CharacterEllipsis;
@@ -517,7 +535,7 @@ namespace IRacing_Standings
         {
             textBlock.Tag = "IRating";
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock.Padding = new Thickness(12, 3.5, 12, 3.5);
+            textBlock.Padding = new Thickness(12, 1, 12, 3.5);
             textBlock.Text = $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k";
         }
 
@@ -525,7 +543,7 @@ namespace IRacing_Standings
         {
             textBlock.Tag = "Delta";
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock.Padding = new Thickness(20, 3.5, 20, 3.5);
+            textBlock.Padding = new Thickness(20, 1, 20, 3.5);
             if (_TelemetryData.IsRace)
             {
                 if (position == firstPosition)
@@ -554,10 +572,10 @@ namespace IRacing_Standings
         private void UpdateFastestLapCell(TextBlock textBlock, Driver position, double? classFastestLap)
         {
             textBlock.Tag = "FastestLap";
-            textBlock.Padding = new Thickness(10, 3.5, 0, 3.5);
+            textBlock.Padding = new Thickness(10, 1, 0, 3.5);
             textBlock.TextAlignment = TextAlignment.Left;
             textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
-            if (position.FastestLap != null && position.FastestLap.Value == classFastestLap.Value)
+            if (position.FastestLap != null && position.FastestLap.Value == (classFastestLap ?? 0))
             {
                 textBlock.Foreground = Brushes.Purple;
             }
@@ -569,16 +587,25 @@ namespace IRacing_Standings
             {
                 textBlock.Text = "--:--.---";
             }
-            else if (textBlock.Text != TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0'))
+            else if (textBlock.Text != TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0') ||
+                textBlock.Text != TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"ss\.fff").TrimStart('m', '0')
+                )
             {
-                textBlock.Text = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
+                if (position.FastestLap.Value > 60)
+                {
+                    textBlock.Text = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
+                }
+                else
+                {
+                    textBlock.Text = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"ss\.fff");
+                }
             }
         }
 
         private void UpdateLastLapCell(TextBlock textBlock, Driver position, double? classFastestLap, int rowIndex)
         {
             textBlock.Tag = "LastLap";
-            textBlock.Padding = new Thickness(5, 3.5, 5, 3.5);
+            textBlock.Padding = new Thickness(5, 1, 5, 3.5);
             textBlock.TextAlignment = TextAlignment.Left;
             textBlock.HorizontalAlignment = HorizontalAlignment.Left;
             if (position.FastestLap != null && position.FastestLap.Value == classFastestLap)

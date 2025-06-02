@@ -12,9 +12,27 @@ namespace IRacing_Standings
 {
     public class WindowSettings
     {
-        public Dictionary<string, string> StandingsSettings { get; set; }
-        public Dictionary<string, string> RelativeSettings { get; set; }
-        public Dictionary<string, string> FuelSettings { get; set; }
+        public Dictionary<string, string> StandingsSettings { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> RelativeSettings { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> FuelSettings { get; set; } = new Dictionary<string, string>
+        {
+            { "Locked", "false" },
+            { "XPos", "0" },
+            { "YPos", "0" }
+        };
+        public Dictionary<string, string> TireSettings { get; set; } = new Dictionary<string, string>
+        {
+            { "Locked", "false" },
+            { "XPos", "0" },
+            { "YPos", "0" }
+        };
+
+        public Dictionary<string, string> LiveTrackSettings { get; set; } = new Dictionary<string, string>
+        {
+            { "Locked", "false" },
+            { "XPos", "0" },
+            { "YPos", "0" }
+        };
 
         public void SaveSettings(string window, Dictionary<string, string> settings)
         {
@@ -28,6 +46,12 @@ namespace IRacing_Standings
                     break;
                 case "Fuel":
                      FuelSettings = settings;
+                    break;
+                case "Tires":
+                    TireSettings = settings;
+                    break;
+                case "LiveTrack":
+                    LiveTrackSettings = settings;
                     break;
             }
         }
