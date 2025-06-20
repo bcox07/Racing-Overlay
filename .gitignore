@@ -1,0 +1,7 @@
+﻿obj/
+bin/
+properties/
+publish/
+packages/
+tools/
+/.vs
