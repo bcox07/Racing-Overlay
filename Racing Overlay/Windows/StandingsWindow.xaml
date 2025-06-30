@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IRacing_Standings"
         mc:Ignorable="d"
-        Title="StandingsWindow" Width="450" Opacity="0.85" AllowsTransparency="True" WindowStyle="None" Background="Black">
-    <Grid x:Name="standingsGrid" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Opacity="0.85" Cursor="Arrow" >
+        Title="StandingsWindow" Width="650" Opacity="0.85" AllowsTransparency="True" WindowStyle="None" Background="Black">
+    <Grid x:Name="standingsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Opacity="0.85" Cursor="Arrow" >
     </Grid>
 </Window>

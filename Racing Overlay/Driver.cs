@@ -10,6 +10,7 @@ namespace IRacing_Standings
     {
         public int CarId { get; set; }
         public string CarPath { get; set; }
+        public string CarNumber { get; set; }
         public int ClassId { get; set; }
         public string ClassColor { get; set; }
         public int? ClassPosition { get; set; }

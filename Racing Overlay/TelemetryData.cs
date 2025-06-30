@@ -279,6 +279,7 @@ namespace IRacing_Standings
             var preCorrectedPositions = AllResultsPositions.Join(AllDrivers, p => p.CarIdx, d => d.CarIdx, (p, d) => new Driver()
             {
                 CarId = (int)d.CarIdx,
+                CarNumber = d.CarNumber,
                 CarPath = d.CarPath,
                 ClassId = (int)d.CarClassID,
                 ClassColor = d.CarClassColor,
@@ -302,6 +303,7 @@ namespace IRacing_Standings
                     preCorrectedPositions.Add(new Driver
                     {
                         CarId = (int)driver.CarIdx,
+                        CarNumber = driver.CarNumber,
                         CarPath = driver.CarPath,
                         ClassColor = driver.CarClassColor,
                         ClassId = (int)driver.CarClassID,

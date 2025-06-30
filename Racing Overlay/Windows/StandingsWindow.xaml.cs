@@ -29,6 +29,15 @@ namespace IRacing_Standings
         public TelemetryData _TelemetryData;
         private const int SecondsForReset = 30;
         public bool Locked = false;
+        int PosNumberWidth = 2;
+        int CarNumberWidth = 3;
+        int DriverNameWidth = 12;
+        int IRatingWidth = 4;
+        int SafetyRatingWidth = 5;
+        int DeltaWidth = 3;
+        int FastestLapWidth = 7;
+        int LastLapWidth = 7;
+        int ColumnsWidth = 0;
 
         public StandingsWindow(TelemetryData telemetryData)
         {
@@ -61,10 +70,11 @@ namespace IRacing_Standings
             Top = double.Parse(mainWindow.WindowSettings.StandingsSettings["YPos"]);
             Height = 0;
             Background = Brushes.Transparent;
+            ColumnsWidth = PosNumberWidth + CarNumberWidth + DriverNameWidth + IRatingWidth + SafetyRatingWidth + DeltaWidth + FastestLapWidth + LastLapWidth;
             Dispatcher.Invoke(() =>
             {
                 standingsGrid.Background = Brushes.Transparent;
-                for (var i = 0; i < 30; i++)
+                for (var i = 0; i < ColumnsWidth; i++)
                 {
                     ColumnDefinition colDef = new ColumnDefinition();
                     standingsGrid.ColumnDefinitions.Add(colDef);
@@ -100,7 +110,7 @@ namespace IRacing_Standings
 
             var rowIndex = 0;
             CellIndex = 0;
-            Dispatcher.Invoke((Action)delegate
+            Dispatcher.Invoke(() =>
             {
                 if (rowIndex >= standingsGrid.RowDefinitions.Count)
                 {
@@ -148,7 +158,7 @@ namespace IRacing_Standings
                     title.Height = 30;
                     title.Foreground = Brushes.White;
                     title.Background = Brushes.Black;
-                    Grid.SetColumnSpan(title, 30);
+                    Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
                     Grid.SetRow(title, rowIndex);
                     standingsGrid.Children.Add(title);
                 }
@@ -166,7 +176,7 @@ namespace IRacing_Standings
                     title.Height = 30;
                     title.Foreground = Brushes.White;
                     title.Background = Brushes.Black;
-                    Grid.SetColumnSpan(title, 24);
+                    Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
                     Grid.SetRow(title, rowIndex);
                 }
                 else
@@ -182,7 +192,7 @@ namespace IRacing_Standings
                     title.Foreground = Brushes.White;
                     title.Background = Brushes.Black;
                     title.Padding = new Thickness(5, 0, 0, 0);
-                    Grid.SetColumnSpan(title, 24);
+                    Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
                     Grid.SetRow(title, rowIndex);
                 }
             });
@@ -208,7 +218,7 @@ namespace IRacing_Standings
                 {
                     Height = ((rowIndex - _TelemetryData.SortedPositions.Count)  * 30) + (_TelemetryData.SortedPositions.Count * 20);
                 }
-                standingsGrid.Width = 450;
+                standingsGrid.Width = 550;
                 Content = standingsGrid;
             });
             CachedAllPositions = _TelemetryData.AllPositions;
@@ -286,14 +296,62 @@ namespace IRacing_Standings
                 }
 
                 Grid.SetColumn(classTitle, 0);
-                Grid.SetColumnSpan(classTitle, 12);
+                Grid.SetColumnSpan(classTitle, ColumnsWidth - FastestLapWidth);
                 Grid.SetRow(classTitle, rowIndex);
                 CellIndex++;
             });
 
             var sof = (int)driverClassGroup.Value.Average(d => d.iRating);
+            var carCount = (int)driverClassGroup.Value.Count;
+
             Dispatcher.Invoke(() =>
             {
+                var carCountTitle = standingsGrid.Children.Count > CellIndex ? (TextBlock)standingsGrid.Children[CellIndex] : null;
+                if (carCountTitle == null || carCountTitle.Text != $"Cars: {carCount}")
+                {
+                    if (carCountTitle == null)
+                    {
+                        carCountTitle = new TextBlock();
+                        carCountTitle.FontSize = 14;
+                        carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                        carCountTitle.Foreground = Brushes.Black;
+                        carCountTitle.FontWeight = FontWeights.Bold;
+                        carCountTitle.TextAlignment = TextAlignment.Right;
+                        carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        carCountTitle.Text = $"Cars: {carCount}";
+                        carCountTitle.Padding = new Thickness(0, 0, 5, 0);
+                        standingsGrid.Children.Add(carCountTitle);
+                    }
+                    else
+                    {
+                        carCountTitle.FontSize = 14;
+                        carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                        carCountTitle.Foreground = Brushes.Black;
+                        carCountTitle.FontWeight = FontWeights.Bold;
+                        carCountTitle.TextAlignment = TextAlignment.Right;
+                        carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        carCountTitle.Text = $"Cars: {carCount}";
+                        carCountTitle.Padding = new Thickness(0, 0, 5, 0);
+                        standingsGrid.Children[CellIndex] = carCountTitle;
+                    }
+                }
+                else
+                {
+                    carCountTitle.FontSize = 14;
+                    carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                    carCountTitle.Foreground = Brushes.Black;
+                    carCountTitle.FontWeight = FontWeights.Bold;
+                    carCountTitle.TextAlignment = TextAlignment.Right;
+                    carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    carCountTitle.Padding = new Thickness(0, 0, 5, 0);
+                    carCountTitle.Text = $"Cars: {carCount}";
+                }
+
+                Grid.SetColumn(carCountTitle, ColumnsWidth - FastestLapWidth - 20);
+                Grid.SetColumnSpan(carCountTitle, 10);
+                Grid.SetRow(carCountTitle, rowIndex);
+                CellIndex++;
+
                 var sofTitle = standingsGrid.Children.Count > CellIndex ? (TextBlock)standingsGrid.Children[CellIndex] : null;
                 if (sofTitle == null || sofTitle.Text != $"SoF - {sof}")
                 {
@@ -335,15 +393,19 @@ namespace IRacing_Standings
                     sofTitle.Text = $"SoF: {sof}";
                 }
 
-                Grid.SetColumn(sofTitle, 12);
-                Grid.SetColumnSpan(sofTitle, 12);
+                Grid.SetColumn(sofTitle, ColumnsWidth - FastestLapWidth - 10);
+                Grid.SetColumnSpan(sofTitle, 10);
                 Grid.SetRow(sofTitle, rowIndex);
-                rowIndex++;
                 CellIndex++;
+                rowIndex++;            
             });
+
+            
 
             foreach (var position in surroundingPositions.ToList())
             {
+                var columnIndex = 0;
+
                 Dispatcher.Invoke((Action)delegate
                 {
                     if (rowIndex >= standingsGrid.RowDefinitions.Count)
@@ -360,6 +422,7 @@ namespace IRacing_Standings
                     }
 
                     var posNumber = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
+                    
                     if (posNumber == null)
                     {
                         posNumber = new TextBlock();
@@ -372,9 +435,29 @@ namespace IRacing_Standings
                         UpdatePosNumberCell(posNumber, position);
                         UpdateCellGeneric(posNumber, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumnSpan(posNumber, 2);
-                    Grid.SetColumn(posNumber, 0);
+                    Grid.SetColumnSpan(posNumber, PosNumberWidth);
+                    Grid.SetColumn(posNumber, columnIndex);
                     Grid.SetRow(posNumber, rowIndex);
+                    columnIndex += PosNumberWidth;
+                    CellIndex++;
+
+                    var carNumber = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
+                    if (carNumber == null)
+                    {
+                        carNumber = new TextBlock();
+                        UpdateCarNumberCell(carNumber, position);
+                        UpdateCellGeneric(carNumber, rowIndex, position, viewedCar);
+                        standingsGrid.Children.Add(carNumber);
+                    }
+                    else
+                    {
+                        UpdateCarNumberCell(carNumber, position);
+                        UpdateCellGeneric(carNumber, rowIndex, position, viewedCar);
+                    }
+                    Grid.SetColumnSpan(carNumber, CarNumberWidth);
+                    Grid.SetColumn(carNumber, columnIndex);
+                    Grid.SetRow(carNumber, rowIndex);
+                    columnIndex += CarNumberWidth;
                     CellIndex++;
 
                     var driverName = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
@@ -392,9 +475,10 @@ namespace IRacing_Standings
                         UpdateCellGeneric(driverName, rowIndex, position, viewedCar);
                         UpdateDriverNameCell(driverName, position);
                     }
-                    Grid.SetColumn(driverName, 2);
-                    Grid.SetColumnSpan(driverName, 10);
+                    Grid.SetColumn(driverName, columnIndex);
+                    Grid.SetColumnSpan(driverName, DriverNameWidth);
                     Grid.SetRow(driverName, rowIndex);
+                    columnIndex += DriverNameWidth;
                     CellIndex++;
 
                     var iRating = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
@@ -410,9 +494,29 @@ namespace IRacing_Standings
                         UpdateIRatingCell(iRating, position);
                         UpdateCellGeneric(iRating, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(iRating, 12);
-                    Grid.SetColumnSpan(iRating, 3);
+                    Grid.SetColumn(iRating, columnIndex);
+                    Grid.SetColumnSpan(iRating, IRatingWidth);
                     Grid.SetRow(iRating, rowIndex);
+                    columnIndex += IRatingWidth;
+                    CellIndex++;
+
+                    var safetyRating = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
+                    if (safetyRating == null)
+                    {
+                        safetyRating = new TextBlock();
+                        UpdateSafetyRatingCell(safetyRating, position);
+                        UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
+                        standingsGrid.Children.Add(safetyRating);
+                    }
+                    else
+                    {
+                        UpdateSafetyRatingCell(safetyRating, position);
+                        UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
+                    }
+                    Grid.SetColumn(safetyRating, columnIndex);
+                    Grid.SetColumnSpan(safetyRating, SafetyRatingWidth);
+                    Grid.SetRow(safetyRating, rowIndex);
+                    columnIndex += SafetyRatingWidth;
                     CellIndex++;
 
                     var deltaFromLeader = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
@@ -428,9 +532,10 @@ namespace IRacing_Standings
                         UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First());
                         UpdateCellGeneric(deltaFromLeader, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(deltaFromLeader, 15);
-                    Grid.SetColumnSpan(deltaFromLeader, 3);
+                    Grid.SetColumn(deltaFromLeader, columnIndex);
+                    Grid.SetColumnSpan(deltaFromLeader, DeltaWidth);
                     Grid.SetRow(deltaFromLeader, rowIndex);
+                    columnIndex += DeltaWidth;
                     CellIndex++;
 
                     var classFastestLap = surroundingPositions.Where(s => s.FastestLap != null).OrderBy(s => s.FastestLap).FirstOrDefault()?.FastestLap;
@@ -447,9 +552,10 @@ namespace IRacing_Standings
                         UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
                         UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(fastestLap, 18);
-                    Grid.SetColumnSpan(fastestLap, 6);
+                    Grid.SetColumn(fastestLap, columnIndex);
+                    Grid.SetColumnSpan(fastestLap, FastestLapWidth);
                     Grid.SetRow(fastestLap, rowIndex);
+                    columnIndex += FastestLapWidth;
                     CellIndex++;
 
                     var lastLap = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
@@ -465,9 +571,10 @@ namespace IRacing_Standings
                         UpdateLastLapCell(lastLap, position, classFastestLap, rowIndex);
                         UpdateCellGeneric(lastLap, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(lastLap, 24);
-                    Grid.SetColumnSpan(lastLap, 6);
+                    Grid.SetColumn(lastLap, columnIndex);
+                    Grid.SetColumnSpan(lastLap, LastLapWidth);
                     Grid.SetRow(lastLap, rowIndex);
+                    columnIndex += LastLapWidth;
                     CellIndex++;
                 });
                 rowIndex++;
@@ -521,6 +628,15 @@ namespace IRacing_Standings
             textBlock.Text = position.ClassPosition.ToString();
         }
 
+        private void UpdateCarNumberCell(TextBlock textBlock, Driver position)
+        {
+            textBlock.Tag = "CarNumber";
+            textBlock.TextAlignment = TextAlignment.Center;
+            textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
+            textBlock.Padding = new Thickness(1);
+            textBlock.Text = $"#{position.CarNumber}";
+        }
+
         private void UpdateDriverNameCell(TextBlock textBlock, Driver position)
         {
             textBlock.Tag = "DriverName";
@@ -537,6 +653,14 @@ namespace IRacing_Standings
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
             textBlock.Padding = new Thickness(12, 1, 12, 3.5);
             textBlock.Text = $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k";
+        }
+
+        private void UpdateSafetyRatingCell(TextBlock textBlock, Driver position)
+        {
+            textBlock.Tag = "SafetyRating";
+            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock.Padding = new Thickness(12, 1, 12, 3.5);
+            textBlock.Text = position.SafetyRating;
         }
 
         private void UpdateDeltaCell(TextBlock textBlock, Driver position, Driver firstPosition)
