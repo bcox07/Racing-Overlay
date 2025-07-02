@@ -3,18 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace IRacing_Standings
 {
@@ -587,7 +581,7 @@ namespace IRacing_Standings
             textBlock.FontSize = 16;
             textBlock.FontWeight = FontWeights.Bold;
             textBlock.TextTrimming = TextTrimming.None;
-            if (textBlock.Tag.ToString() != "LastLap" && textBlock.Tag.ToString() != "FastestLap")
+            if (textBlock.Tag.ToString() != "LastLap" && textBlock.Tag.ToString() != "FastestLap" && textBlock.Tag.ToString() != "SafetyRating")
             {
                 textBlock.Foreground = Brushes.White;
             }
@@ -610,6 +604,7 @@ namespace IRacing_Standings
                 case "PosNumber":
                 case "DriverName":
                 case "IRating":
+                case "CarNumber":
                     if (position.CarId == viewedCar.CarId)
                     {
                         textBlock.Foreground = Brushes.Gold;
@@ -660,7 +655,8 @@ namespace IRacing_Standings
             textBlock.Tag = "SafetyRating";
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
             textBlock.Padding = new Thickness(12, 1, 12, 3.5);
-            textBlock.Text = position.SafetyRating;
+            textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom(position.SafetyRating.Item2.Replace("0x", "#"));
+            textBlock.Text = position.SafetyRating.Item1;
         }
 
         private void UpdateDeltaCell(TextBlock textBlock, Driver position, Driver firstPosition)

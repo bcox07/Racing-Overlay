@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NLog;
+using static iRacingSDK.SessionData._DriverInfo;
 
 namespace IRacing_Standings
 {
@@ -287,7 +288,7 @@ namespace IRacing_Standings
                 OverallPosition = (int)p.Position,
                 Name = d.UserName,
                 iRating = (int)d.IRating,
-                SafetyRating = d.LicString,
+                SafetyRating = new Tuple<string, string>(d.LicString, d.LicColor),
                 FastestLap = GetFastestLap(p),
                 LastLap = ((float[])FeedTelemetry["CarIdxLastLapTime"])[d.CarIdx] > 0 ? (double?)((float[])FeedTelemetry["CarIdxLastLapTime"])[d.CarIdx] : null,
                 LapsComplete = (int)FeedTelemetry.CarIdxLap[d.CarIdx],
@@ -311,7 +312,7 @@ namespace IRacing_Standings
                         OverallPosition = FeedTelemetry.CarIdxPosition[driver.CarIdx] == 0 ? null : (int?)FeedTelemetry.CarIdxPosition[driver.CarIdx],
                         Name = driver.UserName,
                         iRating = (int)driver.IRating,
-                        SafetyRating = driver.LicString,
+                        SafetyRating = new Tuple<string, string>(driver.LicString, driver.LicColor),
                         FastestLap = null,
                         LastLap = null,
                         LapsComplete = null,

@@ -17,7 +17,7 @@ namespace IRacing_Standings
         public int? OverallPosition { get; set; }
         public string Name { get; set; }
         public int iRating { get; set; }
-        public string SafetyRating { get; set; }
+        public Tuple<string, string> SafetyRating { get; set; }
         public double PosOnTrack { get; set; }
         public double Distance { get; set; }
         public double Delta { get; set; }
