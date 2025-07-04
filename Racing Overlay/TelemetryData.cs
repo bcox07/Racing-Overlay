@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NLog;
-using static iRacingSDK.SessionData._DriverInfo;
 
 namespace IRacing_Standings
 {
@@ -252,7 +251,6 @@ namespace IRacing_Standings
                         }
                     }
                 }
-                
             }
         }
 
@@ -329,13 +327,13 @@ namespace IRacing_Standings
                 if (AllPositions != null)
                 {
                     var lastPosition = AllPositions.FirstOrDefault(c => c.CarId == position.CarId);
-                    if (lastPosition != null && lastPosition.LastLap == position.LastLap)
+                    if (position.LastLap == null || lastPosition?.LastLap != position?.LastLap)
                     {
-                        position.SecondsSinceLastLap = lastPosition.SecondsSinceLastLap + StopWatch.Elapsed.TotalSeconds;
+                        position.LapChangeTime = DateTime.UtcNow;
                     }
-                    else if (position.LastLap == null)
+                    else
                     {
-                        position.SecondsSinceLastLap = 0;
+                        position.LapChangeTime = lastPosition?.LapChangeTime ?? DateTime.MinValue;
                     }
                 }
             }
@@ -394,9 +392,9 @@ namespace IRacing_Standings
                 LapList = new List<Lap>();
             }
 
+
             if (LapList.Where(l => l.LapNumber == FeedTelemetry.Lap).Count() == 0)
-            {
-                
+            {          
                 LapList.Add(new Lap()
                 {
                     TrackId = TrackId,
@@ -407,6 +405,7 @@ namespace IRacing_Standings
                     EstLapTime = FeedSessionData.DriverInfo.DriverCarEstLapTime,
                     SpeedData = new List<Speed>()
                 });
+
             }
             var positionOnTrack = Math.Floor(FeedTelemetry.LapDist);
             var timeAtPosition = (double)FeedTelemetry.LapCurrentLapTime;

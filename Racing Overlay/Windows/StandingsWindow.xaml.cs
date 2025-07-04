@@ -20,7 +20,7 @@ namespace IRacing_Standings
         public Thread thread;
         private int CellIndex = 0;
         public TelemetryData _TelemetryData;
-        private const int SecondsForReset = 30;
+        private const double SecondsForReset = 30;
         public bool Locked = false;
         private int PosNumberWidth = 2;
         private int CarNumberWidth = 3;
@@ -685,7 +685,8 @@ namespace IRacing_Standings
             else
             {
                 textBlock.Foreground = position.FastestLap != null && position.LastLap != null && 
-                    position.LastLap.Value == position.FastestLap.Value && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
+                    position.LastLap.Value == position.FastestLap.Value && 
+                    DateTime.UtcNow.Subtract(position.LapChangeTime).TotalSeconds <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
             }
 
             var text = "--:--.---";
@@ -710,14 +711,14 @@ namespace IRacing_Standings
 
             if ((position.FastestLap ?? 9999.9) == classFastestLap)
             {
-                textBlock.Foreground = position.LastLap == position.FastestLap && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.Purple : Brushes.White;
+                textBlock.Foreground = position.LastLap == position.FastestLap && DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds <= SecondsForReset * 1000 ? Brushes.Purple : Brushes.White;
             }
             else
             {
-                textBlock.Foreground = position.LastLap == position.FastestLap && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
+                textBlock.Foreground = position.LastLap == position.FastestLap && DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds <= SecondsForReset * 1000 ? Brushes.LimeGreen : Brushes.White;
             }
 
-            if (position.LastLap == null || position.SecondsSinceLastLap > SecondsForReset)
+            if (position.LastLap == null || DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds > SecondsForReset * 1000)
             {
                 textBlock.Foreground = Brushes.Transparent;
                 textBlock.Background = Brushes.Transparent;
