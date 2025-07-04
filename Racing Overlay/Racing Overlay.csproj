@@ -63,8 +63,8 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="iRacingSDK, Version=1.13.8456.39470, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\iRacingSDK.1.0.1.25\lib\net472\iRacingSDK.dll</HintPath>
+    <Reference Include="iRacingSDK, Version=1.13.9288.31088, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iRacingSDK.1.18.6\lib\net472\iRacingSDK.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.4\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -121,8 +121,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="YamlDotNet, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
-      <HintPath>..\packages\YamlDotNet.13.0.2\lib\net47\YamlDotNet.dll</HintPath>
+    <Reference Include="YamlDotNet, Version=16.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.16.3.0\lib\net47\YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +198,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="tools\nuget.exe" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -205,6 +206,8 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="App.TripleMonitor.config" />
+    <None Include="App.SingleMonitor.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -274,9 +277,15 @@
     <None Include="SpeedFiles\433-watkins\dallarap217.json" />
     <None Include="SpeedFiles\434-daytona\ligierjsp320.json" />
     <None Include="SpeedFiles\434-roadatlanta\ligierjsp320.json" />
-    <None Include="SpeedFiles\434-watkins\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\434-watkins\dallarap217.json" />
-    <None Include="SpeedFiles\434-watkins\ligierjsp320.json" />
+    <None Include="SpeedFiles\434-watkins\acuraarx06gtp.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-watkins\dallarap217.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-watkins\ligierjsp320.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="SpeedFiles\444-fuji\acuraarx06gtp.json" />
     <None Include="SpeedFiles\448-indianapolis\acuraarx06gtp.json" />
     <None Include="SpeedFiles\46-barber\bmwm4gt3.json" />
@@ -306,7 +315,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="tools\nuget.exe" />
     <Resource Include="TrackMaps\roadamerica\Road_America.png" />
   </ItemGroup>
   <ItemGroup>
