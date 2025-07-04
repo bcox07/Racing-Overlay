@@ -18,20 +18,19 @@ namespace IRacing_Standings
     public partial class StandingsWindow : Window
     {
         public Thread thread;
-        private List<Driver> CachedAllPositions = new List<Driver>();
         private int CellIndex = 0;
         public TelemetryData _TelemetryData;
         private const int SecondsForReset = 30;
         public bool Locked = false;
-        int PosNumberWidth = 2;
-        int CarNumberWidth = 3;
-        int DriverNameWidth = 12;
-        int IRatingWidth = 4;
-        int SafetyRatingWidth = 5;
-        int DeltaWidth = 3;
-        int FastestLapWidth = 7;
-        int LastLapWidth = 7;
-        int ColumnsWidth = 0;
+        private int PosNumberWidth = 2;
+        private int CarNumberWidth = 3;
+        private int DriverNameWidth = 12;
+        private int IRatingWidth = 4;
+        private int SafetyRatingWidth = 5;
+        private int DeltaWidth = 3;
+        private int FastestLapWidth = 7;
+        private int LastLapWidth = 7;
+        private int ColumnsWidth = 0;
 
         public StandingsWindow(TelemetryData telemetryData)
         {
@@ -215,7 +214,6 @@ namespace IRacing_Standings
                 standingsGrid.Width = 550;
                 Content = standingsGrid;
             });
-            CachedAllPositions = _TelemetryData.AllPositions;
             Thread.Sleep(16);
         }
 
@@ -507,9 +505,7 @@ namespace IRacing_Standings
                         UpdateSafetyRatingCell(safetyRating, position);
                         UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(safetyRating, columnIndex);
-                    Grid.SetColumnSpan(safetyRating, SafetyRatingWidth);
-                    Grid.SetRow(safetyRating, rowIndex);
+                    SetCellLocation(safetyRating, columnIndex, SafetyRatingWidth, rowIndex);
                     columnIndex += SafetyRatingWidth;
                     CellIndex++;
 
@@ -526,9 +522,7 @@ namespace IRacing_Standings
                         UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First());
                         UpdateCellGeneric(deltaFromLeader, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(deltaFromLeader, columnIndex);
-                    Grid.SetColumnSpan(deltaFromLeader, DeltaWidth);
-                    Grid.SetRow(deltaFromLeader, rowIndex);
+                    SetCellLocation(deltaFromLeader, columnIndex, DeltaWidth, rowIndex);
                     columnIndex += DeltaWidth;
                     CellIndex++;
 
@@ -546,9 +540,7 @@ namespace IRacing_Standings
                         UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
                         UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(fastestLap, columnIndex);
-                    Grid.SetColumnSpan(fastestLap, FastestLapWidth);
-                    Grid.SetRow(fastestLap, rowIndex);
+                    SetCellLocation(fastestLap, columnIndex, FastestLapWidth, rowIndex);
                     columnIndex += FastestLapWidth;
                     CellIndex++;
 
@@ -565,9 +557,7 @@ namespace IRacing_Standings
                         UpdateLastLapCell(lastLap, position, classFastestLap, rowIndex);
                         UpdateCellGeneric(lastLap, rowIndex, position, viewedCar);
                     }
-                    Grid.SetColumn(lastLap, columnIndex);
-                    Grid.SetColumnSpan(lastLap, LastLapWidth);
-                    Grid.SetRow(lastLap, rowIndex);
+                    SetCellLocation(lastLap, columnIndex, LastLapWidth, rowIndex);
                     columnIndex += LastLapWidth;
                     CellIndex++;
                 });
@@ -614,121 +604,111 @@ namespace IRacing_Standings
             }
         }
 
+        private void SetCellLocation(TextBlock textBlock, int columnIndex, int columnWidth, int rowIndex)
+        {
+            Grid.SetColumn(textBlock, columnIndex);
+            Grid.SetColumnSpan(textBlock, columnWidth);
+            Grid.SetRow(textBlock, rowIndex);
+        }
+
+        private void UpdateCell(TextBlock textBlock, string tag, string text, TextAlignment textAlignment = TextAlignment.Center, HorizontalAlignment hAlignment = HorizontalAlignment.Stretch)
+        {
+            textBlock.Text = text;
+            textBlock.Tag = tag;
+            textBlock.TextAlignment = textAlignment;
+            textBlock.HorizontalAlignment = hAlignment;
+            textBlock.Margin = new Thickness(-0.5, 0, -0.5, 0);
+            textBlock.Padding = new Thickness(0, 1, 0, 0);
+        }
+
         private void UpdatePosNumberCell(TextBlock textBlock, Driver position)
         {
-            textBlock.Tag = "PosNumber";
-            textBlock.TextAlignment = TextAlignment.Center;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
-            textBlock.Padding = new Thickness(1);
-            textBlock.Text = position.ClassPosition.ToString();
+            UpdateCell(textBlock, "PosNumber", position.ClassPosition.ToString());
         }
 
         private void UpdateCarNumberCell(TextBlock textBlock, Driver position)
         {
-            textBlock.Tag = "CarNumber";
-            textBlock.TextAlignment = TextAlignment.Center;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
+            UpdateCell(textBlock, "CarNumber", $"#{position.CarNumber}");
             textBlock.Padding = new Thickness(1);
-            textBlock.Text = $"#{position.CarNumber}";
         }
 
         private void UpdateDriverNameCell(TextBlock textBlock, Driver position)
         {
-            textBlock.Tag = "DriverName";
+            UpdateCell(textBlock, "DriverName", Regex.Replace(position.Name, @"( .+ )", " "), TextAlignment.Left);
             textBlock.Padding = new Thickness(5, 1, 0, 3.5);
-            textBlock.TextAlignment = TextAlignment.Left;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
             textBlock.TextTrimming = TextTrimming.CharacterEllipsis;
-            textBlock.Text = Regex.Replace(position.Name, @"( .+ )", " ");
         }
 
         private void UpdateIRatingCell(TextBlock textBlock, Driver position)
         {
-            textBlock.Tag = "IRating";
-            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock.Padding = new Thickness(12, 1, 12, 3.5);
-            textBlock.Text = $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k";
+            UpdateCell(textBlock, "IRating", $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k");
         }
 
         private void UpdateSafetyRatingCell(TextBlock textBlock, Driver position)
         {
-            textBlock.Tag = "SafetyRating";
-            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock.Padding = new Thickness(12, 1, 12, 3.5);
+            UpdateCell(textBlock, "SafetyRating", position.SafetyRating.Item1);
+            
             textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom(position.SafetyRating.Item2.Replace("0x", "#"));
-            textBlock.Text = position.SafetyRating.Item1;
         }
 
         private void UpdateDeltaCell(TextBlock textBlock, Driver position, Driver firstPosition)
         {
-            textBlock.Tag = "Delta";
-            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock.Padding = new Thickness(20, 1, 20, 3.5);
+            var text = "-";
             if (_TelemetryData.IsRace)
             {
-                if (position == firstPosition)
+                if (firstPosition.Distance - (position.Distance > 0 ? position.Distance : 0) > _TelemetryData.TrackLength)
                 {
-                    textBlock.Text = "-";
+                    text = $"{(int)((firstPosition.Distance - position.Distance) / _TelemetryData.TrackLength)}L";
                 }
-                else if (firstPosition.Distance - (position.Distance > 0 ? position.Distance : 0) > _TelemetryData.TrackLength)
+                else if (position != firstPosition)
                 {
-                    textBlock.Text = $"{(int)((firstPosition.Distance - position.Distance) / _TelemetryData.TrackLength)}L";
-                }
-                else
-                {
-                    textBlock.Text = (position.TimeBehindLeader - firstPosition.TimeBehindLeader).ToString("N1");
+                    text = (position.TimeBehindLeader - firstPosition.TimeBehindLeader).ToString("N1");
                 }
             }
             else
             {
-                textBlock.Text = "-";
                 if (position.FastestLap != null && firstPosition.FastestLap != null &&  position.FastestLap.Value != firstPosition.FastestLap.Value)
                 {
-                    textBlock.Text = (position.FastestLap.Value - firstPosition.FastestLap.Value).ToString("N1");
+                    text = (position.FastestLap.Value - firstPosition.FastestLap.Value).ToString("N1");
                 }
             }
+
+            UpdateCell(textBlock, "Delta", text);
         }
 
         private void UpdateFastestLapCell(TextBlock textBlock, Driver position, double? classFastestLap)
         {
-            textBlock.Tag = "FastestLap";
-            textBlock.Padding = new Thickness(10, 1, 0, 3.5);
-            textBlock.TextAlignment = TextAlignment.Left;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Stretch;
             if (position.FastestLap != null && position.FastestLap.Value == (classFastestLap ?? 0))
             {
                 textBlock.Foreground = Brushes.Purple;
             }
             else
             {
-                textBlock.Foreground = position.FastestLap != null && position.LastLap != null && position.LastLap.Value == position.FastestLap.Value && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
+                textBlock.Foreground = position.FastestLap != null && position.LastLap != null && 
+                    position.LastLap.Value == position.FastestLap.Value && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
             }
-            if (position.FastestLap == null)
+
+            var text = "--:--.---";
+            if (position.FastestLap != null)
             {
-                textBlock.Text = "--:--.---";
-            }
-            else if (textBlock.Text != TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0') ||
-                textBlock.Text != TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"ss\.fff").TrimStart('m', '0')
-                )
-            {
-                if (position.FastestLap.Value > 60)
+                var aboveMinuteText = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
+                var subMinuteText = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"ss\.fff").TrimStart('m', '0');
+
+                if (textBlock.Text != aboveMinuteText || textBlock.Text != subMinuteText)
                 {
-                    textBlock.Text = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
-                }
-                else
-                {
-                    textBlock.Text = TimeSpan.FromSeconds(Math.Truncate(position.FastestLap.Value * 1000) / 1000).ToString(@"ss\.fff");
+                    text = position.FastestLap.Value > 60 ? aboveMinuteText : subMinuteText;
                 }
             }
+
+            UpdateCell(textBlock, "FastestLap", text, TextAlignment.Right);
+            textBlock.Padding = new Thickness(0, 1, 10, 0);
         }
 
         private void UpdateLastLapCell(TextBlock textBlock, Driver position, double? classFastestLap, int rowIndex)
         {
-            textBlock.Tag = "LastLap";
-            textBlock.Padding = new Thickness(5, 1, 5, 3.5);
-            textBlock.TextAlignment = TextAlignment.Left;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Left;
-            if (position.FastestLap != null && position.FastestLap.Value == classFastestLap)
+            var text = textBlock.Text ?? string.Empty;
+
+            if ((position.FastestLap ?? 9999.9) == classFastestLap)
             {
                 textBlock.Foreground = position.LastLap == position.FastestLap && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.Purple : Brushes.White;
             }
@@ -736,24 +716,25 @@ namespace IRacing_Standings
             {
                 textBlock.Foreground = position.LastLap == position.FastestLap && position.SecondsSinceLastLap <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
             }
+
             if (position.LastLap == null || position.SecondsSinceLastLap > SecondsForReset)
             {
-                textBlock.Text = "--:--.---";
-                textBlock.Foreground = textBlock.Background = Brushes.Transparent;
+                textBlock.Foreground = Brushes.Transparent;
+                textBlock.Background = Brushes.Transparent;
             }
-            else if (position.LastLap != null && textBlock.Text != TimeSpan.FromSeconds(Math.Truncate(position.LastLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0'))
+            else
             {
-                textBlock.Foreground = Brushes.White;
-                if (rowIndex % 2 == 1)
+                var aboveMinuteText = TimeSpan.FromSeconds(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
+                var subMinuteText = TimeSpan.FromSeconds(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000).ToString(@"ss\.fff").TrimStart('m', '0');
+                textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525") : Brushes.Black;
+                if (textBlock.Text != aboveMinuteText && textBlock.Text != subMinuteText)
                 {
-                    textBlock.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525");
+                    text = position.LastLap.Value > 60 ? aboveMinuteText : subMinuteText;
                 }
-                else
-                {
-                    textBlock.Background = Brushes.Black;
-                }
-                textBlock.Text = TimeSpan.FromSeconds(Math.Truncate(position.LastLap.Value * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
             }
+
+            UpdateCell(textBlock, "LastLap", text, TextAlignment.Right);
+            textBlock.Padding = new Thickness(5, 1, 5, 3.5);
         }
     }
 }
