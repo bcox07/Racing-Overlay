@@ -3,6 +3,7 @@ using iRacingSDK;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,11 +31,13 @@ namespace IRacing_Standings
         TelemetryData telemetryData;
         public WindowSettings WindowSettings;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
-        Timer timer;
-        public MainWindow(WindowSettings windowSettings)
+        Configuration _configuration;
+        public MainWindow(Configuration config)
         {
             InitializeComponent();
-            WindowSettings = windowSettings;
+            _configuration = config;
+
+            WindowSettings = new WindowSettings(_configuration.AppSettings);
             telemetryData = new TelemetryData();
             telemetryData.StartOperation(telemetryData.RetrieveData);
 
@@ -324,8 +327,12 @@ namespace IRacing_Standings
         {
             if (StandingsWindow != null)
             {
-                WindowSettings.StandingsSettings["XPos"] = StandingsWindow.Left.ToString();
-                WindowSettings.StandingsSettings["YPos"] = StandingsWindow.Top.ToString();
+                _configuration.AppSettings.Settings["StandingsWindowLocked"].Value = StandingsWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["StandingsWindowXPos"].Value = StandingsWindow.Left.ToString();
+                _configuration.AppSettings.Settings["StandingsWindowYPos"].Value = StandingsWindow.Top.ToString();
+
+                _configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
             }
         }
 
@@ -352,8 +359,12 @@ namespace IRacing_Standings
         {
             if (RelativeWindow != null)
             {
-                WindowSettings.RelativeSettings["XPos"] = RelativeWindow.Left.ToString();
-                WindowSettings.RelativeSettings["YPos"] = RelativeWindow.Top.ToString();
+                _configuration.AppSettings.Settings["RelativeWindowLocked"].Value = RelativeWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["RelativeWindowXPos"].Value = RelativeWindow.Left.ToString();
+                _configuration.AppSettings.Settings["RelativeWindowYPos"].Value = RelativeWindow.Top.ToString();
+
+                _configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
             }
         }
 
@@ -380,8 +391,12 @@ namespace IRacing_Standings
         {
             if (FuelWindow != null)
             {
-                WindowSettings.FuelSettings["XPos"] = FuelWindow.Left.ToString();
-                WindowSettings.FuelSettings["YPos"] = FuelWindow.Top.ToString();
+                _configuration.AppSettings.Settings["FuelWindowLocked"].Value = FuelWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["FuelWindowXPos"].Value = FuelWindow.Left.ToString();
+                _configuration.AppSettings.Settings["FuelWindowYPos"].Value = FuelWindow.Top.ToString();
+
+                _configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
             }
         }
 
@@ -408,8 +423,12 @@ namespace IRacing_Standings
         {
             if (TireWindow != null)
             {
-                WindowSettings.TireSettings["XPos"] = TireWindow.Left.ToString();
-                WindowSettings.TireSettings["YPos"] = TireWindow.Top.ToString();
+                _configuration.AppSettings.Settings["TireWindowLocked"].Value = TireWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["TireWindowXPos"].Value = TireWindow.Left.ToString();
+                _configuration.AppSettings.Settings["TireWindowYPos"].Value = TireWindow.Top.ToString();
+
+                _configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
             }
         }
 
@@ -436,8 +455,12 @@ namespace IRacing_Standings
         {
             if (LiveTrackWindow != null)
             {
-                WindowSettings.LiveTrackSettings["XPos"] = LiveTrackWindow.Left.ToString();
-                WindowSettings.LiveTrackSettings["YPos"] = LiveTrackWindow.Top.ToString();
+                _configuration.AppSettings.Settings["LiveTrackWindowLocked"].Value = LiveTrackWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["LiveTrackWindowXPos"].Value = LiveTrackWindow.Left.ToString();
+                _configuration.AppSettings.Settings["LiveTrackWindowYPos"].Value = LiveTrackWindow.Top.ToString();
+
+                _configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
             }
         }
 
