@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using NLog;
 
 namespace IRacing_Standings
@@ -89,13 +86,26 @@ namespace IRacing_Standings
             var trackDirectory = Directory.GetDirectories($"..\\..\\SpeedFiles", $"{trackId}-*").FirstOrDefault();
             if (trackDirectory != null)
             {
-                var speedFile = $"{trackDirectory}\\{carPath}.json";
+                var speedFile = $"{trackDirectory}\\{carPath}.csv";
                 if (File.Exists(speedFile))
                 {
                     try
                     {
-                        var speedJsonString = File.ReadAllText(speedFile);
-                        speedData = JsonSerializer.Deserialize<List<Speed>>(speedJsonString);
+                        using (var reader = new StreamReader(speedFile))
+                        {
+                            speedData = new List<Speed>();
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                var data = line.Split(',');
+                                speedData.Add(new Speed
+                                {
+                                    Meter = int.Parse(data[0]),
+                                    SpeedMS = double.Parse(data[1]),
+                                    TimeInSeconds = double.Parse(data[2]),
+                                });
+                            }
+                        }
                     }
                     catch (IOException ex)
                     {

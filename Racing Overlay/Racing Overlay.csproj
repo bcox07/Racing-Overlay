@@ -214,102 +214,288 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Racing Overlay_TemporaryKey.pfx" />
-    <None Include="SpeedFiles\127-roadatlanta\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\127-roadatlanta\bmwm4gt3.json" />
-    <None Include="SpeedFiles\127-roadatlanta\dallarap217.json" />
-    <None Include="SpeedFiles\127-spielberg\dallarap217.json" />
-    <None Include="SpeedFiles\144-mosport\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\144-mosport\dallarap217.json" />
-    <None Include="SpeedFiles\145-brandshatch\dallarap217.json" />
-    <None Include="SpeedFiles\149-zandvoort\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\149-zandvoort\dallarap217.json" />
-    <None Include="SpeedFiles\152-phillipisland\bmwm4gt3.json" />
-    <None Include="SpeedFiles\153-mid-ohio\ligierjsp320.json" />
-    <None Include="SpeedFiles\163-spa\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\165-spa\bmwm4gt3.json" />
-    <None Include="SpeedFiles\165-spa\dallarap217.json" />
-    <None Include="SpeedFiles\166-okayama\bmwm4gt3.json" />
-    <None Include="SpeedFiles\166-okayama\dallarap217.json" />
-    <None Include="SpeedFiles\168-suzuka\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\168-suzuka\dallarap217.json" />
-    <None Include="SpeedFiles\168-vir\dallarap217.json" />
-    <None Include="SpeedFiles\179-longbeach\bmwm4gt3.json" />
-    <None Include="SpeedFiles\179-longbeach\dallarap217.json" />
-    <None Include="SpeedFiles\18-roadamerica\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\18-roadamerica\bmwm4gt3.json" />
-    <None Include="SpeedFiles\18-roadamerica\cadillacvseriesrgtp.json" />
-    <None Include="SpeedFiles\18-roadamerica\dallarap217.json" />
-    <None Include="SpeedFiles\18-roadamerica\specracer.json" />
-    <None Include="SpeedFiles\180-oulton\streetstock.json" />
-    <None Include="SpeedFiles\180-oulton\toyotagr86.json" />
-    <None Include="SpeedFiles\192-daytona\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\192-daytona\cadillacvseriesrgtp.json" />
-    <None Include="SpeedFiles\212-interlagos\bmwm4gt3.json" />
-    <None Include="SpeedFiles\212-interlagos\dallarap217.json" />
-    <None Include="SpeedFiles\212-interlagos\ligierjsp320.json" />
-    <None Include="SpeedFiles\212-longbeach\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\218-montreal\dallarap217.json" />
-    <None Include="SpeedFiles\219-bathurst\bmwm4gt3.json" />
-    <None Include="SpeedFiles\229-cota\bmwm4gt3.json" />
-    <None Include="SpeedFiles\239-monzafull\cadillacvseriesrgtp.json" />
-    <None Include="SpeedFiles\249-nordschleife\raygr22.json" />
-    <None Include="SpeedFiles\250-grandprix\dallaraf3.json" />
-    <None Include="SpeedFiles\252-24h\ligierjsp320.json" />
-    <None Include="SpeedFiles\264-gesamtstreckelong\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\266-imolafull\dallarap217.json" />
-    <None Include="SpeedFiles\266-imolafull\ferrari296gt3.json" />
-    <None Include="SpeedFiles\268-24heures\bmwm4gt3.json" />
-    <None Include="SpeedFiles\268-24heures\cadillacvseriesrgtp.json" />
-    <None Include="SpeedFiles\319-belleisle\dallaraf3.json" />
-    <None Include="SpeedFiles\319-belleisle\dallarap217.json" />
-    <None Include="SpeedFiles\319-belleisle\ligierjsp320.json" />
-    <None Include="SpeedFiles\341-roadamerica\dallarap217.json" />
-    <None Include="SpeedFiles\341-silverstone\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\341-silverstone\dallarap217.json" />
-    <None Include="SpeedFiles\349-barcelona\bmwm4gt3.json" />
-    <None Include="SpeedFiles\349-barcelona\dallaraf3.json" />
-    <None Include="SpeedFiles\353-grandprix\bmwm4gt3.json" />
-    <None Include="SpeedFiles\353-grandprix\streetstock.json" />
-    <None Include="SpeedFiles\390-hockenheim-ring\bmwm4gt3.json" />
-    <None Include="SpeedFiles\403-spielberg\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\413-hungaroring\bmwm4gt3.json" />
-    <None Include="SpeedFiles\413-hungaroring\dallarap217.json" />
-    <None Include="SpeedFiles\433-watkins\dallarap217.json" />
-    <None Include="SpeedFiles\434-daytona\ligierjsp320.json" />
-    <None Include="SpeedFiles\434-roadatlanta\ligierjsp320.json" />
-    <None Include="SpeedFiles\434-watkins\acuraarx06gtp.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="SpeedFiles\127-roadatlanta\acuraarx06gtp.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SpeedFiles\434-watkins\dallarap217.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="SpeedFiles\127-roadatlanta\bmwm4gt3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SpeedFiles\434-watkins\ligierjsp320.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="SpeedFiles\127-roadatlanta\dallarap217.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SpeedFiles\444-fuji\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\448-indianapolis\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\46-barber\bmwm4gt3.json" />
-    <None Include="SpeedFiles\46-barber\dallarap217.json" />
-    <None Include="SpeedFiles\463-magny-cours\dallarap217.json" />
-    <None Include="SpeedFiles\465-vir\amvantagegt4.json" />
-    <None Include="SpeedFiles\465-vir\bmwm4gt3.json" />
-    <None Include="SpeedFiles\465-vir\dallaraf3.json" />
-    <None Include="SpeedFiles\465-vir\toyotagr86.json" />
-    <None Include="SpeedFiles\47-lagunaseca\dallarap217.json" />
-    <None Include="SpeedFiles\47-lagunaseca\ligierjsp320.json" />
-    <None Include="SpeedFiles\47-lagunaseca\lotus79.json" />
-    <None Include="SpeedFiles\474-jerez\dallarap217.json" />
-    <None Include="SpeedFiles\489-ledenon\ligierjsp320.json" />
-    <None Include="SpeedFiles\498-noname\ferrari296gt3.json" />
-    <None Include="SpeedFiles\509-portimao\dallaraf3.json" />
-    <None Include="SpeedFiles\509-portimao\ferrari296gt3.json" />
-    <None Include="SpeedFiles\540-thebend\ferrari296gt3.json" />
-    <None Include="SpeedFiles\541-thebend\ligierjsp320.json" />
-    <None Include="SpeedFiles\95-roadatlanta\ligierjsp320.json" />
-    <None Include="SpeedFiles\95-sebring\acuraarx06gtp.json" />
-    <None Include="SpeedFiles\95-sebring\ferrari296gt3.json" />
-    <None Include="SpeedFiles\95-sebring\ligierjsp320.json" />
-    <None Include="TrackMaps\roadamerica\roadamerica.json" />
+    <None Include="SpeedFiles\127-spielberg\dallarap217.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\144-mosport\acuraarx06gtp.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\144-mosport\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\145-brandshatch\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\149-zandvoort\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\149-zandvoort\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\152-phillipisland\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\153-mid-ohio\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\163-spa\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\165-spa\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\165-spa\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\166-okayama\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\166-okayama\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\166-okayama\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\166-spa\dallaraf3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\168-suzuka\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\168-suzuka\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\168-vir\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\179-longbeach\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\179-longbeach\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\18-roadamerica\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\18-roadamerica\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\18-roadamerica\cadillacvseriesrgtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\18-roadamerica\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\18-roadamerica\specracer.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\180-oulton\streetstock.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\180-oulton\toyotagr86.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\192-daytona\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\192-daytona\cadillacvseriesrgtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\212-interlagos\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\212-interlagos\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\212-interlagos\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\212-longbeach\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\218-montreal\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\219-bathurst\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\229-cota\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\239-monzafull\cadillacvseriesrgtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\249-nordschleife\raygr22.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\250-grandprix\dallaraf3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\252-24h\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\264-gesamtstreckelong\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\266-imolafull\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\266-imolafull\ferrari296gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\268-24heures\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\268-24heures\cadillacvseriesrgtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\319-belleisle\dallaraf3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\319-belleisle\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\319-belleisle\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\341-roadamerica\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\341-silverstone\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\341-silverstone\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\349-barcelona\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\349-barcelona\dallaraf3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\353-grandprix\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\353-grandprix\streetstock.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\390-hockenheim-ring\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\403-spielberg\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\413-hungaroring\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\413-hungaroring\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\433-watkins\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-daytona\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-roadatlanta\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-watkins\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-watkins\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-watkins\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\444-fuji\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\444-fuji\ferrari296gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\444-okayama\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\448-indianapolis\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\46-barber\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\46-barber\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\463-magny-cours\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\465-vir\amvantagegt4.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\465-vir\bmwm4gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\465-vir\dallaraf3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\465-vir\toyotagr86.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\47-lagunaseca\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\47-lagunaseca\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\47-lagunaseca\lotus79.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\474-jerez\dallarap217.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\489-ledenon\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\498-noname\ferrari296gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\509-portimao\dallaraf3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\509-portimao\ferrari296gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\540-thebend\ferrari296gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\541-thebend\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\95-roadatlanta\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\95-sebring\acuraarx06gtp.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\95-sebring\ferrari296gt3.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\95-sebring\ligierjsp320.csv" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TrackMaps\roadamerica\roadamerica.json" >
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
