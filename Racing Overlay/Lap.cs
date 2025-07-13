@@ -152,7 +152,7 @@ namespace IRacing_Standings
         public void SaveLap()
         {
             var parentDirectory = $"..\\..\\SpeedFiles\\{TrackId}-{TrackName.Replace(" ", "").ToLower()}";
-            var fileLocation = $"{parentDirectory}\\{CarPath}.json";
+            var fileLocation = $"{parentDirectory}\\{CarPath}.csv";
             if (!Directory.Exists(parentDirectory))
             {
                 Directory.CreateDirectory(parentDirectory);
@@ -162,15 +162,22 @@ namespace IRacing_Standings
 
             if (!IsFileLocked(fileLocation))
             {
-                using (StreamWriter writer = new StreamWriter(fileLocation))
+                try
                 {
-                    var options = new JsonSerializerOptions()
+                    using (StreamWriter writer = new StreamWriter(fileLocation))
                     {
-                        WriteIndented = true
-                    };
-                    var timesJson = JsonSerializer.Serialize(SpeedData, options);
-                    writer.Write(timesJson);
+                        foreach (var meter in SpeedData)
+                        {
+                            writer.WriteLine($"{meter.Meter}, {meter.SpeedMS}, {meter.TimeInSeconds}");
+                        }
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                    return;
+                }
+                
 
                 Logger.Info($"New Fastest Lap Recorded for {CarPath} at {TrackName} : {SpeedData.Last().TimeInSeconds}");
             }
