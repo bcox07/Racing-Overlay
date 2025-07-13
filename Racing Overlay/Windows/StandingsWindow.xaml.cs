@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace IRacing_Standings
 {
@@ -30,6 +32,7 @@ namespace IRacing_Standings
         private int DeltaWidth = 3;
         private int FastestLapWidth = 7;
         private int LastLapWidth = 7;
+        private int CarLogoWidth = 2;
         private int ColumnsWidth = 0;
 
         public StandingsWindow(TelemetryData telemetryData)
@@ -63,9 +66,10 @@ namespace IRacing_Standings
             Top = double.Parse(mainWindow.WindowSettings.StandingsSettings["YPos"]);
             Height = 0;
             Background = Brushes.Transparent;
-            ColumnsWidth = PosNumberWidth + CarNumberWidth + DriverNameWidth + IRatingWidth + SafetyRatingWidth + DeltaWidth + FastestLapWidth + LastLapWidth;
+            ColumnsWidth = PosNumberWidth + CarNumberWidth + CarLogoWidth + DriverNameWidth + IRatingWidth + SafetyRatingWidth + DeltaWidth + FastestLapWidth + LastLapWidth;
             Dispatcher.Invoke(() =>
             {
+                
                 standingsGrid.Background = Brushes.Transparent;
                 for (var i = 0; i < ColumnsWidth; i++)
                 {
@@ -203,10 +207,12 @@ namespace IRacing_Standings
                 {
                     standingsGrid.RowDefinitions.RemoveAt(i);
                 }
-                for (var i = CellIndex; i < standingsGrid.Children.Count; i++)
+
+                while (standingsGrid.Children.Count > CellIndex + 1)
                 {
-                    standingsGrid.Children.RemoveAt(i);
+                    standingsGrid.Children.RemoveAt(CellIndex + 1);
                 }
+
                 if (standingsGrid.ActualHeight != ((rowIndex - _TelemetryData.SortedPositions.Count - 1)  * 30) + (_TelemetryData.SortedPositions.Count * 20))
                 {
                     Height = ((rowIndex - _TelemetryData.SortedPositions.Count)  * 30) + (_TelemetryData.SortedPositions.Count * 20);
@@ -263,136 +269,60 @@ namespace IRacing_Standings
             Dispatcher.Invoke(() =>
             {
                 
-                var classTitle = standingsGrid.Children.Count > CellIndex ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                if (classTitle == null || classTitle.Text != carClassName)
-                {
-                    var newCell = classTitle == null;
-                    classTitle = classTitle != null ? classTitle : new TextBlock();
-                    classTitle.FontSize = 14;
-                    classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                    classTitle.Foreground = Brushes.Black;
-                    classTitle.FontWeight = FontWeights.Bold;
-                    classTitle.TextAlignment = TextAlignment.Left;
-                    classTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
-                    classTitle.Padding = new Thickness(5, 0, 0, 0);
+                var classTitle = new TextBlock();
+                classTitle.FontSize = 14;
+                classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                classTitle.Foreground = Brushes.Black;
+                classTitle.FontWeight = FontWeights.Bold;
+                classTitle.TextAlignment = TextAlignment.Left;
+                classTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
+                classTitle.Padding = new Thickness(5, 0, 0, 0);
 
-                    if (newCell)
-                    {
-                        standingsGrid.Children.Add(classTitle);
-                    }
-                    else
-                    {
-                        standingsGrid.Children[CellIndex] = classTitle;
-                    }
-                }
+                CheckOrUpdateGridChildText(classTitle);
 
                 Grid.SetColumn(classTitle, 0);
                 Grid.SetColumnSpan(classTitle, ColumnsWidth - FastestLapWidth);
                 Grid.SetRow(classTitle, rowIndex);
                 CellIndex++;
-            });
 
-            var sof = (int)driverClassGroup.Value.Average(d => d.iRating);
-            var carCount = (int)driverClassGroup.Value.Count;
+                var sof = (int)driverClassGroup.Value.Average(d => d.iRating);
+                var carCount = (int)driverClassGroup.Value.Count;
 
-            Dispatcher.Invoke(() =>
-            {
-                var carCountTitle = standingsGrid.Children.Count > CellIndex ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                if (carCountTitle == null || carCountTitle.Text != $"Cars: {carCount}")
-                {
-                    if (carCountTitle == null)
-                    {
-                        carCountTitle = new TextBlock();
-                        carCountTitle.FontSize = 14;
-                        carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                        carCountTitle.Foreground = Brushes.Black;
-                        carCountTitle.FontWeight = FontWeights.Bold;
-                        carCountTitle.TextAlignment = TextAlignment.Right;
-                        carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        carCountTitle.Text = $"Cars: {carCount}";
-                        carCountTitle.Padding = new Thickness(0, 0, 5, 0);
-                        standingsGrid.Children.Add(carCountTitle);
-                    }
-                    else
-                    {
-                        carCountTitle.FontSize = 14;
-                        carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                        carCountTitle.Foreground = Brushes.Black;
-                        carCountTitle.FontWeight = FontWeights.Bold;
-                        carCountTitle.TextAlignment = TextAlignment.Right;
-                        carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        carCountTitle.Text = $"Cars: {carCount}";
-                        carCountTitle.Padding = new Thickness(0, 0, 5, 0);
-                        standingsGrid.Children[CellIndex] = carCountTitle;
-                    }
-                }
-                else
-                {
-                    carCountTitle.FontSize = 14;
-                    carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                    carCountTitle.Foreground = Brushes.Black;
-                    carCountTitle.FontWeight = FontWeights.Bold;
-                    carCountTitle.TextAlignment = TextAlignment.Right;
-                    carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    carCountTitle.Padding = new Thickness(0, 0, 5, 0);
-                    carCountTitle.Text = $"Cars: {carCount}";
-                }
+                var carCountTitle = new TextBlock();
+                carCountTitle.Text = $"Cars: {carCount}";
+                carCountTitle.FontSize = 14;
+                carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                carCountTitle.Foreground = Brushes.Black;
+                carCountTitle.FontWeight = FontWeights.Bold;
+                carCountTitle.TextAlignment = TextAlignment.Right;
+                carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                carCountTitle.Padding = new Thickness(0, 0, 5, 0);
+                CheckOrUpdateGridChildText(carCountTitle);
 
                 Grid.SetColumn(carCountTitle, ColumnsWidth - FastestLapWidth - 20);
                 Grid.SetColumnSpan(carCountTitle, 10);
                 Grid.SetRow(carCountTitle, rowIndex);
                 CellIndex++;
 
-                var sofTitle = standingsGrid.Children.Count > CellIndex ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                if (sofTitle == null || sofTitle.Text != $"SoF - {sof}")
-                {
-                    if (sofTitle == null)
-                    {
-                        sofTitle = new TextBlock();
-                        sofTitle.FontSize = 14;
-                        sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                        sofTitle.Foreground = Brushes.Black;
-                        sofTitle.FontWeight = FontWeights.Bold;
-                        sofTitle.TextAlignment = TextAlignment.Right;
-                        sofTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        sofTitle.Text = $"SoF: {sof}";
-                        sofTitle.Padding = new Thickness(0, 0, 5, 0);
-                        standingsGrid.Children.Add(sofTitle);
-                    }
-                    else
-                    {
-                        sofTitle.FontSize = 14;
-                        sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                        sofTitle.Foreground = Brushes.Black;
-                        sofTitle.FontWeight = FontWeights.Bold;
-                        sofTitle.TextAlignment = TextAlignment.Right;
-                        sofTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                        sofTitle.Text = $"SoF: {sof}";
-                        sofTitle.Padding = new Thickness(0, 0, 5, 0);
-                        standingsGrid.Children[CellIndex] = sofTitle;
-                    }
-                }
-                else
-                {
-                    sofTitle.FontSize = 14;
-                    sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                    sofTitle.Foreground = Brushes.Black;
-                    sofTitle.FontWeight = FontWeights.Bold;
-                    sofTitle.TextAlignment = TextAlignment.Right;
-                    sofTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    sofTitle.Padding = new Thickness(0, 0, 5, 0);
-                    sofTitle.Text = $"SoF: {sof}";
-                }
+                var sofTitle = new TextBlock();
+                sofTitle.FontSize = 14;
+                sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                sofTitle.Foreground = Brushes.Black;
+                sofTitle.FontWeight = FontWeights.Bold;
+                sofTitle.TextAlignment = TextAlignment.Right;
+                sofTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
+                sofTitle.Text = $"SoF: {sof}";
+                sofTitle.Padding = new Thickness(0, 0, 5, 0);
+
+                CheckOrUpdateGridChildText(sofTitle);
 
                 Grid.SetColumn(sofTitle, ColumnsWidth - FastestLapWidth - 10);
                 Grid.SetColumnSpan(sofTitle, 10);
                 Grid.SetRow(sofTitle, rowIndex);
                 CellIndex++;
-                rowIndex++;            
-            });
-
-            
+                rowIndex++;
+            }); 
 
             foreach (var position in surroundingPositions.ToList())
             {
@@ -413,150 +343,113 @@ namespace IRacing_Standings
                         standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                     }
 
-                    var posNumber = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    
-                    if (posNumber == null)
-                    {
-                        posNumber = new TextBlock();
-                        UpdatePosNumberCell(posNumber, position);
-                        UpdateCellGeneric(posNumber, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(posNumber);
-                    }
-                    else
-                    {
-                        UpdatePosNumberCell(posNumber, position);
-                        UpdateCellGeneric(posNumber, rowIndex, position, viewedCar);
-                    }
+                    var posNumber = new TextBlock();
+                    UpdatePosNumberCell(posNumber, position);
+                    UpdateCellGeneric(posNumber, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(posNumber);
+
+
                     Grid.SetColumnSpan(posNumber, PosNumberWidth);
                     Grid.SetColumn(posNumber, columnIndex);
                     Grid.SetRow(posNumber, rowIndex);
                     columnIndex += PosNumberWidth;
                     CellIndex++;
 
-                    var carNumber = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (carNumber == null)
-                    {
-                        carNumber = new TextBlock();
-                        UpdateCarNumberCell(carNumber, position);
-                        UpdateCellGeneric(carNumber, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(carNumber);
-                    }
-                    else
-                    {
-                        UpdateCarNumberCell(carNumber, position);
-                        UpdateCellGeneric(carNumber, rowIndex, position, viewedCar);
-                    }
+                    var carNumber = new TextBlock();
+                    UpdateCarNumberCell(carNumber, position);
+                    UpdateCellGeneric(carNumber, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(carNumber);
+
                     Grid.SetColumnSpan(carNumber, CarNumberWidth);
                     Grid.SetColumn(carNumber, columnIndex);
                     Grid.SetRow(carNumber, rowIndex);
                     columnIndex += CarNumberWidth;
                     CellIndex++;
 
-                    var driverName = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (driverName == null)
+                    Image carLogo = new Image();
+                    carLogo.Tag = "CarLogo";
+                    carLogo.Stretch = Stretch.UniformToFill;
+                    carLogo.Source = new BitmapImage(new Uri($"images/{CarLogo.GetLogoUri(position.CarPath)}{(rowIndex % 2 == 1 ? "-gray" : "")}.png", UriKind.Relative));
+                    carLogo.Source.Freeze();
+
+                    if (CellIndex >= standingsGrid.Children.Count)
                     {
-                        driverName = new TextBlock();
-                        driverName.Tag = "DriverName";
-                        UpdateCellGeneric(driverName, rowIndex, position, viewedCar);
-                        UpdateDriverNameCell(driverName, position);
-                        standingsGrid.Children.Add(driverName);
+                        standingsGrid.Children.Add(carLogo);
                     }
                     else
                     {
-                        driverName.Tag = "DriverName";
-                        UpdateCellGeneric(driverName, rowIndex, position, viewedCar);
-                        UpdateDriverNameCell(driverName, position);
+                        standingsGrid.Children.Insert(CellIndex, carLogo);
                     }
+                    
+                    Grid.SetColumnSpan(carLogo, CarLogoWidth);
+                    Grid.SetColumn(carLogo, columnIndex);
+                    Grid.SetRow(carLogo, rowIndex);
+                    columnIndex += CarLogoWidth;
+                    CellIndex++;
+
+                    var driverName = new TextBlock();
+                    driverName.Tag = "DriverName";
+                    UpdateCellGeneric(driverName, rowIndex, position, viewedCar);
+                    UpdateDriverNameCell(driverName, position);
+
+                    CheckOrUpdateGridChildText(driverName);
+
                     Grid.SetColumn(driverName, columnIndex);
                     Grid.SetColumnSpan(driverName, DriverNameWidth);
                     Grid.SetRow(driverName, rowIndex);
                     columnIndex += DriverNameWidth;
                     CellIndex++;
 
-                    var iRating = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (iRating == null)
-                    {
-                        iRating = new TextBlock();
-                        UpdateIRatingCell(iRating, position);
-                        UpdateCellGeneric(iRating, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(iRating);
-                    }
-                    else
-                    {
-                        UpdateIRatingCell(iRating, position);
-                        UpdateCellGeneric(iRating, rowIndex, position, viewedCar);
-                    }
+                    var iRating = new TextBlock();
+                    UpdateIRatingCell(iRating, position);
+                    UpdateCellGeneric(iRating, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(iRating);
+
                     Grid.SetColumn(iRating, columnIndex);
                     Grid.SetColumnSpan(iRating, IRatingWidth);
                     Grid.SetRow(iRating, rowIndex);
                     columnIndex += IRatingWidth;
                     CellIndex++;
 
-                    var safetyRating = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (safetyRating == null)
-                    {
-                        safetyRating = new TextBlock();
-                        UpdateSafetyRatingCell(safetyRating, position);
-                        UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(safetyRating);
-                    }
-                    else
-                    {
-                        UpdateSafetyRatingCell(safetyRating, position);
-                        UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
-                    }
+                    var safetyRating = new TextBlock();
+                    UpdateSafetyRatingCell(safetyRating, position);
+                    UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(safetyRating);
+
                     SetCellLocation(safetyRating, columnIndex, SafetyRatingWidth, rowIndex);
                     columnIndex += SafetyRatingWidth;
                     CellIndex++;
 
-                    var deltaFromLeader = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (deltaFromLeader == null)
-                    {
-                        deltaFromLeader = new TextBlock();
-                        UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First());
-                        UpdateCellGeneric(deltaFromLeader, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(deltaFromLeader);
-                    }
-                    else
-                    {
-                        UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First());
-                        UpdateCellGeneric(deltaFromLeader, rowIndex, position, viewedCar);
-                    }
+                    var deltaFromLeader = new TextBlock();
+                    UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First());
+                    UpdateCellGeneric(deltaFromLeader, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(deltaFromLeader);
+
                     SetCellLocation(deltaFromLeader, columnIndex, DeltaWidth, rowIndex);
                     columnIndex += DeltaWidth;
                     CellIndex++;
 
-                    var classFastestLap = surroundingPositions.Where(s => s.FastestLap != null).OrderBy(s => s.FastestLap).FirstOrDefault()?.FastestLap;
-                    var fastestLap = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (fastestLap == null)
-                    {
-                        fastestLap = new TextBlock();
-                        UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
-                        UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(fastestLap);
-                    }
-                    else
-                    {
-                        UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
-                        UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
-                    }
+                    var fastestLap = new TextBlock();
+                    UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
+                    UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(fastestLap);
+
                     SetCellLocation(fastestLap, columnIndex, FastestLapWidth, rowIndex);
                     columnIndex += FastestLapWidth;
                     CellIndex++;
 
-                    var lastLap = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : null;
-                    if (lastLap == null)
-                    {
-                        lastLap = new TextBlock();
-                        UpdateLastLapCell(lastLap, position, classFastestLap, rowIndex);
-                        UpdateCellGeneric(lastLap, rowIndex, position, viewedCar);
-                        standingsGrid.Children.Add(lastLap);
-                    }
-                    else
-                    {
-                        UpdateLastLapCell(lastLap, position, classFastestLap, rowIndex);
-                        UpdateCellGeneric(lastLap, rowIndex, position, viewedCar);
-                    }
+                    var lastLap = new TextBlock();
+                    UpdateLastLapCell(lastLap, position, classFastestDriver.FastestLap, rowIndex);
+                    UpdateCellGeneric(lastLap, rowIndex, position, viewedCar);
+
+                    CheckOrUpdateGridChildText(lastLap);
+
                     SetCellLocation(lastLap, columnIndex, LastLapWidth, rowIndex);
                     columnIndex += LastLapWidth;
                     CellIndex++;
@@ -564,6 +457,18 @@ namespace IRacing_Standings
                 rowIndex++;
             }
             return rowIndex;
+        }
+
+        private void CheckOrUpdateGridChildText(TextBlock textBlock)
+        {
+            if (CellIndex >= standingsGrid.Children.Count)
+            {
+                standingsGrid.Children.Add(textBlock);
+            }
+            else if (standingsGrid.Children[CellIndex].GetType() != typeof(TextBlock) || ((TextBlock)standingsGrid.Children[CellIndex]).Text != textBlock.Text)
+            {
+                standingsGrid.Children.Insert(CellIndex, textBlock);
+            }
         }
 
         private void UpdateCellGeneric(TextBlock textBlock, int rowIndex, Driver position, Driver viewedCar)

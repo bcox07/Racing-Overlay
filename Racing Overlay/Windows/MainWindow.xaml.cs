@@ -107,6 +107,7 @@ namespace IRacing_Standings
                             Trace.WriteLine(ex);
                         }
                     }
+
                     if (FuelWindow == null)
                     {
                         if (tokenSource.IsCancellationRequested)
@@ -134,6 +135,7 @@ namespace IRacing_Standings
                             Trace.WriteLine(ex);
                         }
                     }
+
                     if (RelativeWindow == null)
                     {
                         if (tokenSource.IsCancellationRequested)
@@ -161,6 +163,7 @@ namespace IRacing_Standings
                             Trace.WriteLine(ex);
                         }
                     }
+
                     if (TireWindow == null)
                     {
                         if (tokenSource.IsCancellationRequested)
