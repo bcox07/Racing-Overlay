@@ -233,7 +233,6 @@ namespace IRacing_Standings
                         IsConnected = data.IsConnected;
                         if (IsConnected)
                         {
-                            Trace.WriteLine("Connected...");
                             LastValidConnection = DateTime.UtcNow;
                             CollectData(data);
                             CollectPositions();

@@ -32,6 +32,7 @@ namespace IRacing_Standings
                 case "dallarap217":
                     return "dallara-logo";
                 case "ferrari296gt3":
+                case "ferrari499p":
                     return "ferrari-logo";
                 case "fordmustanggt3":
                     return "ford-logo";

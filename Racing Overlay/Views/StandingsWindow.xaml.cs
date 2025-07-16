@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace IRacing_Standings
@@ -38,9 +39,9 @@ namespace IRacing_Standings
         public StandingsWindow(TelemetryData telemetryData)
         {
             InitializeComponent();
-            InitializeOverlay();
             try
             {
+                InitializeOverlay();
                 UpdateTelemetryData(telemetryData);
             }
             catch (Exception ex)
@@ -70,11 +71,11 @@ namespace IRacing_Standings
             Dispatcher.Invoke(() =>
             {
                 
-                standingsGrid.Background = Brushes.Transparent;
+                StandingsGrid.Background = Brushes.Transparent;
                 for (var i = 0; i < ColumnsWidth; i++)
                 {
                     ColumnDefinition colDef = new ColumnDefinition();
-                    standingsGrid.ColumnDefinitions.Add(colDef);
+                    StandingsGrid.ColumnDefinitions.Add(colDef);
                 }
             });
         }
@@ -109,35 +110,24 @@ namespace IRacing_Standings
             CellIndex = 0;
             Dispatcher.Invoke(() =>
             {
-                if (rowIndex >= standingsGrid.RowDefinitions.Count)
+                if (rowIndex >= StandingsGrid.RowDefinitions.Count)
                 {
                     RowDefinition rowDefinition = new RowDefinition();
                     rowDefinition.Name = "SessionTitle";
                     rowDefinition.Height = new GridLength(25);
-                    standingsGrid.RowDefinitions.Add(rowDefinition);
+                    StandingsGrid.RowDefinitions.Add(rowDefinition);
                 }
-                else if (standingsGrid.RowDefinitions[rowIndex].Name != "SessionTitle")
+                else if (StandingsGrid.RowDefinitions[rowIndex].Name != "SessionTitle")
                 {
-                    standingsGrid.RowDefinitions[rowIndex].Name = "SessionTitle";
-                    standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
+                    StandingsGrid.RowDefinitions[rowIndex].Name = "SessionTitle";
+                    StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                 }
 
-                TextBlock title = CellIndex < standingsGrid.Children.Count ? (TextBlock)standingsGrid.Children[CellIndex] : new TextBlock();
+                var title = CellIndex < StandingsGrid.Children.Count ? (TextBlock)StandingsGrid.Children[CellIndex] : new TextBlock();
                 var elapsedTime = sessionTime - _TelemetryData.FeedTelemetry.SessionTimeRemain;
                 
-                var test = TimeSpan.FromSeconds(sessionTime).ToString(@"hh\:mm\:ss").TrimStart('m', '0').TrimStart('h', '0');
-                var sessionTimeString = "";
-                var elapsedTimeString = "";
-
-                if (sessionTime >= 3600)
-                    sessionTimeString = TimeSpan.FromSeconds(sessionTime).ToString(@"hh\:mm\:ss").TrimStart('m', '0').TrimStart('h', '0');
-                else
-                    sessionTimeString = TimeSpan.FromSeconds(sessionTime).ToString(@"mm\:ss").TrimStart('m', '0');
-
-                if (elapsedTime >= 3600)
-                    elapsedTimeString = TimeSpan.FromSeconds(elapsedTime).ToString(@"hh\:mm\:ss").TrimStart('m', '0').TrimStart('h', '0');
-                else
-                    elapsedTimeString = TimeSpan.FromSeconds(elapsedTime).ToString(@"mm\:ss").TrimStart('m', '0');
+                var sessionTimeString = StringHelper.GetTimeString(sessionTime, false);
+                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime, false);
 
                 if (title.Text == "")
                 {
@@ -155,9 +145,10 @@ namespace IRacing_Standings
                     title.Height = 30;
                     title.Foreground = Brushes.White;
                     title.Background = Brushes.Black;
+
                     Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
                     Grid.SetRow(title, rowIndex);
-                    standingsGrid.Children.Add(title);
+                    StandingsGrid.Children.Add(title);
                 }
                 else if (!title.Text.Contains($"{sessionType}"))
                 {
@@ -173,6 +164,7 @@ namespace IRacing_Standings
                     title.Height = 30;
                     title.Foreground = Brushes.White;
                     title.Background = Brushes.Black;
+
                     Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
                     Grid.SetRow(title, rowIndex);
                 }
@@ -189,6 +181,8 @@ namespace IRacing_Standings
                     title.Foreground = Brushes.White;
                     title.Background = Brushes.Black;
                     title.Padding = new Thickness(5, 0, 0, 0);
+
+
                     Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
                     Grid.SetRow(title, rowIndex);
                 }
@@ -203,22 +197,24 @@ namespace IRacing_Standings
 
             Dispatcher.Invoke(() =>
             {
-                for (var i = rowIndex; i < standingsGrid.RowDefinitions.Count; i++)
+                for (var i = rowIndex; i < StandingsGrid.RowDefinitions.Count; i++)
                 {
-                    standingsGrid.RowDefinitions.RemoveAt(i);
+                    StandingsGrid.RowDefinitions.RemoveAt(i);
                 }
 
-                while (standingsGrid.Children.Count > CellIndex + 1)
+                while (StandingsGrid.Children.Count > CellIndex + 1)
                 {
-                    standingsGrid.Children.RemoveAt(CellIndex + 1);
+                    StandingsGrid.Children.RemoveAt(CellIndex + 1);
                 }
 
-                if (standingsGrid.ActualHeight != ((rowIndex - _TelemetryData.SortedPositions.Count - 1)  * 30) + (_TelemetryData.SortedPositions.Count * 20))
+                if (StandingsGrid.ActualHeight != ((rowIndex - _TelemetryData.SortedPositions.Count - 1)  * 30) + (_TelemetryData.SortedPositions.Count * 20))
                 {
                     Height = ((rowIndex - _TelemetryData.SortedPositions.Count)  * 30) + (_TelemetryData.SortedPositions.Count * 20);
                 }
-                standingsGrid.Width = 550;
-                Content = standingsGrid;
+
+                var shownDriverCount = StandingsGrid.RowDefinitions.Where(r => r.Name.StartsWith("Driver")).ToList().Count;
+                var classTitleCount = StandingsGrid.RowDefinitions.Where(r => r.Name.Equals("ClassTitle")).ToList().Count;
+                StandingsGrid.Width = 550;
             });
             Thread.Sleep(16);
         }
@@ -249,17 +245,17 @@ namespace IRacing_Standings
 
             Dispatcher.Invoke(() =>
             {
-                if (rowIndex >= standingsGrid.RowDefinitions.Count)
+                if (rowIndex >= StandingsGrid.RowDefinitions.Count)
                 {
                     RowDefinition titleDef = new RowDefinition();
                     titleDef.Name = "ClassTitle";
                     titleDef.Height = new GridLength(20);
-                    standingsGrid.RowDefinitions.Add(titleDef);
+                    StandingsGrid.RowDefinitions.Add(titleDef);
                 }
-                else if (standingsGrid.RowDefinitions[rowIndex]?.Name != "ClassTitle")
+                else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != "ClassTitle")
                 {
-                    standingsGrid.RowDefinitions[rowIndex].Name = "ClassTitle";
-                    standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(20);
+                    StandingsGrid.RowDefinitions[rowIndex].Name = "ClassTitle";
+                    StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(20);
                 }
             });
 
@@ -314,7 +310,6 @@ namespace IRacing_Standings
                 sofTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
                 sofTitle.Text = $"SoF: {sof}";
                 sofTitle.Padding = new Thickness(0, 0, 5, 0);
-
                 CheckOrUpdateGridChildText(sofTitle);
 
                 Grid.SetColumn(sofTitle, ColumnsWidth - FastestLapWidth - 10);
@@ -330,17 +325,17 @@ namespace IRacing_Standings
 
                 Dispatcher.Invoke((Action)delegate
                 {
-                    if (rowIndex >= standingsGrid.RowDefinitions.Count)
+                    if (rowIndex >= StandingsGrid.RowDefinitions.Count)
                     {
                         RowDefinition rowDef = new RowDefinition();
                         rowDef.Name = $"Driver{position.CarId}";
                         rowDef.Height = new GridLength(25);
-                        standingsGrid.RowDefinitions.Add(rowDef);
+                        StandingsGrid.RowDefinitions.Add(rowDef);
                     }
-                    else if (standingsGrid.RowDefinitions[rowIndex]?.Name != $"Driver{position.CarId}")
+                    else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != $"Driver{position.CarId}")
                     {
-                        standingsGrid.RowDefinitions[rowIndex].Name = $"Driver{position.CarId}";
-                        standingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
+                        StandingsGrid.RowDefinitions[rowIndex].Name = $"Driver{position.CarId}";
+                        StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                     }
 
                     var posNumber = new TextBlock();
@@ -374,13 +369,13 @@ namespace IRacing_Standings
                     carLogo.Source = new BitmapImage(new Uri($"images/{CarLogo.GetLogoUri(position.CarPath)}{(rowIndex % 2 == 1 ? "-gray" : "")}.png", UriKind.Relative));
                     carLogo.Source.Freeze();
 
-                    if (CellIndex >= standingsGrid.Children.Count)
+                    if (CellIndex >= StandingsGrid.Children.Count)
                     {
-                        standingsGrid.Children.Add(carLogo);
+                        StandingsGrid.Children.Add(carLogo);
                     }
                     else
                     {
-                        standingsGrid.Children.Insert(CellIndex, carLogo);
+                        StandingsGrid.Children.Insert(CellIndex, carLogo);
                     }
                     
                     Grid.SetColumnSpan(carLogo, CarLogoWidth);
@@ -461,13 +456,13 @@ namespace IRacing_Standings
 
         private void CheckOrUpdateGridChildText(TextBlock textBlock)
         {
-            if (CellIndex >= standingsGrid.Children.Count)
+            if (CellIndex >= StandingsGrid.Children.Count)
             {
-                standingsGrid.Children.Add(textBlock);
+                StandingsGrid.Children.Add(textBlock);
             }
-            else if (standingsGrid.Children[CellIndex].GetType() != typeof(TextBlock) || ((TextBlock)standingsGrid.Children[CellIndex]).Text != textBlock.Text)
+            else if (StandingsGrid.Children[CellIndex].GetType() != typeof(TextBlock) || ((TextBlock)StandingsGrid.Children[CellIndex]).Text != textBlock.Text)
             {
-                standingsGrid.Children.Insert(CellIndex, textBlock);
+                StandingsGrid.Children.Insert(CellIndex, textBlock);
             }
         }
 
@@ -496,18 +491,17 @@ namespace IRacing_Standings
 
             switch (textBlock.Tag.ToString())
             {
-                case "PosNumber":
                 case "DriverName":
+                case "PosNumber":
                 case "IRating":
                 case "CarNumber":
-                    if (position.CarId == viewedCar.CarId)
-                    {
+                    if(_TelemetryData.FeedTelemetry.RadioTransmitCarIdx == position.CarId)
+                        textBlock.Foreground = Brushes.LimeGreen;
+                    else if (position.CarId == viewedCar.CarId)
                         textBlock.Foreground = Brushes.Gold;
-                    }
                     break;
-
             }
-        }
+        } 
 
         private void SetCellLocation(TextBlock textBlock, int columnIndex, int columnWidth, int rowIndex)
         {
@@ -539,7 +533,9 @@ namespace IRacing_Standings
 
         private void UpdateDriverNameCell(TextBlock textBlock, Driver position)
         {
-            UpdateCell(textBlock, "DriverName", Regex.Replace(position.Name, @"( .+ )", " "), TextAlignment.Left);
+            var driverNameText = Regex.Replace(position.Name, @"( .+ )", " ");
+            
+            UpdateCell(textBlock, "DriverName", driverNameText, TextAlignment.Left);
             textBlock.Padding = new Thickness(5, 1, 0, 3.5);
             textBlock.TextTrimming = TextTrimming.CharacterEllipsis;
         }
@@ -613,6 +609,7 @@ namespace IRacing_Standings
         private void UpdateLastLapCell(TextBlock textBlock, Driver position, double? classFastestLap, int rowIndex)
         {
             var text = textBlock.Text ?? string.Empty;
+            textBlock.HorizontalAlignment = HorizontalAlignment.Left;
 
             if ((position.FastestLap ?? 9999.9) == classFastestLap)
             {
@@ -630,12 +627,12 @@ namespace IRacing_Standings
             }
             else
             {
-                var aboveMinuteText = TimeSpan.FromSeconds(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000).ToString(@"mm\:ss\.fff").TrimStart('m', '0');
-                var subMinuteText = TimeSpan.FromSeconds(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000).ToString(@"ss\.fff").TrimStart('m', '0');
+
+                var timeText = StringHelper.GetTimeString(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000, true);
                 textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525") : Brushes.Black;
-                if (textBlock.Text != aboveMinuteText && textBlock.Text != subMinuteText)
+                if (textBlock.Text != timeText)
                 {
-                    text = position.LastLap.Value > 60 ? aboveMinuteText : subMinuteText;
+                    text = timeText;
                 }
             }
 

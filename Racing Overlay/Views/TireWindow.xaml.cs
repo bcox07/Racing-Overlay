@@ -78,20 +78,20 @@ namespace IRacing_Standings
             {
                 LFTemp.Text = $"{lFTireData.Temp.Item2:N1}°";
                 LFWear.Text = $"{lFTireData.Wear.Item2:N0}%";
-                SetTireColor(LFTemp, lFTireData);
+                SetTireColor(LFTempBorder, lFTireData);
                 RFTemp.Text = $"{rFTireData.Temp.Item2:N1}°";
                 RFWear.Text = $"{rFTireData.Wear.Item2:N0}%";
-                SetTireColor(RFTemp, rFTireData);
+                SetTireColor(RFTempBorder, rFTireData);
                 LRTemp.Text = $"{lRTireData.Temp.Item2:N1}°";
                 LRWear.Text = $"{lRTireData.Wear.Item2:N0}%";
-                SetTireColor(LRTemp, lRTireData);
+                SetTireColor(LRTempBorder, lRTireData);
                 RRTemp.Text = $"{rRTireData.Temp.Item2:N1}°";
                 RRWear.Text = $"{rRTireData.Wear.Item2:N0}%";
-                SetTireColor(RRTemp, rRTireData);
+                SetTireColor(RRTempBorder, rRTireData);
             });
         }
         
-        private void SetTireColor(TextBlock tireBox, TireData tireData)
+        private void SetTireColor(Border tireBox, TireData tireData)
         {
             string leftColor;
             if (tireData.Temp.Item1 < 70)

@@ -38,7 +38,7 @@ namespace IRacing_Standings.Windows
             for (int i= 0; i < 1; i++)
             {
                 var colDef = new ColumnDefinition();
-                colDef.Width = new GridLength(1500);
+                colDef.Width = new GridLength(1470);
             }
         }
 
@@ -84,7 +84,7 @@ namespace IRacing_Standings.Windows
                     textBox.FontSize = 16;
                     textBox.TextAlignment = TextAlignment.Center;
                     textBox.HorizontalAlignment = HorizontalAlignment.Left;
-                    textBox.Padding = new Thickness(0, 4, 0, 0);
+                    textBox.Padding = new Thickness(0, 3, 0, 0);
                     textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
                     textBox.Foreground = Brushes.Black;
                     textBox.Resources = Player.Resources;
@@ -93,15 +93,15 @@ namespace IRacing_Standings.Windows
 
                     if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx) 
                     {
-                        textBox.BorderBrush = Brushes.LawnGreen;
+                        textBox.BorderBrush = Brushes.OrangeRed;
                         textBox.BorderThickness = new Thickness(4);
-                        textBox.Padding = new Thickness(-1, 0, 0, 0);
+                        textBox.Padding = new Thickness(0, -1, 0, 0);
                         Canvas.SetZIndex(textBox, 99);
                     }
  
 
                    List<UIElement> elementsToRemove = new List<UIElement>();
-                    foreach (UIElement uiElement in this. TrackCanvas.Children.OfType<TextBox>())
+                    foreach (UIElement uiElement in TrackCanvas.Children.OfType<TextBox>())
                     { 
                         var element = (TextBox) uiElement;
                         if (element.Uid == textBox.Uid)//) && element.Margin != textBox.Margin)

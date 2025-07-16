@@ -215,8 +215,7 @@ namespace IRacing_Standings
                 }
                 else
                 {
-                    CloseAllWindows();
-                    
+                    CloseAllWindows(); 
                 }
                 Thread.Sleep(16);
             }

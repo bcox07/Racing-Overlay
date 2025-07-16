@@ -104,7 +104,8 @@ namespace IRacing_Standings
             }
             Dispatcher.Invoke(() =>
             {
-                RelativeGrid.Width = 400;
+                RelativeGeometry.Rect = new Rect(0, 0, 300, rowIndex * 27);
+                RelativeGrid.Width = 300;
             });
             Dispatcher.Invoke(() =>
             {
@@ -124,6 +125,7 @@ namespace IRacing_Standings
         {
             Dispatcher.Invoke(() =>
             {
+                
                 if (rowIndex >= RelativeGrid.RowDefinitions.Count)
                 {
                     var rowDef = new RowDefinition();

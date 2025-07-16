@@ -130,40 +130,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CarLogo.cs" />
-    <Compile Include="FuelUse.cs" />
-    <Compile Include="Lap.cs" />
-    <Compile Include="Windows\LiveTrackWindow.xaml.cs">
+    <Compile Include="Models\CarLogo.cs" />
+    <Compile Include="Models\FuelUse.cs" />
+    <Compile Include="Models\Lap.cs" />
+    <Compile Include="StringHelper.cs" />
+    <Compile Include="Views\LiveTrackWindow.xaml.cs">
       <DependentUpon>LiveTrackWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\TireWindow.xaml.cs">
+    <Compile Include="Views\TireWindow.xaml.cs">
       <DependentUpon>TireWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowSettings.cs" />
-    <Compile Include="Windows\FuelWindow.xaml.cs">
+    <Compile Include="Config\WindowSettings.cs" />
+    <Compile Include="Views\FuelWindow.xaml.cs">
       <DependentUpon>FuelWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\RelativeWindow.xaml.cs">
+    <Compile Include="Views\RelativeWindow.xaml.cs">
       <DependentUpon>RelativeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Speed.cs" />
-    <Compile Include="Windows\StandingsWindow.xaml.cs">
+    <Compile Include="Models\Speed.cs" />
+    <Compile Include="Views\StandingsWindow.xaml.cs">
       <DependentUpon>StandingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TelemetryData.cs" />
-    <Page Include="Windows\LiveTrackWindow.xaml">
+    <Compile Include="Services\TelemetryData.cs" />
+    <Page Include="Views\LiveTrackWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\TireWindow.xaml">
+    <Page Include="Views\TireWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\FuelWindow.xaml">
+    <Page Include="Views\FuelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -171,16 +172,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Driver.cs" />
-    <Compile Include="Windows\MainWindow.xaml.cs">
+    <Compile Include="Models\Driver.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Windows\RelativeWindow.xaml">
+    <Page Include="Views\RelativeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\StandingsWindow.xaml">
+    <Page Include="Views\StandingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -277,7 +278,6 @@
     <Content Include="images\porsche-logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\nuget.exe" />
     <Content Include="images\acura-logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -291,10 +291,10 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="App.TripleMonitor.config">
+    <None Include="Config\App.TripleMonitor.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="App.SingleMonitor.config">
+    <None Include="Config\App.SingleMonitor.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -325,6 +325,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\144-mosport\ligierjsp320.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\144-mosport\porsche992rgt3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\145-brandshatch\dallarap217.csv">

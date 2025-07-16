@@ -7,9 +7,18 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Closed="Window_Closed"
-        Title="MainWindow" Height="257" Width="420" HorizontalAlignment="Center" Background="#D8000000" Opacity="0.85" WindowStyle="None" AllowsTransparency="True">
+        Title="MainWindow" Height="257" Width="408" HorizontalAlignment="Center" Background="#D8000000" Opacity="0.85" WindowStyle="None" AllowsTransparency="True">
+    <Window.Resources>
+        <Style x:Key="TabItemStyle" TargetType="TabItem">
+            <Setter Property="Background" Value="White"></Setter>
+            <Setter Property="Foreground" Value="Black"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"></Setter>
+            <Setter Property="Margin" Value="0"></Setter>
+            <Setter Property="MinWidth" Value="80"></Setter>
+        </Style>
+    </Window.Resources>
     <TabControl x:Name="tabControl" Background="Transparent" FontSize="20" FontWeight="Bold">
-        <TabItem Header="Standings">
+        <TabItem Header="Standings" Style="{DynamicResource TabItemStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
