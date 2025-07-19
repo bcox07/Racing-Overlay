@@ -101,7 +101,7 @@ namespace IRacing_Standings
                     var carClassSpeedDict = new Dictionary<int, Dictionary<string, List<Speed>>>();
                     foreach (var carClass in carClasses)
                     {
-                        var carSpeedData = FeedSessionData.DriverInfo.Drivers.Where(d => d.CarClassID == carClass).Select(d => d.CarPath).Distinct().ToDictionary(d => d, d => Lap.GetSpeedData(TrackId, d));
+                        var carSpeedData = FeedSessionData.DriverInfo.Drivers.Where(d => d.CarClassID == carClass).Select(d => d.CarPath).Distinct().ToDictionary(d => d, d => Lap.GetSpeedData(TrackId, TrackName, d));
                         carClassSpeedDict.Add((int)carClass, carSpeedData);
                     }
                     _savedSpeedData = carClassSpeedDict;
@@ -428,6 +428,17 @@ namespace IRacing_Standings
         public double GetRelativeDelta(Driver viewedDriver, Driver targetDriver, double trackLength)
         {
             var distanceBetweenDrivers = targetDriver.PosOnTrack - viewedDriver.PosOnTrack;
+            var targetDriverAngle = targetDriver.PosOnTrack / trackLength * 360;
+            var viewedDriverAngle = viewedDriver.PosOnTrack / trackLength * 360;
+
+            var originalDifferenceAngle = viewedDriverAngle - targetDriverAngle;
+            var differenceAngle = viewedDriverAngle - targetDriverAngle;
+
+            if (Math.Abs(differenceAngle) > 180)
+                differenceAngle = differenceAngle > 180 ? differenceAngle - 360 : differenceAngle + 360;
+
+            distanceBetweenDrivers = differenceAngle / 360 * trackLength * -1;
+
             var averageSpeed = 45.0;
             var delta = 0.0;
             var listedCarSpeedData = SavedSpeedData.Where(s => s.Key == viewedDriver.ClassId).First().Value.Where(s => s.Key == viewedDriver.CarPath).First().Value;
@@ -441,65 +452,45 @@ namespace IRacing_Standings
                 targetCarSpeedData = SavedSpeedData.Where(s => s.Key == targetDriver.ClassId).First().Value.FirstOrDefault(s => s.Value != null).Value;
             }
 
-            if (Math.Abs(distanceBetweenDrivers) > (TrackLength / 2))
+            // Set default delta if no speed data is present
+            delta = distanceBetweenDrivers / averageSpeed;
+
+            if (distanceBetweenDrivers >= 0)
             {
-                //If target driver is on first half of track and the listed driver (viewed driver) is within half a track behind
-                if (targetDriver.PosOnTrack - trackLength < -(TrackLength / 2) && viewedDriver.PosOnTrack - trackLength > (-(TrackLength / 2) + targetDriver.PosOnTrack))
+                if (originalDifferenceAngle > 180)
                 {
-                    distanceBetweenDrivers = trackLength - viewedDriver.PosOnTrack + targetDriver.PosOnTrack;
-                    delta = distanceBetweenDrivers / averageSpeed;
                     if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
-                    {
                         delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
-                    }
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
-                    {
-                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(viewedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
-                    }
-                }
-                //If listed driver is on first half of track and the target driver is within half a track behind
-                else if (viewedDriver.PosOnTrack - trackLength < -(TrackLength / 2) && targetDriver.PosOnTrack - trackLength > (-(TrackLength / 2) + viewedDriver.PosOnTrack))
-                {
-                    distanceBetweenDrivers = trackLength - targetDriver.PosOnTrack + viewedDriver.PosOnTrack;
-                    delta = distanceBetweenDrivers / averageSpeed * -1;
-                    if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
-                    {
-                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(viewedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
-                    }
-                    else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
-                    {
-                        delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(viewedDriver.PosOnTrack) || s.Meter >= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
-                    }
-                }
-            }
-            else
-            {
-                delta = distanceBetweenDrivers / averageSpeed;
-                if (distanceBetweenDrivers < 0)
-                {
-                    if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
-                    {
-                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
-                    }
-                    else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
-                    {
-                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
-                    }
+                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                 }
                 else
                 {
-                    //Try and get speed data from viewed car first, then target car if it doesn't exist
                     if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
-                    {
-                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(viewedDriver.PosOnTrack) && s.Meter <= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
-                    }
+                        delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) && s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
-                    {
-                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(viewedDriver.PosOnTrack) && s.Meter <= Math.Floor(targetDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
-                    }
+                        delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) && s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                 }
                 
             }
+            else
+            {
+                if (originalDifferenceAngle < -180)
+                {
+                    if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
+                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) || s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                    else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
+                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) || s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                }
+                else
+                {
+                    if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
+                        delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                    else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
+                        delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                }
+            }             
+            
             return delta;
         }
 

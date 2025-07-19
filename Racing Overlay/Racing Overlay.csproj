@@ -130,10 +130,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Models\CarLogo.cs" />
     <Compile Include="Models\FuelUse.cs" />
     <Compile Include="Models\Lap.cs" />
-    <Compile Include="StringHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Views\LiveTrackWindow.xaml.cs">
       <DependentUpon>LiveTrackWindow.xaml</DependentUpon>
     </Compile>
@@ -303,6 +304,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Racing Overlay_TemporaryKey.pfx" />
+    <None Include="SpeedFiles\127-mosport\porsche992rgt3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="SpeedFiles\127-roadatlanta\acuraarx06gtp.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -328,6 +332,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\144-mosport\porsche992rgt3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\144-spa\porsche992rgt3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\145-brandshatch\dallarap217.csv">
@@ -537,6 +544,9 @@
     <None Include="SpeedFiles\463-magny-cours\dallarap217.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SpeedFiles\465-donington\ligierjsp320.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="SpeedFiles\465-vir\amvantagegt4.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -544,6 +554,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\465-vir\dallaraf3.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\465-vir\mclaren720sgt3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\465-vir\toyotagr86.csv">

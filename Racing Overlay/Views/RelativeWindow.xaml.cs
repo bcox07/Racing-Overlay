@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IRacing_Standings.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
+using static iRacingSDK.SessionData._DriverInfo;
 
 namespace IRacing_Standings
 {
@@ -16,9 +19,20 @@ namespace IRacing_Standings
     /// </summary>
     public partial class RelativeWindow : Window
     {
+        private readonly FontWeight DefaultWeight = FontWeights.Bold;
         private int CellIndex;
         public bool Locked = false;
         TelemetryData LocalTelemetry;
+        private double WindowWidth = 0;
+        private int PosNumberWidth = 3;
+        private int ClassColorWidth = 1;
+        private int CarNumberWidth = 4;
+        private int SafetyRatingWidth = 5;
+        private int DriverNameWidth = 16;
+        private int DeltaWidth = 6;
+        private int IRatingWidth = 4;
+        private double ColumnsWidth = 0;
+        private int ColumnIndex = 0;
         public RelativeWindow(TelemetryData telemetryData)
         {
             LocalTelemetry = telemetryData;
@@ -26,6 +40,9 @@ namespace IRacing_Standings
             Locked = bool.Parse(mainWindow.WindowSettings.RelativeSettings["Locked"]);
             Left = double.Parse(mainWindow.WindowSettings.RelativeSettings["XPos"]);
             Top = double.Parse(mainWindow.WindowSettings.RelativeSettings["YPos"]);
+            ColumnsWidth = PosNumberWidth + ClassColorWidth + CarNumberWidth + SafetyRatingWidth + DriverNameWidth + DeltaWidth + IRatingWidth;
+            WindowWidth = 350;
+            Width = WindowWidth;
             InitializeComponent();
             InitializeGrid();
         }
@@ -45,10 +62,10 @@ namespace IRacing_Standings
             {
                 Topmost = true;
                 RelativeGrid.Background = Brushes.Transparent;
-                for (var i = 0; i < 30; i++)
+                for (var i = 0; i < ColumnsWidth; i++)
                 {
                     var colDef = new ColumnDefinition();
-                    colDef.Width = new GridLength(10);
+                    colDef.Width = new GridLength(WindowWidth / ColumnsWidth);
                     RelativeGrid.ColumnDefinitions.Add(colDef);
                 }
             });
@@ -75,47 +92,37 @@ namespace IRacing_Standings
             {
                 if (localPosition.PosOnTrack > 0 && viewedCar.PosOnTrack > 0)
                 {
-                    var targetDistanceFromStart = LocalTelemetry.TrackLength - localPosition.PosOnTrack;
-                    var viewedDistanceFromStart = LocalTelemetry.TrackLength - viewedCar.PosOnTrack;
-                    if (Math.Abs(viewedCar.PosOnTrack - localPosition.PosOnTrack) <= (LocalTelemetry.TrackLength / 2) ||
-                        LocalTelemetry.TrackLength - localPosition.PosOnTrack + viewedCar.PosOnTrack <= (LocalTelemetry.TrackLength / 2) ||
-                        LocalTelemetry.TrackLength - viewedCar.PosOnTrack + localPosition.PosOnTrack <= (LocalTelemetry.TrackLength / 2))
-                    {
-                        localPosition.Delta = LocalTelemetry.GetRelativeDelta(viewedCar, localPosition, LocalTelemetry.TrackLength);
-                        surroundingCars.Add(localPosition);
-                    }
+                    localPosition.Delta = LocalTelemetry.GetRelativeDelta(viewedCar, localPosition, LocalTelemetry.TrackLength);
+                    surroundingCars.Add(localPosition);
                 }
             }
-            surroundingCars = surroundingCars.OrderByDescending(s => s.Delta).ToList();
-            var newSurroundingCars = new List<Driver>();
-            foreach (var car in surroundingCars)
-            {
-                if (Math.Abs(surroundingCars.IndexOf(car) - surroundingCars.IndexOf(viewedCar)) < 4)
-                {
-                    newSurroundingCars.Add(car);
-                }
-            }
+            var closestCarsAhead = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(4).ToList();
+            var closestCarsBehind = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(3).ToList();
+            surroundingCars = closestCarsAhead.Concat(closestCarsBehind).OrderByDescending(s => s.Delta).ToList();
 
             var rowIndex = 0;
             CellIndex = 0;
-            foreach (var car in newSurroundingCars)
+            
+            foreach (var car in surroundingCars)
             {
                 rowIndex = GenerateRow(car, viewedCar, rowIndex, LocalTelemetry);
             }
             Dispatcher.Invoke(() =>
             {
-                RelativeGeometry.Rect = new Rect(0, 0, 300, rowIndex * 27);
-                RelativeGrid.Width = 300;
+                RelativeGeometry.Rect = new Rect(0, 0, WindowWidth, rowIndex * 27);
+                RelativeGrid.Width = WindowWidth;
             });
             Dispatcher.Invoke(() =>
             {
-                for (var i = rowIndex; i < RelativeGrid.RowDefinitions.Count; i++)
+
+                while (RelativeGrid.RowDefinitions.Count > rowIndex + 1)
                 {
-                    RelativeGrid.RowDefinitions.RemoveAt(i);
+                    RelativeGrid.RowDefinitions.RemoveAt(rowIndex + 1);
                 }
-                for (var i = CellIndex; i < RelativeGrid.Children.Count; i++)
+
+                while (RelativeGrid.Children.Count > CellIndex + 1)
                 {
-                    RelativeGrid.Children.RemoveAt(i);
+                    RelativeGrid.Children.RemoveAt(CellIndex + 1);
                 }
             });
             Thread.Sleep(16);
@@ -123,6 +130,7 @@ namespace IRacing_Standings
 
         private int GenerateRow(Driver driver, Driver viewedDriver, int rowIndex, TelemetryData telemetryData)
         {
+            ColumnIndex = 0;
             Dispatcher.Invoke(() =>
             {
                 
@@ -133,233 +141,138 @@ namespace IRacing_Standings
                     RelativeGrid.RowDefinitions.Add(rowDef);
                 }
 
-                var posNumber = CellIndex < RelativeGrid.Children.Count ? (TextBlock)RelativeGrid.Children[CellIndex] : null;
-                if (posNumber == null)
-                {
-                    posNumber = new TextBlock();
-                    posNumber.Tag = "PosNumber";
-                    UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData);
-                    posNumber.TextAlignment = TextAlignment.Center;
-                    posNumber.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    posNumber.Padding = new Thickness(2);
-                    posNumber.Text = driver.ClassPosition.ToString();
-                    RelativeGrid.Children.Add(posNumber);
-                }
-                else
-                {
-                    posNumber.Tag = "PosNumber";
-                    UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData);
-                    posNumber.TextAlignment = TextAlignment.Center;
-                    posNumber.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    posNumber.Padding = new Thickness(2);
-                    posNumber.Text = driver.ClassPosition.ToString();
-                }
-                Grid.SetColumnSpan(posNumber, 3);
-                Grid.SetColumn(posNumber, 0);
-                Grid.SetRow(posNumber, rowIndex);
+                var posNumber = UIHelper.CreateTextBlock(null);
+                posNumber.Tag = "PosNumber";
+                posNumber.Text = driver.ClassPosition.ToString();
+                UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData, null, null);
+                
+                UIHelper.SetCellFormat(posNumber, ColumnIndex, PosNumberWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, posNumber, CellIndex);
+                ColumnIndex += PosNumberWidth;
                 CellIndex++;
 
-                var classColor = CellIndex < RelativeGrid.Children.Count ? (TextBlock)RelativeGrid.Children[CellIndex] : null;
-                if (classColor == null)
-                {
-                    classColor = new TextBlock();
-                    classColor.Tag = "ClassColor";
-                    UpdateDriverCell(classColor, rowIndex, driver, viewedDriver, telemetryData);
-                    classColor.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    classColor.Padding = new Thickness(2);
-                    var test = driver.ClassColor.Replace("0x", "#");
-                    classColor.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(test);
-                    RelativeGrid.Children.Add(classColor);
-                }
-                else
-                {
-                    classColor.Tag = "ClassColor";
-                    UpdateDriverCell(classColor, rowIndex, driver, viewedDriver, telemetryData);
-                    classColor.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    classColor.Padding = new Thickness(2);
-                    var test = driver.ClassColor.Replace("0x", "#");
-                    classColor.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(test);
-                    classColor.Text = "";
-                }
-                Grid.SetColumnSpan(classColor, 1);
-                Grid.SetColumn(classColor, 3);
-                Grid.SetRow(classColor, rowIndex);
+
+                var classColor = UIHelper.CreateTextBlock(new Thickness(4, 4, 4, 4));
+                classColor.Tag = "ClassColor";
+                UpdateDriverCell(classColor, rowIndex, driver, viewedDriver, telemetryData, null, (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#")));
+
+                UIHelper.SetCellFormat(classColor, ColumnIndex, ClassColorWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, classColor, CellIndex);
+                ColumnIndex += ClassColorWidth;
                 CellIndex++;
 
-                var driverName = CellIndex < RelativeGrid.Children.Count ? (TextBlock)RelativeGrid.Children[CellIndex] : null;
-                if (driverName == null)
-                {
-                    driverName = new TextBlock();
-                    driverName.Tag = "DriverName";
-                    UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData);
-                    driverName.Padding = new Thickness(5, 2, 0, 3.5);
-                    driverName.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    driverName.TextTrimming = TextTrimming.CharacterEllipsis;
-                    RelativeGrid.Children.Add(driverName);
-                }
-                else
-                {
-                    driverName.Tag = "DriverName";
-                    UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData);
-                    driverName.Padding = new Thickness(5, 2, 0, 3.5);
-                    driverName.TextAlignment = TextAlignment.Left;
-                    driverName.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    driverName.TextTrimming = TextTrimming.CharacterEllipsis;
-                    if (driverName.Text != Regex.Replace(driver.Name, @"( .+ )", " "))
-                    {
-                        driverName.Text = Regex.Replace(driver.Name, @"( .+ )", " ");
-                    }
-                }
-                Grid.SetColumn(driverName, 4);
-                Grid.SetColumnSpan(driverName, 16);
-                Grid.SetRow(driverName, rowIndex);
+                var carNumber = UIHelper.CreateTextBlock(new Thickness(0, 4, 0, 4), fontSize: 15);
+                carNumber.Tag = "CarNumber";
+                UpdateDriverCell(carNumber, rowIndex, driver, viewedDriver, telemetryData, FontWeights.SemiBold, null);
+                carNumber.Text = $"#{driver.CarNumber}";
+                carNumber.FontStyle = FontStyles.Oblique;
+                carNumber.Margin = new Thickness(0, 0, -1, 0);
+                
+                UIHelper.SetCellFormat(carNumber, ColumnIndex, CarNumberWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, carNumber, CellIndex);
+                ColumnIndex += CarNumberWidth;
                 CellIndex++;
 
-                var iRating = CellIndex < RelativeGrid.Children.Count ? (TextBlock)RelativeGrid.Children[CellIndex] : null;
-                if (iRating == null)
-                {
-                    iRating = new TextBlock();
-                    iRating.Tag = "IRating";
-                    UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData);
-                    iRating.HorizontalAlignment = HorizontalAlignment.Center;
-                    iRating.Padding = new Thickness(12, 32, 12, 3.5);
-                    RelativeGrid.Children.Add(iRating);
-                }
-                else
-                {
-                    iRating.Tag = "IRating";
-                    UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData);
-                    iRating.HorizontalAlignment = HorizontalAlignment.Center;
-                    iRating.Padding = new Thickness(12, 2, 12, 3.5);
-                    if (iRating.Text != $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k")
-                    {
-                        iRating.Text = $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k";
-                    }
-                }
-                Grid.SetColumn(iRating, 20);
-                Grid.SetColumnSpan(iRating, 5);
-                Grid.SetRow(iRating, rowIndex);
+                var driverName = UIHelper.CreateTextBlock(new Thickness(6, 3, 6, 3), textAlignment: TextAlignment.Left);
+                driverName.Tag = "DriverName";
+                UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData, null, null);
+                driverName.Text = Regex.Replace(driver.Name, @"( .+ )", " ");
+                driverName.TextTrimming = TextTrimming.CharacterEllipsis;
+                driverName.Margin = new Thickness(0, 0, -1, 0);
+
+                UIHelper.SetCellFormat(driverName, ColumnIndex, DriverNameWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, driverName, CellIndex);
+                ColumnIndex += DriverNameWidth;
                 CellIndex++;
 
-                var delta = CellIndex < RelativeGrid.Children.Count ? (TextBlock)RelativeGrid.Children[CellIndex] : null;
-                if (delta == null)
-                {
-                    delta = new TextBlock();
-                    if (driver.PosOnTrack < 0)
-                    {
-                        delta.Text = "-";
-                    }
-                    else
-                    {
-                        delta.Text = driver.Delta.ToString("N1");
-                    }
-                    delta.Tag = "Delta";
-                    UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData);
-                    delta.HorizontalAlignment = HorizontalAlignment.Center;
-                    delta.Padding = new Thickness(25, 2, 25, 3.5);
-                    RelativeGrid.Children.Add(delta);
-                }
-                else
-                {
-                    if ((driver.PosOnTrack < 0 && driver.LapsComplete < 0) || driver == viewedDriver)
-                    {
-                        delta.Text = "-";
-                    }
-                    else
-                    {
-                        delta.Text = driver.Delta.ToString("N1");
-                    }
-                    delta.Tag = "Delta";
-                    UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData);
-                    delta.HorizontalAlignment = HorizontalAlignment.Center;
-                    delta.Padding = new Thickness(25, 2, 25, 3.5);
-                }
-                Grid.SetColumn(delta, 25);
-                Grid.SetColumnSpan(delta, 5);
-                Grid.SetRow(delta, rowIndex);
+
+                var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3));
+                border.VerticalAlignment = VerticalAlignment.Stretch;
+                UIHelper.SetCellFormat(border, ColumnIndex, SafetyRatingWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, border, CellIndex);
+
+                ColumnIndex += SafetyRatingWidth;
+                CellIndex++;
+
+                var iRating = UIHelper.CreateTextBlock(null);
+                iRating.Tag = "IRating";
+                UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData, null, null);
+                iRating.Text = $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k";
+                iRating.Margin = new Thickness(-1, 0, -1, 0);
+
+                UIHelper.SetCellFormat(iRating, ColumnIndex, IRatingWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, iRating, CellIndex);
+                ColumnIndex += IRatingWidth;
+                CellIndex++;
+
+                var delta = UIHelper.CreateTextBlock(new Thickness(2, 3, 7, 3), textAlignment: TextAlignment.Right);
+                delta.Tag = "Delta";
+                UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData, null, null); 
+                delta.Text = ((driver.PosOnTrack < 0 && driver.LapsComplete < 0) || driver == viewedDriver) ? "  -  " : driver.Delta.ToString("N1");
+                
+                UIHelper.SetCellFormat(delta, ColumnIndex, DeltaWidth, rowIndex);
+                UIHelper.AddOrInsertChild(RelativeGrid, delta, CellIndex);
+                ColumnIndex += DeltaWidth;
                 CellIndex++;
             });
             rowIndex++;
             return rowIndex;
         }
 
-        private void UpdateDriverCell(TextBlock textBlock, int posIndex, Driver position, Driver viewedCar, TelemetryData telemetryData)
+        private void SetCellFormat(TextBlock textBlock, int columnWidth, int rowIndex)
         {
-            textBlock.FontSize = 16;
-            textBlock.FontWeight = FontWeights.Bold;
+            Grid.SetColumnSpan(textBlock, columnWidth);
+            Grid.SetColumn(textBlock, ColumnIndex);
+            Grid.SetRow(textBlock, rowIndex);
+        }
+
+        private void UpdateDriverCell(
+            TextBlock textBlock, 
+            int posIndex, 
+            Driver position, 
+            Driver viewedCar, 
+            TelemetryData telemetryData, 
+            FontWeight? fontWeight,
+            Brush backgroundColor)
+        {
+            var fadedWhiteBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#A8A8A8");
+            var fadedGoldBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#998100");
+            var fadedRedBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#5C0000");
+            var blueBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#00BFFF");
+            var fadedBlueBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#006385");
+
+            textBlock.FontWeight = fontWeight ?? FontWeights.Bold;
             textBlock.Foreground = Brushes.White;
-            textBlock.TextTrimming = TextTrimming.None;
-            if (posIndex % 2 == 1)
-            {
-                textBlock.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525");
-            }
+            if (backgroundColor == null)
+                textBlock.Background = posIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525"): Brushes.Black;
             else
-            {
-                textBlock.Background = Brushes.Black;
-            }
+                textBlock.Background = backgroundColor;
 
             switch (textBlock.Tag)
             {
                 case "PosNumber":
+                case "CarNumber":
                 case "DriverName":
                 case "IRating":
                 case "Delta":
                     if (telemetryData.IsRace)
                     {
-                        if (position.InPit)
-                        {
-                            textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#A8A8A8");
-                            if (position.CarId == viewedCar.CarId)
-                            {
-                                textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#998100");
-                            }
-                            else if (position.Distance - viewedCar.Distance > telemetryData.TrackLength * 0.75)
-                            {
-                                textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#5c0000");
-                            }
-                            else if (viewedCar.Distance - telemetryData.TrackLength * 0.75 > position.Distance)
-                            {
-                                textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#006385");
-                            }
-                        }
-                        else
-                        {
-                            textBlock.Foreground = Brushes.White;
-                            if (position.CarId == viewedCar.CarId) 
-                            {
-                                textBlock.Foreground = Brushes.Gold;
-                            }
-                            else if (position.Distance - viewedCar.Distance > telemetryData.TrackLength * 0.75)
-                            {
-                                textBlock.Foreground = Brushes.Red;
-                            }
-                            else if (viewedCar.Distance - (telemetryData.TrackLength * 0.75) > position.Distance)
-                            {
-                                textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#00bfff");
-                            }
-                        }
+                        textBlock.Foreground = position.InPit ? fadedWhiteBrush : Brushes.White;
+                        if (position.CarId == viewedCar.CarId)
+                            textBlock.Foreground = position.InPit ? fadedGoldBrush : Brushes.Gold;
+                        else if (position.Distance > viewedCar.Distance && position.Delta < 0 || position.Distance - viewedCar.Distance > telemetryData.TrackLength)
+                            textBlock.Foreground = position.InPit ? fadedRedBrush : Brushes.Red;
+                        else if (position.Distance < viewedCar.Distance && position.Delta > 0 || viewedCar.Distance - position.Distance > telemetryData.TrackLength)
+                            textBlock.Foreground = position.InPit ? fadedBlueBrush : blueBrush;
                     }
                     else
                     {
-                        textBlock.Foreground = Brushes.White;
-                        if (position.InPit)
-                        {
-                            textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#A8A8A8");
-                            if (position.CarId == viewedCar.CarId)
-                            {
-                                textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#998100");
-                            }
-                        }
-                        else
-                        {
-                            if (position.CarId == viewedCar.CarId)
-                            {
-                                textBlock.Foreground = Brushes.Gold;
-                            }
-                        }
+                        textBlock.Foreground = position.InPit ? fadedWhiteBrush : Brushes.White;
+
+                        if (position.CarId == viewedCar.CarId)
+                            textBlock.Foreground = position.InPit ? fadedGoldBrush : Brushes.Gold;
                     }
                     break;
-
             }
         }
     }

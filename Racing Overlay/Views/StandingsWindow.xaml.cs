@@ -1,4 +1,5 @@
-﻿using iRacingSDK;
+﻿using IRacing_Standings.Helpers;
+using iRacingSDK;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using static iRacingSDK.SessionData._DriverInfo;
 
 namespace IRacing_Standings
 {
@@ -29,7 +31,7 @@ namespace IRacing_Standings
         private int CarNumberWidth = 3;
         private int DriverNameWidth = 12;
         private int IRatingWidth = 4;
-        private int SafetyRatingWidth = 5;
+        private int SafetyRatingWidth = 4;
         private int DeltaWidth = 3;
         private int FastestLapWidth = 7;
         private int LastLapWidth = 7;
@@ -197,9 +199,9 @@ namespace IRacing_Standings
 
             Dispatcher.Invoke(() =>
             {
-                for (var i = rowIndex; i < StandingsGrid.RowDefinitions.Count; i++)
+                while (StandingsGrid.RowDefinitions.Count > rowIndex + 1)
                 {
-                    StandingsGrid.RowDefinitions.RemoveAt(i);
+                    StandingsGrid.RowDefinitions.RemoveAt(rowIndex + 1);
                 }
 
                 while (StandingsGrid.Children.Count > CellIndex + 1)
@@ -265,56 +267,37 @@ namespace IRacing_Standings
             Dispatcher.Invoke(() =>
             {
                 
-                var classTitle = new TextBlock();
-                classTitle.FontSize = 14;
+                var classTitle = UIHelper.CreateTextBlock(new Thickness(5, 0, 0, 0), TextAlignment.Left, fontSize: 14);
+                classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
                 classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 classTitle.Foreground = Brushes.Black;
                 classTitle.FontWeight = FontWeights.Bold;
-                classTitle.TextAlignment = TextAlignment.Left;
-                classTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
-                classTitle.Padding = new Thickness(5, 0, 0, 0);
 
-                CheckOrUpdateGridChildText(classTitle);
-
-                Grid.SetColumn(classTitle, 0);
-                Grid.SetColumnSpan(classTitle, ColumnsWidth - FastestLapWidth);
-                Grid.SetRow(classTitle, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, classTitle, CellIndex);
+                UIHelper.SetCellFormat(classTitle, 0, ColumnsWidth - FastestLapWidth, rowIndex);
                 CellIndex++;
 
                 var sof = (int)driverClassGroup.Value.Average(d => d.iRating);
                 var carCount = (int)driverClassGroup.Value.Count;
 
-                var carCountTitle = new TextBlock();
+                var carCountTitle = UIHelper.CreateTextBlock(new Thickness(0, 0, 5, 0), TextAlignment.Right, fontSize: 14);
                 carCountTitle.Text = $"Cars: {carCount}";
-                carCountTitle.FontSize = 14;
-                carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                carCountTitle.Foreground = Brushes.Black;
                 carCountTitle.FontWeight = FontWeights.Bold;
-                carCountTitle.TextAlignment = TextAlignment.Right;
-                carCountTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                carCountTitle.Padding = new Thickness(0, 0, 5, 0);
-                CheckOrUpdateGridChildText(carCountTitle);
+                carCountTitle.Foreground = Brushes.Black;
+                carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
 
-                Grid.SetColumn(carCountTitle, ColumnsWidth - FastestLapWidth - 20);
-                Grid.SetColumnSpan(carCountTitle, 10);
-                Grid.SetRow(carCountTitle, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, carCountTitle, CellIndex);
+                UIHelper.SetCellFormat(carCountTitle, ColumnsWidth - FastestLapWidth - 20, 10, rowIndex);
                 CellIndex++;
 
-                var sofTitle = new TextBlock();
-                sofTitle.FontSize = 14;
+                var sofTitle = UIHelper.CreateTextBlock(new Thickness(0, 0, 5, 0), TextAlignment.Right, fontSize: 14);
+                sofTitle.Text = $"SoF: {sof}";
                 sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 sofTitle.Foreground = Brushes.Black;
                 sofTitle.FontWeight = FontWeights.Bold;
-                sofTitle.TextAlignment = TextAlignment.Right;
-                sofTitle.HorizontalAlignment = HorizontalAlignment.Stretch;
-                sofTitle.Text = $"SoF: {sof}";
-                sofTitle.Padding = new Thickness(0, 0, 5, 0);
-                CheckOrUpdateGridChildText(sofTitle);
-
-                Grid.SetColumn(sofTitle, ColumnsWidth - FastestLapWidth - 10);
-                Grid.SetColumnSpan(sofTitle, 10);
-                Grid.SetRow(sofTitle, rowIndex);
+                
+                UIHelper.AddOrInsertChild(StandingsGrid, sofTitle, CellIndex);
+                UIHelper.SetCellFormat(sofTitle, ColumnsWidth - FastestLapWidth - 10, 10, rowIndex);
                 CellIndex++;
                 rowIndex++;
             }); 
@@ -338,28 +321,18 @@ namespace IRacing_Standings
                         StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                     }
 
-                    var posNumber = new TextBlock();
-                    UpdatePosNumberCell(posNumber, position);
-                    UpdateCellGeneric(posNumber, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(posNumber);
-
-
-                    Grid.SetColumnSpan(posNumber, PosNumberWidth);
-                    Grid.SetColumn(posNumber, columnIndex);
-                    Grid.SetRow(posNumber, rowIndex);
+                    var posNumber = UIHelper.CreateTextBlock(new Thickness(4, 4, 4, 4));
+                    UpdateCell(posNumber, "PosNumber", position.ClassPosition.ToString(), rowIndex, position, viewedCar, null);
+                    UIHelper.AddOrInsertChild(StandingsGrid, posNumber, CellIndex);
+                    UIHelper.SetCellFormat(posNumber, columnIndex, PosNumberWidth, rowIndex);
                     columnIndex += PosNumberWidth;
                     CellIndex++;
 
-                    var carNumber = new TextBlock();
-                    UpdateCarNumberCell(carNumber, position);
-                    UpdateCellGeneric(carNumber, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(carNumber);
-
-                    Grid.SetColumnSpan(carNumber, CarNumberWidth);
-                    Grid.SetColumn(carNumber, columnIndex);
-                    Grid.SetRow(carNumber, rowIndex);
+                    var carNumber = UIHelper.CreateTextBlock(new Thickness(0, 4, 3, 4), fontSize: 14);
+                    UpdateCell(carNumber, "CarNumber", $"#{position.CarNumber}", rowIndex, position, viewedCar, FontWeights.SemiBold);
+                    carNumber.FontStyle = FontStyles.Oblique;
+                    UIHelper.AddOrInsertChild(StandingsGrid, carNumber, CellIndex);
+                    UIHelper.SetCellFormat(carNumber, columnIndex, CarNumberWidth, rowIndex);
                     columnIndex += CarNumberWidth;
                     CellIndex++;
 
@@ -368,84 +341,50 @@ namespace IRacing_Standings
                     carLogo.Stretch = Stretch.UniformToFill;
                     carLogo.Source = new BitmapImage(new Uri($"images/{CarLogo.GetLogoUri(position.CarPath)}{(rowIndex % 2 == 1 ? "-gray" : "")}.png", UriKind.Relative));
                     carLogo.Source.Freeze();
-
-                    if (CellIndex >= StandingsGrid.Children.Count)
-                    {
-                        StandingsGrid.Children.Add(carLogo);
-                    }
-                    else
-                    {
-                        StandingsGrid.Children.Insert(CellIndex, carLogo);
-                    }
-                    
-                    Grid.SetColumnSpan(carLogo, CarLogoWidth);
-                    Grid.SetColumn(carLogo, columnIndex);
-                    Grid.SetRow(carLogo, rowIndex);
+                    UIHelper.AddOrInsertChild(StandingsGrid, carLogo, CellIndex);
+                    UIHelper.SetCellFormat(carLogo, columnIndex, CarLogoWidth, rowIndex);
                     columnIndex += CarLogoWidth;
                     CellIndex++;
 
-                    var driverName = new TextBlock();
-                    driverName.Tag = "DriverName";
-                    UpdateCellGeneric(driverName, rowIndex, position, viewedCar);
-                    UpdateDriverNameCell(driverName, position);
-
-                    CheckOrUpdateGridChildText(driverName);
-
-                    Grid.SetColumn(driverName, columnIndex);
-                    Grid.SetColumnSpan(driverName, DriverNameWidth);
-                    Grid.SetRow(driverName, rowIndex);
+                    var driverName = UIHelper.CreateTextBlock(new Thickness(7, 1, 0, 3.5), TextAlignment.Left);
+                    driverName.TextTrimming = TextTrimming.CharacterEllipsis;
+                    UpdateCell(driverName, "DriverName", Regex.Replace(position.Name, @"( .+ )", " "), rowIndex, position, viewedCar, null);
+                    UIHelper.AddOrInsertChild(StandingsGrid, driverName, CellIndex);
+                    UIHelper.SetCellFormat(driverName, columnIndex, DriverNameWidth, rowIndex);
                     columnIndex += DriverNameWidth;
                     CellIndex++;
 
-                    var iRating = new TextBlock();
-                    UpdateIRatingCell(iRating, position);
-                    UpdateCellGeneric(iRating, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(iRating);
-
-                    Grid.SetColumn(iRating, columnIndex);
-                    Grid.SetColumnSpan(iRating, IRatingWidth);
-                    Grid.SetRow(iRating, rowIndex);
+                    var iRating = UIHelper.CreateTextBlock(null);
+                    UpdateCell(iRating, "IRating", $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k", rowIndex, position, viewedCar, null);
+                    UIHelper.AddOrInsertChild(StandingsGrid, iRating, CellIndex);
+                    UIHelper.SetCellFormat(iRating, columnIndex, IRatingWidth, rowIndex);
                     columnIndex += IRatingWidth;
                     CellIndex++;
 
-                    var safetyRating = new TextBlock();
-                    UpdateSafetyRatingCell(safetyRating, position);
-                    UpdateCellGeneric(safetyRating, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(safetyRating);
-
-                    SetCellLocation(safetyRating, columnIndex, SafetyRatingWidth, rowIndex);
+                    var border = UIHelper.DesignSafetyRating(rowIndex, position, new Thickness(7, 3, 7, 3));
+                    UIHelper.AddOrInsertChild(StandingsGrid, border, CellIndex);
+                    UIHelper.SetCellFormat(border, columnIndex, SafetyRatingWidth, rowIndex);
                     columnIndex += SafetyRatingWidth;
                     CellIndex++;
 
-                    var deltaFromLeader = new TextBlock();
-                    UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First());
-                    UpdateCellGeneric(deltaFromLeader, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(deltaFromLeader);
-
-                    SetCellLocation(deltaFromLeader, columnIndex, DeltaWidth, rowIndex);
+                    var deltaFromLeader = UIHelper.CreateTextBlock(null, TextAlignment.Right);
+                    UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First(), viewedCar, rowIndex);
+                    UIHelper.AddOrInsertChild(StandingsGrid, deltaFromLeader, CellIndex);
+                    UIHelper.SetCellFormat(deltaFromLeader, columnIndex, DeltaWidth, rowIndex);
                     columnIndex += DeltaWidth;
                     CellIndex++;
 
-                    var fastestLap = new TextBlock();
-                    UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap);
-                    UpdateCellGeneric(fastestLap, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(fastestLap);
-
-                    SetCellLocation(fastestLap, columnIndex, FastestLapWidth, rowIndex);
+                    var fastestLap = UIHelper.CreateTextBlock(new Thickness(6, 4, 6, 4), TextAlignment.Right);
+                    UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap, viewedCar, rowIndex);
+                    UIHelper.AddOrInsertChild(StandingsGrid, fastestLap, CellIndex);
+                    UIHelper.SetCellFormat(fastestLap, columnIndex, FastestLapWidth, rowIndex);
                     columnIndex += FastestLapWidth;
                     CellIndex++;
 
-                    var lastLap = new TextBlock();
-                    UpdateLastLapCell(lastLap, position, classFastestDriver.FastestLap, rowIndex);
-                    UpdateCellGeneric(lastLap, rowIndex, position, viewedCar);
-
-                    CheckOrUpdateGridChildText(lastLap);
-
-                    SetCellLocation(lastLap, columnIndex, LastLapWidth, rowIndex);
+                    var lastLap = UIHelper.CreateTextBlock(new Thickness(6, 4, 6, 4), TextAlignment.Right, HorizontalAlignment.Left);
+                    UpdateLastLapCell(lastLap, position, classFastestDriver.FastestLap, viewedCar, rowIndex);
+                    UIHelper.AddOrInsertChild(StandingsGrid, lastLap, CellIndex);
+                    UIHelper.SetCellFormat(lastLap, columnIndex, LastLapWidth, rowIndex);
                     columnIndex += LastLapWidth;
                     CellIndex++;
                 });
@@ -454,105 +393,35 @@ namespace IRacing_Standings
             return rowIndex;
         }
 
-        private void CheckOrUpdateGridChildText(TextBlock textBlock)
+        private void UpdateCell(TextBlock textBlock, string tag, string text, int rowIndex, Driver position, Driver viewedCar, FontWeight? fontWeight)
         {
-            if (CellIndex >= StandingsGrid.Children.Count)
-            {
-                StandingsGrid.Children.Add(textBlock);
-            }
-            else if (StandingsGrid.Children[CellIndex].GetType() != typeof(TextBlock) || ((TextBlock)StandingsGrid.Children[CellIndex]).Text != textBlock.Text)
-            {
-                StandingsGrid.Children.Insert(CellIndex, textBlock);
-            }
-        }
+            textBlock.Text = text;
+            textBlock.Tag = tag;
+            textBlock.Margin = new Thickness(-0.5, 0, -0.5, 0);
 
-        private void UpdateCellGeneric(TextBlock textBlock, int rowIndex, Driver position, Driver viewedCar)
-        {
-            textBlock.FontSize = 16;
-            textBlock.FontWeight = FontWeights.Bold;
-            textBlock.TextTrimming = TextTrimming.None;
-            if (textBlock.Tag.ToString() != "LastLap" && textBlock.Tag.ToString() != "FastestLap" && textBlock.Tag.ToString() != "SafetyRating")
-            {
+            textBlock.FontWeight = fontWeight ?? FontWeights.Bold;
+            if (tag != "LastLap" && tag != "FastestLap" && tag != "SafetyRating")
                 textBlock.Foreground = Brushes.White;
-            }
 
-            if (textBlock.Tag.ToString() != "LastLap")
-            {
-                if (rowIndex % 2 == 1)
-                {
-                    textBlock.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525");
-                }
-                else
-                {
-                    textBlock.Background = Brushes.Black;
-                }
-            }
-            
+            if (tag != "LastLap")
+                textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525") : Brushes.Black;
 
-            switch (textBlock.Tag.ToString())
+
+            switch (tag)
             {
                 case "DriverName":
                 case "PosNumber":
                 case "IRating":
                 case "CarNumber":
-                    if(_TelemetryData.FeedTelemetry.RadioTransmitCarIdx == position.CarId)
+                    if (_TelemetryData.FeedTelemetry.RadioTransmitCarIdx == position.CarId)
                         textBlock.Foreground = Brushes.LimeGreen;
                     else if (position.CarId == viewedCar.CarId)
                         textBlock.Foreground = Brushes.Gold;
                     break;
             }
-        } 
-
-        private void SetCellLocation(TextBlock textBlock, int columnIndex, int columnWidth, int rowIndex)
-        {
-            Grid.SetColumn(textBlock, columnIndex);
-            Grid.SetColumnSpan(textBlock, columnWidth);
-            Grid.SetRow(textBlock, rowIndex);
         }
 
-        private void UpdateCell(TextBlock textBlock, string tag, string text, TextAlignment textAlignment = TextAlignment.Center, HorizontalAlignment hAlignment = HorizontalAlignment.Stretch)
-        {
-            textBlock.Text = text;
-            textBlock.Tag = tag;
-            textBlock.TextAlignment = textAlignment;
-            textBlock.HorizontalAlignment = hAlignment;
-            textBlock.Margin = new Thickness(-0.5, 0, -0.5, 0);
-            textBlock.Padding = new Thickness(0, 1, 0, 0);
-        }
-
-        private void UpdatePosNumberCell(TextBlock textBlock, Driver position)
-        {
-            UpdateCell(textBlock, "PosNumber", position.ClassPosition.ToString());
-        }
-
-        private void UpdateCarNumberCell(TextBlock textBlock, Driver position)
-        {
-            UpdateCell(textBlock, "CarNumber", $"#{position.CarNumber}");
-            textBlock.Padding = new Thickness(1);
-        }
-
-        private void UpdateDriverNameCell(TextBlock textBlock, Driver position)
-        {
-            var driverNameText = Regex.Replace(position.Name, @"( .+ )", " ");
-            
-            UpdateCell(textBlock, "DriverName", driverNameText, TextAlignment.Left);
-            textBlock.Padding = new Thickness(5, 1, 0, 3.5);
-            textBlock.TextTrimming = TextTrimming.CharacterEllipsis;
-        }
-
-        private void UpdateIRatingCell(TextBlock textBlock, Driver position)
-        {
-            UpdateCell(textBlock, "IRating", $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k");
-        }
-
-        private void UpdateSafetyRatingCell(TextBlock textBlock, Driver position)
-        {
-            UpdateCell(textBlock, "SafetyRating", position.SafetyRating.Item1);
-            
-            textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom(position.SafetyRating.Item2.Replace("0x", "#"));
-        }
-
-        private void UpdateDeltaCell(TextBlock textBlock, Driver position, Driver firstPosition)
+        private void UpdateDeltaCell(TextBlock textBlock, Driver position, Driver firstPosition, Driver viewedPosition, int rowIndex)
         {
             var text = "-";
             if (_TelemetryData.IsRace)
@@ -574,10 +443,10 @@ namespace IRacing_Standings
                 }
             }
 
-            UpdateCell(textBlock, "Delta", text);
+            UpdateCell(textBlock, "Delta", text, rowIndex, position, viewedPosition, null);
         }
 
-        private void UpdateFastestLapCell(TextBlock textBlock, Driver position, double? classFastestLap)
+        private void UpdateFastestLapCell(TextBlock textBlock, Driver position, double? classFastestLap, Driver viewedPosition, int rowIndex)
         {
             if (position.FastestLap != null && position.FastestLap.Value == (classFastestLap ?? 0))
             {
@@ -602,14 +471,12 @@ namespace IRacing_Standings
                 }
             }
 
-            UpdateCell(textBlock, "FastestLap", text, TextAlignment.Right);
-            textBlock.Padding = new Thickness(0, 1, 10, 0);
+            UpdateCell(textBlock, "FastestLap", text, rowIndex, position, viewedPosition, null);
         }
 
-        private void UpdateLastLapCell(TextBlock textBlock, Driver position, double? classFastestLap, int rowIndex)
+        private void UpdateLastLapCell(TextBlock textBlock, Driver position, double? classFastestLap, Driver viewedPosition, int rowIndex)
         {
             var text = textBlock.Text ?? string.Empty;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Left;
 
             if ((position.FastestLap ?? 9999.9) == classFastestLap)
             {
@@ -627,7 +494,6 @@ namespace IRacing_Standings
             }
             else
             {
-
                 var timeText = StringHelper.GetTimeString(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000, true);
                 textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525") : Brushes.Black;
                 if (textBlock.Text != timeText)
@@ -636,8 +502,7 @@ namespace IRacing_Standings
                 }
             }
 
-            UpdateCell(textBlock, "LastLap", text, TextAlignment.Right);
-            textBlock.Padding = new Thickness(5, 1, 5, 3.5);
+            UpdateCell(textBlock, "LastLap", text, rowIndex, position, viewedPosition, null);
         }
     }
 }
