@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IRacing_Standings"
         mc:Ignorable="d"
-        Title="RelativeWindow" Height="189" Opacity="0.85" AllowsTransparency="True" WindowStyle="None" Background="#00000000">
-    <Border Background="White">
+        Title="RelativeWindow" Height="189" Opacity="0.75" AllowsTransparency="True" WindowStyle="None" Background="#00000000">
+    <Border>
         <Border.Clip>
             <RectangleGeometry x:Name="RelativeGeometry" RadiusX="10" RadiusY="10" ></RectangleGeometry>
         </Border.Clip>

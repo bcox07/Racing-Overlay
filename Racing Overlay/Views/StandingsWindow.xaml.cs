@@ -272,9 +272,10 @@ namespace IRacing_Standings
                 classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 classTitle.Foreground = Brushes.Black;
                 classTitle.FontWeight = FontWeights.Bold;
+                classTitle.Margin = new Thickness(0, 0, -1 , 0);
 
                 UIHelper.AddOrInsertChild(StandingsGrid, classTitle, CellIndex);
-                UIHelper.SetCellFormat(classTitle, 0, ColumnsWidth - FastestLapWidth, rowIndex);
+                UIHelper.SetCellFormat(classTitle, 0, ColumnsWidth - FastestLapWidth - 20, rowIndex);
                 CellIndex++;
 
                 var sof = (int)driverClassGroup.Value.Average(d => d.iRating);
@@ -285,6 +286,7 @@ namespace IRacing_Standings
                 carCountTitle.FontWeight = FontWeights.Bold;
                 carCountTitle.Foreground = Brushes.Black;
                 carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                carCountTitle.Margin = new Thickness(0, 0, -1, 0);
 
                 UIHelper.AddOrInsertChild(StandingsGrid, carCountTitle, CellIndex);
                 UIHelper.SetCellFormat(carCountTitle, ColumnsWidth - FastestLapWidth - 20, 10, rowIndex);
