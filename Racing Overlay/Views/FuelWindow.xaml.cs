@@ -66,7 +66,7 @@ namespace IRacing_Standings
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (!System.Windows.Application.Current.Windows.OfType<FuelWindow>().Any())
+                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
                     {
                         return;
                     }
@@ -77,18 +77,20 @@ namespace IRacing_Standings
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (!System.Windows.Application.Current.Windows.OfType<FuelWindow>().Any())
+                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
                     {
                         return;
                     }
                     Show();
                 });
             }
+            var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
+            var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             FuelRemaining = _TelemetryData.FeedTelemetry.FuelLevel;
             LapsToEnd = _TelemetryData.FeedTelemetry.SessionTimeRemain / (_TelemetryData.CurrentSession.ResultsFastestLap[0].FastestTime * 1.01);
             if (FuelUseList.Count >= 2)
             {
-                FuelToAdd = LapsToEnd * AvgFuelUsage - FuelRemaining;
+                FuelToAdd = (LapsToEnd * AvgFuelUsage) - (FuelRemaining - (AvgFuelUsage * (1 - lapDistPct)));
                 AvgFuelUsage = -1;
                 var avg = FuelUseList.Select(f => f.FuelUsed).Average();
                 var stdDev = Math.Sqrt(FuelUseList.Select(f => Math.Pow(f.FuelUsed - avg, 2)).Sum() / FuelUseList.Count());
@@ -103,7 +105,7 @@ namespace IRacing_Standings
             var lap = _TelemetryData.FeedTelemetry.Lap;
             var currentLapFuel = new FuelUse(lap, LastLapFuelLevel - FuelRemaining, _TelemetryData.FeedTelemetry.OnPitRoad);
             
-            var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
+            
             //Reset calculator after leaving pits
             if (_TelemetryData.CurrentSession.SessionNum != ((int?)_TelemetryData._DataSample.LastSample?.Telemetry?.Session?.SessionNum ?? _TelemetryData.CurrentSession.SessionNum)
                 || (_TelemetryData.FeedSessionData.WeekendInfo.SessionID != (_TelemetryData._DataSample.LastSample?.SessionData.WeekendInfo.SessionID ?? _TelemetryData.FeedSessionData.WeekendInfo.SessionID)))
@@ -146,7 +148,7 @@ namespace IRacing_Standings
 
                 fuelRemainingCell.Text = FuelRemaining.ToString("N2");
                 fuelUsageCell.Text = AvgFuelUsage.ToString("N2");
-                fuelToAddCell.Text = FuelToAdd.ToString("N2");
+                fuelToAddCell.Text = $"{FuelToAdd.ToString("N2")} - {(FuelToAdd + AvgFuelUsage).ToString("N2")}";
                 lapsRemainingCell.Text = LapsRemaining.ToString("N2");
                 
 
