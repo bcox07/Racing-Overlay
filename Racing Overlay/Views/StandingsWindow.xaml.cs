@@ -108,6 +108,11 @@ namespace IRacing_Standings
             var sessionLapCurrent = viewedCarPosition.LapsComplete + 1;
             var driverClasses = telemetryData.SortedPositions.Select(s => s.Key);
 
+            if (sessionLapsTotal == 0)
+            {
+                sessionLapsTotal = (long)(sessionTime / (viewedCar.FastestLap ?? 1 * 1.03)) + 1;
+            }
+
             var rowIndex = 0;
             CellIndex = 0;
             Dispatcher.Invoke(() =>
@@ -125,73 +130,55 @@ namespace IRacing_Standings
                     StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(25);
                 }
 
-                var title = CellIndex < StandingsGrid.Children.Count ? (TextBlock)StandingsGrid.Children[CellIndex] : new TextBlock();
+                var title = new TextBlock();
                 var elapsedTime = sessionTime - _TelemetryData.FeedTelemetry.SessionTimeRemain;
-                
+
                 var sessionTimeString = StringHelper.GetTimeString(sessionTime, false);
                 var elapsedTimeString = StringHelper.GetTimeString(elapsedTime, false);
 
-                if (title.Text == "")
-                {
-                    title = new TextBlock();
-                    if (sessionTimeString1 == "unlimited")
-                    {
-                        title.Text = $"{sessionType} - {sessionLapCurrent} / {sessionLapsTotal}";
-                    }
-                    else
-                    {
-                        title.Text = $"{sessionType} - {elapsedTimeString} / {sessionTimeString}";
-                    }
+                title.Text = $"{sessionType}";
+                title.FontSize = 18;
+                title.Foreground = Brushes.White;
+                title.Background = Brushes.Black;
+                title.FontWeight = FontWeights.Bold;
+                title.Padding = new Thickness(5);
+                title.VerticalAlignment = VerticalAlignment.Center;
 
-                    title.FontSize = 20;
-                    title.Height = 30;
-                    title.Foreground = Brushes.White;
-                    title.Background = Brushes.Black;
+                UIHelper.SetCellFormat(title, 0, 16, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, title, CellIndex);
+                CellIndex++;
 
-                    Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
-                    Grid.SetRow(title, rowIndex);
-                    StandingsGrid.Children.Add(title);
-                }
-                else if (!title.Text.Contains($"{sessionType}"))
-                {
-                    if (sessionTimeString1 == "unlimited" || sessionLapsTotal > 0)
-                    {
-                        title.Text = $"{sessionType} - {sessionLapCurrent} / {sessionLapsTotal}";
-                    }
-                    else
-                    {
-                        title.Text = $"{sessionType} - {elapsedTimeString} / {sessionTimeString}";
-                    }
-                    title.FontSize = 20;
-                    title.Height = 30;
-                    title.Foreground = Brushes.White;
-                    title.Background = Brushes.Black;
+                var timeTitle = new TextBlock();
+                timeTitle.Text = $"{elapsedTimeString} / {sessionTimeString}";
+                timeTitle.FontSize = 16;
+                timeTitle.FontWeight = FontWeights.Bold;
+                timeTitle.TextAlignment = TextAlignment.Right;
+                timeTitle.VerticalAlignment = VerticalAlignment.Center;
+                timeTitle.Padding = new Thickness(5);
+                timeTitle.Foreground = Brushes.White;
+                timeTitle.Background = Brushes.Black;
 
-                    Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
-                    Grid.SetRow(title, rowIndex);
-                }
-                else
-                {
-                    if (sessionTimeString1 == "unlimited" || sessionLapsTotal > 0)
-                    {
-                        title.Text = $"{sessionType} - {sessionLapCurrent} / {sessionLapsTotal}";
-                    }
-                    else
-                    {
-                        title.Text = $"{sessionType} - {elapsedTimeString} / {sessionTimeString}";
-                    }
-                    title.Foreground = Brushes.White;
-                    title.Background = Brushes.Black;
-                    title.Padding = new Thickness(5, 0, 0, 0);
+                UIHelper.SetCellFormat(timeTitle, 16, 10, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, timeTitle, CellIndex);
+                CellIndex++;
 
+                var lapsTitle = new TextBlock();
+                lapsTitle.Text = $"{sessionLapCurrent} / {sessionLapsTotal}";
+                lapsTitle.FontSize = 16;
+                lapsTitle.FontWeight = FontWeights.Bold;
+                lapsTitle.TextAlignment = TextAlignment.Right;
+                lapsTitle.VerticalAlignment = VerticalAlignment.Center;
+                lapsTitle.Padding = new Thickness(5);
+                lapsTitle.Foreground = Brushes.White;
+                lapsTitle.Background = Brushes.Black;
 
-                    Grid.SetColumnSpan(title, ColumnsWidth - FastestLapWidth);
-                    Grid.SetRow(title, rowIndex);
-                }
+                UIHelper.SetCellFormat(lapsTitle, 26, 11, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, lapsTitle, CellIndex);
             });
-           
+
             rowIndex++;
             CellIndex++;
+
             foreach (var driverClassGroup in telemetryData.SortedPositions)
             {
                 rowIndex = UpdateRow(driverClassGroup, viewedCar, rowIndex);
