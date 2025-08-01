@@ -179,7 +179,7 @@ namespace IRacing_Standings
             get
             {
                 var currentSession = new SessionData._SessionInfo._Sessions();
-                if (FeedSessionData.SessionInfo.Sessions[FeedTelemetry.Session.SessionNum] != null)
+                if (FeedSessionData.SessionInfo.Sessions.Length >= (FeedTelemetry.Session?.SessionNum ?? 99))
                 {
                     currentSession = FeedSessionData.SessionInfo.Sessions[FeedTelemetry.Session.SessionNum];
                 }
@@ -510,7 +510,9 @@ namespace IRacing_Standings
 
         private double? GetFastestLap(SessionData._SessionInfo._Sessions._ResultsPositions driver)
         {
-            return ((float[])FeedTelemetry["CarIdxBestLapTime"])[driver.CarIdx] > 0 ? (double?)((float[])FeedTelemetry["CarIdxBestLapTime"])[driver.CarIdx] : driver.FastestTime > 0 ? (double?)driver.FastestTime : null;
+            var fastestLap = ((float[])FeedTelemetry["CarIdxBestLapTime"])[driver.CarIdx];
+
+            return fastestLap > 0 ? fastestLap : driver.FastestTime > 0 ? (double?)driver.FastestTime : null;
         }
 
         private KeyValuePair<int, List<Driver>> SortUnplacedDrivers(KeyValuePair<int, List<Driver>> driverClassGroup)

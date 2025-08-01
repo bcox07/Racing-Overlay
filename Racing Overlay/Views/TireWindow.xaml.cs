@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iRacingSDK;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -49,6 +50,30 @@ namespace IRacing_Standings
                 Topmost = true;
             });
             LocalTelemetry = telemetryData;
+
+            if (LocalTelemetry.FeedTelemetry.IsReplayPlaying)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
+                    {
+                        return;
+                    }
+                    Hide();
+                });
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
+                    {
+                        return;
+                    }
+                    Show();
+                });
+            }
+
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
                 DisplayTireData();

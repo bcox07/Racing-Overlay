@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.IO.IsolatedStorage;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace IRacing_Standings
 {
@@ -24,7 +25,7 @@ namespace IRacing_Standings
         private void App_Startup(object sender, StartupEventArgs e)
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            
+
             var mainWindow = new MainWindow(config);
             mainWindow.Show();
         }
