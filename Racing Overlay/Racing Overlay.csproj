@@ -135,8 +135,12 @@
     <Compile Include="Models\FuelUse.cs" />
     <Compile Include="Models\Lap.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Views\LiveTrackWindow.xaml.cs">
-      <DependentUpon>LiveTrackWindow.xaml</DependentUpon>
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Views\FullTrackWindow.xaml.cs">
+      <DependentUpon>FullTrackWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SimpleTrackWindow.xaml.cs">
+      <DependentUpon>SimpleTrackWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TireWindow.xaml.cs">
       <DependentUpon>TireWindow.xaml</DependentUpon>
@@ -153,7 +157,11 @@
       <DependentUpon>StandingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\TelemetryData.cs" />
-    <Page Include="Views\LiveTrackWindow.xaml">
+    <Page Include="Views\FullTrackWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SimpleTrackWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -285,6 +293,19 @@
     <Content Include="images\mclaren-logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="TrackMaps\341-silverstone\coordinates.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TrackMaps\341-silverstone\map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TrackMaps\541-the bend\map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Resource Include="TrackMaps\mugello.png" />
+    <None Include="TrackMaps\463-magny-cours\map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -436,6 +457,9 @@
     <None Include="SpeedFiles\229-cota\bmwm4gt3.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SpeedFiles\233-donington\ligierjsp320.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="SpeedFiles\239-monzafull\cadillacvseriesrgtp.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -509,6 +533,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\434-daytona\ligierjsp320.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SpeedFiles\434-donington\ligierjsp320.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\434-roadatlanta\ligierjsp320.csv">
@@ -602,6 +629,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SpeedFiles\95-sebring\ligierjsp320.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TrackMaps\463-magny-cours\coordinates.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TrackMaps\541-the bend\coordinates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TrackMaps\roadamerica\roadamerica.json">
