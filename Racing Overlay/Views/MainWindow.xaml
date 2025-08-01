@@ -79,7 +79,7 @@
                 <Button x:Name="tiresReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="tiresReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
             </Grid>
         </TabItem>
-        <TabItem Header="Live Track">
+        <TabItem Header="Simple Track">
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -89,9 +89,24 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="liveTrackLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="liveTrackLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
-                <Button x:Name="liveTrackSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="liveTrackSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
-                <Button x:Name="liveTrackReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="liveTrackReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="simpleTrackLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="simpleTrackLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
+                <Button x:Name="simpleTrackSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="simpleTrackSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
+                <Button x:Name="simpleTrackReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="simpleTrackReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Full Track">
+            <Grid Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="fullTrackLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
+                <Button x:Name="fullTrackSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
+                <Button x:Name="fullTrackReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
             </Grid>
         </TabItem>
     </TabControl>

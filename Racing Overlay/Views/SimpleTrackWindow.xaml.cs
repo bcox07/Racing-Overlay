@@ -1,39 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace IRacing_Standings.Windows
 {
     /// <summary>
-    /// Interaction logic for LiveTrackWindow.xaml
+    /// Interaction logic for SimpleTrackWindow.xaml
     /// </summary>
     /// 
-   
-    public partial class LiveTrackWindow : Window
+
+    public partial class SimpleTrackWindow : Window
     {
         TelemetryData LocalTelemetry;
         public bool Locked = false;
-        public LiveTrackWindow(TelemetryData telemetryData)
+        public SimpleTrackWindow(TelemetryData telemetryData)
         {
             LocalTelemetry = telemetryData;
             InitializeComponent();
             var mainWindow = (MainWindow)Application.Current.MainWindow;
-            Locked = bool.Parse(mainWindow.WindowSettings.LiveTrackSettings["Locked"] ?? "false");
-            Left = double.Parse(mainWindow.WindowSettings.LiveTrackSettings["XPos"] ?? "0");
-            Top = double.Parse(mainWindow.WindowSettings.LiveTrackSettings["YPos"] ?? "0");
+            Locked = bool.Parse(mainWindow.WindowSettings.SimpleTrackSettings["Locked"] ?? "false");
+            Left = double.Parse(mainWindow.WindowSettings.SimpleTrackSettings["XPos"] ?? "0");
+            Top = double.Parse(mainWindow.WindowSettings.SimpleTrackSettings["YPos"] ?? "0");
 
             for (int i= 0; i < 1; i++)
             {
@@ -67,8 +57,7 @@ namespace IRacing_Standings.Windows
         }
 
         private void DisplayTrackMap()
-        {            
-
+        {
             foreach(var driver in LocalTelemetry.AllPositions)
             {
                 Dispatcher.Invoke(() =>
@@ -79,6 +68,7 @@ namespace IRacing_Standings.Windows
                     textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
                     textBox.Width = 30;
                     textBox.Height = 30;
+                    
                     textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1500 - 15, 1.65, 0, 0);
                     textBox.FontWeight = FontWeights.Bold;
                     textBox.FontSize = 16;
@@ -100,7 +90,7 @@ namespace IRacing_Standings.Windows
                     }
  
 
-                   List<UIElement> elementsToRemove = new List<UIElement>();
+                    List<UIElement> elementsToRemove = new List<UIElement>();
                     foreach (UIElement uiElement in TrackCanvas.Children.OfType<TextBox>())
                     { 
                         var element = (TextBox) uiElement;
@@ -110,10 +100,7 @@ namespace IRacing_Standings.Windows
                         }
                     }
 
-                    foreach (var element in elementsToRemove)
-                    {
-                        TrackCanvas.Children.Remove(element);
-                    }
+                    elementsToRemove.ForEach(element => TrackCanvas.Children.Remove(element));
 
                     if (driver.PosOnTrack > 0) 
                     {

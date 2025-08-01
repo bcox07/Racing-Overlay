@@ -27,7 +27,8 @@ namespace IRacing_Standings
         FuelWindow FuelWindow;
         RelativeWindow RelativeWindow;
         TireWindow TireWindow;
-        LiveTrackWindow LiveTrackWindow;
+        SimpleTrackWindow SimpleTrackWindow;
+        FullTrackWindow FullTrackWindow;
         TelemetryData telemetryData;
         public WindowSettings WindowSettings;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
@@ -45,7 +46,8 @@ namespace IRacing_Standings
             relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? "Unlock" : "Lock";
             fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? "Unlock" : "Lock";
             tiresLock.Content = WindowSettings.TireSettings.ContainsKey("Locked") ? bool.Parse(WindowSettings.TireSettings["Locked"]) ? "Unlock" : "Lock" : "Lock";
-            liveTrackLock.Content = WindowSettings.LiveTrackSettings.ContainsKey("Locked") ? bool.Parse(WindowSettings.LiveTrackSettings["Locked"]) ? "Unlock" : "Lock" : "Lock";
+            simpleTrackLock.Content = bool.Parse(WindowSettings.SimpleTrackSettings["Locked"]) ? "Unlock" : "Lock";
+            fullTrackLock.Content = bool.Parse(WindowSettings.FullTrackSettings["Locked"]) ? "Unlock" : "Lock";
 
             StartOperation(CheckIRacingConnection, thread);
             try
@@ -185,7 +187,7 @@ namespace IRacing_Standings
                         TireWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                     }
 
-                    if (LiveTrackWindow == null)
+                    if (SimpleTrackWindow == null)
                     {
                         if (tokenSource.IsCancellationRequested)
                         {
@@ -193,8 +195,8 @@ namespace IRacing_Standings
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            LiveTrackWindow = new LiveTrackWindow(new TelemetryData(telemetryData));
-                            LiveTrackWindow.Show();
+                            SimpleTrackWindow = new SimpleTrackWindow(new TelemetryData(telemetryData));
+                            SimpleTrackWindow.Show();
                         });
                     }
                     else
@@ -205,7 +207,35 @@ namespace IRacing_Standings
                         }
                         try
                         {
-                            LiveTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            SimpleTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine(ex);
+                        }
+                    }
+
+                    if (FullTrackWindow == null)
+                    {
+                        if (tokenSource.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        Dispatcher.Invoke(() =>
+                        {
+                            FullTrackWindow = new FullTrackWindow(new TelemetryData(telemetryData));
+                            FullTrackWindow.Show();
+                        });
+                    }
+                    else
+                    {
+                        if (tokenSource.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        try
+                        {
+                            FullTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                         }
                         catch (Exception ex)
                         {
@@ -268,52 +298,28 @@ namespace IRacing_Standings
 
         private void CloseAllWindows()
         {
-            if (StandingsWindow != null)
-            { 
-                if (tokenSource.IsCancellationRequested) { return; }
-                Dispatcher.Invoke(() =>
-                {
-                    StandingsWindow.Close();
-                    StandingsWindow = null;
-                });
-            }
-            if (FuelWindow != null)
-            {
-                if (tokenSource.IsCancellationRequested) { return; }
-                Dispatcher.Invoke(() =>
-                {
-                    FuelWindow.Close();
-                    FuelWindow = null;
-                });
-            }
-            if (RelativeWindow != null)
-            {
-                if (tokenSource.IsCancellationRequested) { return; }
-                Dispatcher.Invoke(() =>
-                {
-                    RelativeWindow.Close();
-                    RelativeWindow = null;
-                });
-            }
-            if (TireWindow != null)
-            {
-                if (tokenSource.IsCancellationRequested) { return; }
-                Dispatcher.Invoke(() =>
-                {
-                    TireWindow.Close();
-                    TireWindow = null;
-                });
-            }
-            if (LiveTrackWindow != null)
-            {
-                if (tokenSource.IsCancellationRequested) { return; }
-                Dispatcher.Invoke(() =>
-                {
-                    LiveTrackWindow.Close();
-                    LiveTrackWindow = null;
-                });
-            }
+            StandingsWindow = (StandingsWindow) CloseWindow(StandingsWindow);
+            FuelWindow = (FuelWindow) CloseWindow(FuelWindow);
+            RelativeWindow = (RelativeWindow) CloseWindow(RelativeWindow);
+            TireWindow = (TireWindow) CloseWindow(TireWindow);
+            SimpleTrackWindow = (SimpleTrackWindow) CloseWindow(SimpleTrackWindow);
+            FullTrackWindow = (FullTrackWindow) CloseWindow(FullTrackWindow);
         }
+
+        private Window CloseWindow(Window window)
+        {
+            if (window != null)
+            {
+                if (tokenSource.IsCancellationRequested) { return null ; }
+                Dispatcher.Invoke(() =>
+                {
+                    window.Close();
+                    window = null;
+                });
+            }
+            return null;
+        }
+
 
         private void standingsLock_Click(object sender, RoutedEventArgs e)
         {
@@ -443,35 +449,67 @@ namespace IRacing_Standings
             }
         }
 
-        private void liveTrackLock_Click(object sender, RoutedEventArgs e)
+        private void simpleTrackLock_Click(object sender, RoutedEventArgs e)
         {
-            if (LiveTrackWindow != null)
+            if (SimpleTrackWindow != null)
             {
-                liveTrackLock.Content = LiveTrackWindow.Locked ? "Lock" : "Unlock";
-                LiveTrackWindow.Locked = !LiveTrackWindow.Locked;
-                WindowSettings.LiveTrackSettings["Locked"] = (LiveTrackWindow.Locked).ToString();
+                simpleTrackLock.Content = SimpleTrackWindow.Locked ? "Lock" : "Unlock";
+                SimpleTrackWindow.Locked = !SimpleTrackWindow.Locked;
+                WindowSettings.SimpleTrackSettings["Locked"] = (SimpleTrackWindow.Locked).ToString();
             }
         }
 
-        private void liveTrackSave_Click(object sender, RoutedEventArgs e)
+        private void simpleTrackSave_Click(object sender, RoutedEventArgs e)
         {
-            if (LiveTrackWindow != null)
+            if (SimpleTrackWindow != null)
             {
-                _configuration.AppSettings.Settings["LiveTrackWindowLocked"].Value = LiveTrackWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["LiveTrackWindowXPos"].Value = LiveTrackWindow.Left.ToString();
-                _configuration.AppSettings.Settings["LiveTrackWindowYPos"].Value = LiveTrackWindow.Top.ToString();
+                _configuration.AppSettings.Settings["SimpleTrackWindowLocked"].Value = SimpleTrackWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["SimpleTrackWindowXPos"].Value = SimpleTrackWindow.Left.ToString();
+                _configuration.AppSettings.Settings["SimpleTrackWindowYPos"].Value = SimpleTrackWindow.Top.ToString();
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
             }
         }
 
-        private void liveTrackReset_Click(object sender, RoutedEventArgs e)
+        private void simpleTrackReset_Click(object sender, RoutedEventArgs e)
         {
-            if (LiveTrackWindow != null)
+            if (SimpleTrackWindow != null)
             {
-                LiveTrackWindow.Left = 0;
-                LiveTrackWindow.Top = 0;
+                SimpleTrackWindow.Left = 0;
+                SimpleTrackWindow.Top = 0;
+            }
+        }
+
+        private void fullTrackLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (FullTrackWindow != null)
+            {
+                fullTrackLock.Content = FullTrackWindow.Locked ? "Lock" : "Unlock";
+                FullTrackWindow.Locked = !FullTrackWindow.Locked;
+                WindowSettings.FullTrackSettings["Locked"] = (FullTrackWindow.Locked).ToString();
+            }
+        }
+
+        private void fullTrackSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (FullTrackWindow != null)
+            {
+                _configuration.AppSettings.Settings["FullTrackWindowLocked"].Value = FullTrackWindow.Locked.ToString();
+                _configuration.AppSettings.Settings["FullTrackWindowXPos"].Value = FullTrackWindow.Left.ToString();
+                _configuration.AppSettings.Settings["FullTrackWindowYPos"].Value = FullTrackWindow.Top.ToString();
+
+                _configuration.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
+            }
+        }
+
+        private void fullTrackReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (FullTrackWindow != null)
+            {
+                FullTrackWindow.Left = 0;
+                FullTrackWindow.Top = 0;
             }
         }
     }

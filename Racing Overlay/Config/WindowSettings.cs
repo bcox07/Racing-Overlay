@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace IRacing_Standings
 {
@@ -28,7 +20,14 @@ namespace IRacing_Standings
             { "YPos", "0" }
         };
 
-        public Dictionary<string, string> LiveTrackSettings { get; set; } = new Dictionary<string, string>
+        public Dictionary<string, string> SimpleTrackSettings { get; set; } = new Dictionary<string, string>
+        {
+            { "Locked", "false" },
+            { "XPos", "0" },
+            { "YPos", "0" }
+        };
+
+        public Dictionary<string, string> FullTrackSettings { get; set; } = new Dictionary<string, string>
         {
             { "Locked", "false" },
             { "XPos", "0" },
@@ -59,40 +58,24 @@ namespace IRacing_Standings
                 };
                 TireSettings = new Dictionary<string, string>()
                 {
-                    { "Locked", appSettings.Settings["LiveTrackWindowLocked"].Value },
+                    { "Locked", appSettings.Settings["TireWindowLocked"].Value },
                     { "XPos", appSettings.Settings["TireWindowXPos"].Value },
                     { "YPos", appSettings.Settings["TireWindowYPos"].Value }
                 };
-                LiveTrackSettings = new Dictionary<string, string>()
+                SimpleTrackSettings = new Dictionary<string, string>()
                 {
-                    { "Locked", appSettings.Settings["LiveTrackWindowLocked"].Value },
-                    { "XPos", appSettings.Settings["LiveTrackWindowXPos"].Value },
-                    { "YPos", appSettings.Settings["LiveTrackWindowYPos"].Value }
+                    { "Locked", appSettings.Settings["SimpleTrackWindowLocked"].Value },
+                    { "XPos", appSettings.Settings["SimpleTrackWindowXPos"].Value },
+                    { "YPos", appSettings.Settings["SimpleTrackWindowYPos"].Value }
+                };
+                FullTrackSettings = new Dictionary<string, string>()
+                {
+                    { "Locked", appSettings.Settings["FullTrackWindowLocked"].Value },
+                    { "XPos", appSettings.Settings["FullTrackWindowXPos"].Value },
+                    { "YPos", appSettings.Settings["FullTrackWindowYPos"].Value }
                 };
             }
            
-        }
-
-        public void SaveSettings(string window, Dictionary<string, string> settings)
-        {
-            switch(window)
-            {
-                case "Standings":
-                    StandingsSettings = settings;
-                    break;
-                case "Relative":
-                    RelativeSettings = settings;
-                    break;
-                case "Fuel":
-                     FuelSettings = settings;
-                    break;
-                case "Tires":
-                    TireSettings = settings;
-                    break;
-                case "LiveTrack":
-                    LiveTrackSettings = settings;
-                    break;
-            }
         }
     }
 }
