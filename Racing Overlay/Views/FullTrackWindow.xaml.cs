@@ -1,5 +1,4 @@
-﻿using IRacing_Standings.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -135,17 +134,23 @@ namespace IRacing_Standings.Windows
 
         private void GenerateCoordinates()
         {
+
+
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
             points.Add(0, new List<double> { 284, 204 });
             points.Add(230, new List<double> { 240, 188 });
+            points.Add(390, new List<double> { 209, 177 });
             points.Add(428, new List<double> { 202, 170 });
             points.Add(624, new List<double> { 192, 132 });
-            points.Add(905, new List<double> { 152, 99 });
+            points.Add(905, new List<double>  { 152, 99 });
             points.Add(1041, new List<double> { 172, 80 });
+            points.Add(1070, new List<double> { 167, 75 });
+            points.Add(1100, new List<double> { 161, 74 });
             points.Add(1151, new List<double> { 151, 74 });
             points.Add(1243, new List<double> { 133, 80 });
-            points.Add(1900, new List<double> { 77, 198 }); 
+            points.Add(1886, new List<double> { 78, 195 });
+            points.Add(1940, new List<double> { 77, 206 });
             points.Add(1983, new List<double> { 83, 213 });
             points.Add(2099, new List<double> { 103, 212 });
             points.Add(2133, new List<double> { 109, 214 });
@@ -153,17 +158,24 @@ namespace IRacing_Standings.Windows
             points.Add(2216, new List<double> { 111, 229 });
             points.Add(2278, new List<double> { 96, 232.5 });
             points.Add(2341, new List<double> { 81, 230 });
+            points.Add(2416, new List<double> { 67, 226 });
             points.Add(2532, new List<double> { 48, 213 });
             points.Add(2995, new List<double> { 13, 126 });
             points.Add(3058, new List<double> { 14, 114 });
-            points.Add(3295, new List<double> { 55, 87 });
+            points.Add(3295, new List<double> { 55, 87  });
             points.Add(3584, new List<double> { 104, 68 });
             points.Add(3679, new List<double> { 118, 55 });
             points.Add(3844, new List<double> { 150, 54 });
+            points.Add(3904, new List<double> { 159, 45 });
             points.Add(3975, new List<double> { 173, 37 });
+            points.Add(4046, new List<double> { 184, 41 });
             points.Add(4131, new List<double> { 193, 49 });
+            points.Add(4204, new List<double> { 207, 55 });
+            points.Add(4804, new List<double> { 321, 78.5 });
             points.Add(4938, new List<double> { 346, 85.5 });
+            points.Add(4976, new List<double> { 355, 90 });
             points.Add(5014, new List<double> { 360, 101 });
+            points.Add(5078, new List<double> { 359, 112 });
             points.Add(5135, new List<double> { 350, 121 });
             points.Add(5340, new List<double> { 325, 155 });
             points.Add(5456, new List<double> { 314, 175 });
@@ -180,12 +192,20 @@ namespace IRacing_Standings.Windows
                 writer.WriteLine("{");
                 foreach (var corner in points)
                 {
-                    var xDev = (corner.Value[0] - x) / (corner.Key - locationOnTrack);
-                    var yDev = (corner.Value[1] - y) / (corner.Key - locationOnTrack);
+                    var xDev = (corner.Value[0] - x) / (corner.Key - locationOnTrack == 0 ? 1 : corner.Key - locationOnTrack);
+                    var yDev = (corner.Value[1] - y) / (corner.Key - locationOnTrack == 0 ? 1 : corner.Key - locationOnTrack);
 
-                    while (locationOnTrack < corner.Key)
+                    while (locationOnTrack <= corner.Key)
                     {
-                        writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(x, 2)}, {Math.Round(y, 2)}]");
+                        if (locationOnTrack % 2 == 0)
+                        {
+                            if (locationOnTrack == corner.Key)
+                                writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(corner.Value[0], 2)}, {Math.Round(corner.Value[1], 2)}]");
+                            else
+                                writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(x, 2)}, {Math.Round(y, 2)}]");
+                        }
+                            
+
                         locationOnTrack++;
                         x += xDev;
                         y += yDev;
@@ -197,8 +217,8 @@ namespace IRacing_Standings.Windows
 
         private void DisplayTrackMap()
         {
-            //GenerateCoordinates();
-            foreach(var driver in LocalTelemetry.AllPositions)
+           //GenerateCoordinates();
+           foreach(var driver in LocalTelemetry.AllPositions)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -211,7 +231,7 @@ namespace IRacing_Standings.Windows
                     textBox.Margin = new Thickness(2.5);
                     var loc = GetTrackJsonData();
 
-                    if (driver.Name.StartsWith("Unai"))
+                    if (driver.Name.StartsWith("Rylan"))
                     {
                         Console.WriteLine((int)driver.PosOnTrack);
                     }
@@ -222,13 +242,30 @@ namespace IRacing_Standings.Windows
                     }
                     
                     var coordinates = new List<double> { 0, 0 };
+                    var prevCoordinates = new List<double> { 0, 0 };
+                    var nextCoordinates = new List<double> { 0, 0 };
                     loc.TryGetValue(((int)driver.PosOnTrack).ToString(), out coordinates);
-
-                    
                     
                     if (coordinates == null)
                     {
-                        coordinates = new List<double> { -30, -30 };
+                        loc.TryGetValue((((int)driver.PosOnTrack) - 1).ToString(), out prevCoordinates);
+                        loc.TryGetValue((((int)driver.PosOnTrack) + 1).ToString(), out nextCoordinates);
+                    }
+
+                    if (prevCoordinates == null || nextCoordinates == null)
+                    {
+                        prevCoordinates = new List<double> { -30, -30 };
+                        nextCoordinates = new List<double> { -30, -30 };
+                       
+                    }
+
+                    if (coordinates == null)
+                    {
+                        coordinates = new List<double>
+                        {
+                            (prevCoordinates[0] + nextCoordinates[0]) / 2, 
+                            (prevCoordinates[1] + nextCoordinates[1]) / 2
+                        };
                     }
 
                     Canvas.SetLeft(textBox, coordinates[0]);
