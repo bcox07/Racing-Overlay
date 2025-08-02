@@ -122,20 +122,11 @@ namespace IRacing_Standings
         {
             get
             {
-                if (_trackId != 0)
-                {
-                    return _trackId;
-                }
-                _trackId = 0;
                 if (FeedSessionData != null && _DataSample.SessionData != null)
                 {
                     _trackId = (int)FeedSessionData.WeekendInfo.TrackID;
                 }
                 return _trackId;
-            }
-            set
-            {
-                _trackId = value;
             }
         }
 

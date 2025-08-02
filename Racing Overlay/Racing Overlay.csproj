@@ -135,7 +135,6 @@
     <Compile Include="Models\FuelUse.cs" />
     <Compile Include="Models\Lap.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Models\Location.cs" />
     <Compile Include="Views\FullTrackWindow.xaml.cs">
       <DependentUpon>FullTrackWindow.xaml</DependentUpon>
     </Compile>
@@ -535,9 +534,6 @@
     <None Include="SpeedFiles\434-daytona\ligierjsp320.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SpeedFiles\434-donington\ligierjsp320.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="SpeedFiles\434-roadatlanta\ligierjsp320.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -661,4 +657,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties trackmaps_4341-silverstone_4coordinates_1json__JsonSchema="https://datahubproject.io/schemas/datahub_ingestion_schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
