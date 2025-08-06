@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace IRacing_Standings.Windows
+namespace RacingOverlay.Windows
 {
     /// <summary>
     /// Interaction logic for SimpleTrackWindow.xaml
@@ -24,12 +24,6 @@ namespace IRacing_Standings.Windows
             Locked = bool.Parse(mainWindow.WindowSettings.SimpleTrackSettings["Locked"] ?? "false");
             Left = double.Parse(mainWindow.WindowSettings.SimpleTrackSettings["XPos"] ?? "0");
             Top = double.Parse(mainWindow.WindowSettings.SimpleTrackSettings["YPos"] ?? "0");
-
-            for (int i= 0; i < 1; i++)
-            {
-                var colDef = new ColumnDefinition();
-                colDef.Width = new GridLength(1470);
-            }
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -66,14 +60,15 @@ namespace IRacing_Standings.Windows
                     textBox.Visibility = Visibility.Visible;
                     textBox.Text = driver.ClassPosition.ToString();
                     textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
-                    textBox.Width = 30;
-                    textBox.Height = 30;
+                    textBox.Width = 25;
+                    textBox.Height = 25;
                     
-                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1500 - 15, 1.65, 0, 0);
+                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1296 - 12.5, 0, 0, 0);
                     textBox.FontWeight = FontWeights.Bold;
-                    textBox.FontSize = 16;
+                    textBox.FontSize = 14;
                     textBox.TextAlignment = TextAlignment.Center;
-                    textBox.HorizontalAlignment = HorizontalAlignment.Left;
+                    textBox.HorizontalAlignment = HorizontalAlignment.Center;
+                    textBox.VerticalAlignment = VerticalAlignment.Center;
                     textBox.Padding = new Thickness(0, 3, 0, 0);
                     textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
                     textBox.Foreground = Brushes.Black;
@@ -83,9 +78,8 @@ namespace IRacing_Standings.Windows
 
                     if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx) 
                     {
-                        textBox.BorderBrush = Brushes.OrangeRed;
-                        textBox.BorderThickness = new Thickness(4);
-                        textBox.Padding = new Thickness(0, -1, 0, 0);
+                        textBox.Background = Brushes.DarkGreen;
+                        textBox.Foreground = Brushes.White;
                         Canvas.SetZIndex(textBox, 99);
                     }
  

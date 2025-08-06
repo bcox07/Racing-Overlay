@@ -1,4 +1,4 @@
-﻿<Window x:Class="IRacing_Standings.Windows.FullTrackWindow"
+﻿<Window x:Class="RacingOverlay.Windows.FullTrackWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,13 +15,20 @@
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBox Width="30" Height="30" BorderThickness="13.5" BorderBrush="Transparent"  Panel.ZIndex="99" Canvas.Left="325" Canvas.Top="155" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Purple" />
-        <TextBox Width="30" Height="30" BorderThickness="13.5" BorderBrush="Transparent" Panel.ZIndex="99" Canvas.Left="173" Canvas.Top="37" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Red" />
-        <TextBox Width="30" Height="30" BorderThickness="13.5" BorderBrush="Transparent" Panel.ZIndex="99" Canvas.Left="193" Canvas.Top="49" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Orange" />
-        <TextBox Width="30" Height="30" BorderThickness="13.5" BorderBrush="Transparent" Panel.ZIndex="99" Canvas.Left="360" Canvas.Top="101" Background="Yellow" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <TextBox Width="30" Height="30" BorderThickness="13.5" BorderBrush="Transparent" Panel.ZIndex="99" Canvas.Left="314" Canvas.Top="175" Background="Green" HorizontalAlignment="Center" VerticalAlignment="Top" />
-        <TextBox Width="30" Height="30" BorderThickness="13.5" BorderBrush="Transparent" Panel.ZIndex="99" Canvas.Left="324" Canvas.Top="186" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Image x:Name="TrackMap" Width="400" Height="300" Source="/TrackMaps/341-silverstone/map.png"></Image>
+        <TextBox Width="30" 
+                 Height="30" 
+                 BorderThickness="14" 
+                 Canvas.Left="175" 
+                 Canvas.Top="155" 
+                 Panel.ZIndex="99" 
+                 BorderBrush="Transparent" 
+                 HorizontalAlignment="Left" 
+                 VerticalAlignment="Center"
+                 Background="Purple" 
+                 Visibility="Hidden"
+                 TextChanged="TextBox_TextChanged" />
+
+        <Image x:Name="TrackMap" Width="400" Height="300" Source="/TrackMaps/192-daytona/map.png"></Image>
 
     </Canvas>
 </Window>

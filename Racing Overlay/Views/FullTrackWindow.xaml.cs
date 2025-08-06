@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static iRacingSDK.SessionData._DriverInfo;
 
-namespace IRacing_Standings.Windows
+namespace RacingOverlay.Windows
 {
     /// <summary>
     /// Interaction logic for FullTrackWindow.xaml
@@ -39,18 +39,21 @@ namespace IRacing_Standings.Windows
             Left = double.Parse(mainWindow.WindowSettings.FullTrackSettings["XPos"] ?? "0");
             Top = double.Parse(mainWindow.WindowSettings.FullTrackSettings["YPos"] ?? "0");
 
-            var nonGenericTrack = new BitmapImage();
-            using (var stream = File.OpenRead($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png"))
+            if (HasTrackMap())
             {
-                nonGenericTrack.BeginInit();
-                nonGenericTrack.CacheOption = BitmapCacheOption.OnLoad; // Crucial for releasing the file lock
-                nonGenericTrack.StreamSource = stream;
-                nonGenericTrack.EndInit();
+                var nonGenericTrack = new BitmapImage();
+                using (var stream = File.OpenRead($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png"))
+                {
+                    nonGenericTrack.BeginInit();
+                    nonGenericTrack.CacheOption = BitmapCacheOption.OnLoad; // Crucial for releasing the file lock
+                    nonGenericTrack.StreamSource = stream;
+                    nonGenericTrack.EndInit();
+                }
+
+                TrackMap.Source = nonGenericTrack;
+                TrackMap.Source.Freeze();
             }
-
-            TrackMap.Source = nonGenericTrack;
-            TrackMap.Source.Freeze();
-
+            
             //TraceTrackLine();
         }
 
@@ -61,6 +64,16 @@ namespace IRacing_Standings.Windows
                 base.OnMouseLeftButtonDown(e);
                 DragMove();
             }
+        }
+
+        public bool HasTrackMap()
+        {
+            return File.Exists($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png");
+        }
+
+        public bool HasTrackCoordinates()
+        {
+            return File.Exists($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/coordinates.json");
         }
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
@@ -85,7 +98,7 @@ namespace IRacing_Standings.Windows
             {
                 foreach (var coordinate in loc)
                 {
-                    if (int.Parse(coordinate.Key) % 2 == 0)
+                    if (int.Parse(coordinate.Key) % 8 == 0)
                     {
                         var textBoxTemp = new TextBox();
                         textBoxTemp.Visibility = Visibility.Visible;
@@ -123,6 +136,9 @@ namespace IRacing_Standings.Windows
 
         private Dictionary<string, List<double>> GetTrackJsonData()
         {
+            if (!HasTrackCoordinates())
+                return null;
+
             var items = new Dictionary<string, List<double>>();
             using (var reader = new StreamReader($"./TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName}/coordinates.json"))
             {
@@ -134,55 +150,66 @@ namespace IRacing_Standings.Windows
 
         private void GenerateCoordinates()
         {
-
-
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0, new List<double> { 284, 204 });
-            points.Add(230, new List<double> { 240, 188 });
-            points.Add(390, new List<double> { 209, 177 });
-            points.Add(428, new List<double> { 202, 170 });
-            points.Add(624, new List<double> { 192, 132 });
-            points.Add(905, new List<double>  { 152, 99 });
-            points.Add(1041, new List<double> { 172, 80 });
-            points.Add(1070, new List<double> { 167, 75 });
-            points.Add(1100, new List<double> { 161, 74 });
-            points.Add(1151, new List<double> { 151, 74 });
-            points.Add(1243, new List<double> { 133, 80 });
-            points.Add(1886, new List<double> { 78, 195 });
-            points.Add(1940, new List<double> { 77, 206 });
-            points.Add(1983, new List<double> { 83, 213 });
-            points.Add(2099, new List<double> { 103, 212 });
-            points.Add(2133, new List<double> { 109, 214 });
-            points.Add(2167, new List<double> { 113, 222 });
-            points.Add(2216, new List<double> { 111, 229 });
-            points.Add(2278, new List<double> { 96, 232.5 });
-            points.Add(2341, new List<double> { 81, 230 });
-            points.Add(2416, new List<double> { 67, 226 });
-            points.Add(2532, new List<double> { 48, 213 });
-            points.Add(2995, new List<double> { 13, 126 });
-            points.Add(3058, new List<double> { 14, 114 });
-            points.Add(3295, new List<double> { 55, 87  });
-            points.Add(3584, new List<double> { 104, 68 });
-            points.Add(3679, new List<double> { 118, 55 });
-            points.Add(3844, new List<double> { 150, 54 });
-            points.Add(3904, new List<double> { 159, 45 });
-            points.Add(3975, new List<double> { 173, 37 });
-            points.Add(4046, new List<double> { 184, 41 });
-            points.Add(4131, new List<double> { 193, 49 });
-            points.Add(4204, new List<double> { 207, 55 });
-            points.Add(4804, new List<double> { 321, 78.5 });
-            points.Add(4938, new List<double> { 346, 85.5 });
-            points.Add(4976, new List<double> { 355, 90 });
-            points.Add(5014, new List<double> { 360, 101 });
-            points.Add(5078, new List<double> { 359, 112 });
-            points.Add(5135, new List<double> { 350, 121 });
-            points.Add(5340, new List<double> { 325, 155 });
-            points.Add(5456, new List<double> { 314, 175 });
-            points.Add(5524, new List<double> { 324, 186 });
-            points.Add(5610, new List<double> { 317, 199 });
-            points.Add(5698, new List<double> { 301, 210 });
-            points.Add(5796, new List<double> { 284, 204 });
+            points.Add(0   , new List<double> { 185.5, 224   });
+
+            points.Add(118, new List<double> { 211, 221.5 });
+            points.Add(236, new List<double> { 236, 214.5 });
+            points.Add(354, new List<double> { 259, 205.5 });
+            points.Add(414, new List<double> { 271, 196 });
+            points.Add(474 , new List<double> { 275, 184     });
+            points.Add(522, new List<double> { 269, 172   });
+            points.Add(570, new List<double> { 255, 167.4 });
+            points.Add(618 , new List<double> { 241, 166     });
+            points.Add(680 , new List<double> { 230, 159     });
+            points.Add(914, new List<double> { 182, 157.5 });
+
+            points.Add(936, new List<double> { 175, 155 });
+
+            points.Add(958 , new List<double> { 172.5, 149   });
+
+            points.Add(980, new List<double> { 176, 143 });
+
+            points.Add(1002, new List<double> { 181, 140.5 });
+            points.Add(1060, new List<double> { 194, 138.5 });
+            points.Add(1430, new List<double> { 274, 137     });
+            points.Add(1498, new List<double> { 288, 129 });
+            points.Add(1708, new List<double> { 324, 100 });
+            points.Add(1760, new List<double> { 335, 101     });
+            points.Add(1828, new List<double> { 337, 113 });
+            points.Add(1922, new List<double> { 324, 131 });
+            points.Add(2090, new List<double> { 293, 158 });
+            points.Add(2140, new List<double> { 287, 169     });
+            points.Add(2178, new List<double> { 292, 176 });
+            points.Add(2224, new List<double> { 304, 182 });
+            points.Add(2284, new List<double> { 318, 182     });
+            points.Add(2394, new List<double> { 338.5, 170 });
+            points.Add(2504, new List<double> { 358, 150   });
+            points.Add(2614, new List<double> { 367.5, 127 });
+            points.Add(2726, new List<double> { 368, 101   });
+            points.Add(2834, new List<double> { 359, 78    });
+            points.Add(2946, new List<double> { 344, 61    });
+            points.Add(3056, new List<double> { 321, 49 });
+            points.Add(3166, new List<double> { 295, 44.5    });
+            points.Add(3784, new List<double> { 162, 43.5    });
+            points.Add(3858, new List<double> { 148, 52 });
+            points.Add(3892, new List<double> { 139, 54 });
+            points.Add(3930, new List<double> { 129, 53 });
+            points.Add(3980, new List<double> { 121, 45.5 });
+            points.Add(4006, new List<double> { 115, 43.5    });
+            points.Add(4146, new List<double> { 82 , 43   });
+            points.Add(4286, new List<double> { 50 , 48   });
+            points.Add(4426, new List<double> { 24 , 64   });
+            points.Add(4566, new List<double> { 8  , 86   });
+            points.Add(4706, new List<double> { 2  , 112  });
+            points.Add(4846, new List<double> { 8  , 138  });
+            points.Add(4986, new List<double> { 24 , 161  });
+            points.Add(5126, new List<double> { 52 , 180  });
+            points.Add(5266, new List<double> { 83 , 193  });
+            points.Add(5406, new List<double> { 115, 206  });
+            points.Add(5546, new List<double> { 149, 218 });
+            points.Add(5686, new List<double> { 185.5, 224   });
 
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
@@ -217,8 +244,9 @@ namespace IRacing_Standings.Windows
 
         private void DisplayTrackMap()
         {
-           //GenerateCoordinates();
-           foreach(var driver in LocalTelemetry.AllPositions)
+            //GenerateCoordinates();
+            
+            foreach (var driver in LocalTelemetry.AllPositions)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -226,12 +254,12 @@ namespace IRacing_Standings.Windows
                     textBox.Visibility = Visibility.Visible;
                     textBox.Text = driver.ClassPosition.ToString();
                     textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
-                    textBox.Width = 25;
-                    textBox.Height = 25;
-                    textBox.Margin = new Thickness(2.5);
+                    textBox.Width = 22;
+                    textBox.Height = 22;
+                    textBox.Margin = new Thickness(4);
                     var loc = GetTrackJsonData();
 
-                    if (driver.Name.StartsWith("Rylan"))
+                    if (driver.Name.StartsWith("Dylan Hs"))
                     {
                         Console.WriteLine((int)driver.PosOnTrack);
                     }
@@ -267,26 +295,25 @@ namespace IRacing_Standings.Windows
                             (prevCoordinates[1] + nextCoordinates[1]) / 2
                         };
                     }
-
-                    Canvas.SetLeft(textBox, coordinates[0]);
-                    Canvas.SetTop(textBox, coordinates[1]);
-                    //textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1500 - 15, 1.65, 0, 0);
+                   
                     textBox.FontWeight = FontWeights.Bold;
                     textBox.FontSize = 14;
                     textBox.TextAlignment = TextAlignment.Center;
                     textBox.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBox.Padding = new Thickness(0, 3, 0, 0);
+                    textBox.Padding = new Thickness(0, 1, 0, 0);
                     textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
                     textBox.Foreground = Brushes.Black;
                     textBox.Resources = Player.Resources;
                     textBox.BorderThickness = new Thickness(0);
+
+                    Canvas.SetLeft(textBox, coordinates[0]);
+                    Canvas.SetTop(textBox, coordinates[1]);
                     Canvas.SetZIndex(textBox, 99 - (driver.OverallPosition ?? 99));
 
                     if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx) 
                     {
-                        textBox.BorderBrush = Brushes.OrangeRed;
-                        textBox.BorderThickness = new Thickness(3);
-                        textBox.Padding = new Thickness(0, -1, 0, 0);
+                        textBox.Background = Brushes.DarkGreen;
+                        textBox.Foreground = Brushes.White;
                         Canvas.SetZIndex(textBox, 99);
                     }
  
@@ -312,6 +339,11 @@ namespace IRacing_Standings.Windows
                     }
                 });
             }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

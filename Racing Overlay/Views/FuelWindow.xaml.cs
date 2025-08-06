@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     /// <summary>
     /// Interaction logic for FuelWindow.xaml
@@ -42,6 +42,39 @@ namespace IRacing_Standings
                 return -1.0;
             }
         }
+
+        private double Last5FuelUsage
+        {
+            get
+            {
+                if (FuelUseList.Count >= 5)
+                {
+                    var avg = FuelUseList.Select(f => f.FuelUsed).Average();
+                    var stdDev = Math.Sqrt(FuelUseList.Select(f => Math.Pow(f.FuelUsed - avg, 2)).Sum() / FuelUseList.Count());
+                    var validLaps = FuelUseList.Where(f => Math.Abs(avg - f.FuelUsed) < stdDev).ToList();
+                    if (validLaps.Count >= 5)
+                    {
+                        return validLaps.OrderByDescending(l => l.LapNumber).Take(5).Select(l => l.FuelUsed).Average();
+                    }
+                }
+
+                return -1.0;
+            }
+        }
+
+        private double LastFuelUsage
+        {
+            get
+            {
+                if (FuelUseList.Any())
+                {
+                    return FuelUseList.OrderByDescending(l => l.LapNumber).First().FuelUsed;
+                }
+
+                return -1.0;
+            }
+        }
+
         private double LapsRemaining => _TelemetryData.FeedTelemetry.FuelLevel / AvgFuelUsage;
         private double LapsToEnd => _TelemetryData.FeedTelemetry.SessionTimeRemain / (_TelemetryData.CurrentSession.ResultsFastestLap[0].FastestTime * 1.01);
 
@@ -76,21 +109,21 @@ namespace IRacing_Standings
             });
             _TelemetryData = telemetryData;
 
-            if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
-                || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
-                || _TelemetryData.FeedTelemetry.IsReplayPlaying)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-                    {
-                        return;
-                    }
-                    Hide();
-                });
-            }
-            else
-            {
+            //if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
+            //    || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
+            //    || _TelemetryData.FeedTelemetry.IsReplayPlaying)
+            //{
+                //Dispatcher.Invoke(() =>
+                //{
+                //    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
+                //    {
+                //        return;
+                //    }
+                //    Hide();
+                //});
+            //}
+            //else
+            //{
                 Dispatcher.Invoke(() =>
                 {
                     if (!Application.Current.Windows.OfType<FuelWindow>().Any())
@@ -99,7 +132,7 @@ namespace IRacing_Standings
                     }
                     Show();
                 });
-            }
+            //}
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             
@@ -141,7 +174,9 @@ namespace IRacing_Standings
                 fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : _TelemetryData.FeedTelemetry.FuelLevel.ToString("N2");    
                 lapsRemainingCell.Text = LapsRemaining <= 0 ? "-" : LapsRemaining.ToString("N2");
                 fuelToAddCell.Text = FuelToAdd < 0 ? "-" : $"{FuelToAdd.ToString("N2")} - {(FuelToAdd + AvgFuelUsage).ToString("N2")}";
-                fuelUsageCell.Text = AvgFuelUsage < 0 ? "-" : AvgFuelUsage.ToString("N2");
+                avgFuelUsageCell.Text = AvgFuelUsage < 0 ? "-" : AvgFuelUsage.ToString("N2");
+                last5FuelUsageCell.Text = Last5FuelUsage < 0 ? "-" : Last5FuelUsage.ToString("N2");
+                lastFuelUsageCell.Text = LastFuelUsage < 0 ? "-" : LastFuelUsage.ToString("N2");
             });
         }
     }
