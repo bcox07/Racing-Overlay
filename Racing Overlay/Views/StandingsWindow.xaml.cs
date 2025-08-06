@@ -1,4 +1,4 @@
-﻿using IRacing_Standings.Helpers;
+﻿using RacingOverlay.Helpers;
 using iRacingSDK;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using static iRacingSDK.SessionData._DriverInfo;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     /// <summary>
     /// Interaction logic for StandingsWindow.xaml
@@ -37,6 +37,8 @@ namespace IRacing_Standings
         private int LastLapWidth = 7;
         private int CarLogoWidth = 2;
         private int ColumnsWidth = 0;
+
+        private double? RaceStartOffset = null;
 
         public StandingsWindow(TelemetryData telemetryData)
         {
@@ -106,7 +108,7 @@ namespace IRacing_Standings
             var sessionLapsTotal = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps == "unlimited" ? 0 : long.Parse(telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps);
             var viewedCarPosition = telemetryData.AllResultsPositions?.FirstOrDefault(r => r.CarIdx == viewedCar.CarId) ?? telemetryData.AllResultsPositions.FirstOrDefault() ?? new SessionData._SessionInfo._Sessions._ResultsPositions();
             var sessionLapCurrent = viewedCarPosition.LapsComplete + 1;
-            var driverClasses = telemetryData.SortedPositions.Select(s => s.Key);
+            var driverClasses = telemetryData.SortedPositions.Select(s => s.Key);     
 
             if (sessionLapsTotal == 0)
             {
@@ -132,9 +134,15 @@ namespace IRacing_Standings
 
                 var title = new TextBlock();
                 var elapsedTime = sessionTime - _TelemetryData.FeedTelemetry.SessionTimeRemain;
+                var sessionState = _TelemetryData.FeedTelemetry.SessionState;
+
+                // Set offset for the race start when watching a replay
+                // For some reason in replays the race timer starts at the beginning of the formation lap
+                if (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" && sessionState == SessionState.Racing && RaceStartOffset == null)
+                    RaceStartOffset = elapsedTime;
 
                 var sessionTimeString = StringHelper.GetTimeString(sessionTime, false);
-                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime, false);
+                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime - (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" ? (RaceStartOffset ?? 200) : 0), false);
 
                 title.Text = $"{sessionType}";
                 title.FontSize = 18;
@@ -356,7 +364,7 @@ namespace IRacing_Standings
                     columnIndex += SafetyRatingWidth;
                     CellIndex++;
 
-                    var deltaFromLeader = UIHelper.CreateTextBlock(null, TextAlignment.Right);
+                    var deltaFromLeader = UIHelper.CreateTextBlock(new Thickness(0, 4, 0, 4), TextAlignment.Right, fontSize: 14);
                     UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First(), viewedCar, rowIndex);
                     UIHelper.AddOrInsertChild(StandingsGrid, deltaFromLeader, CellIndex);
                     UIHelper.SetCellFormat(deltaFromLeader, columnIndex, DeltaWidth, rowIndex);
