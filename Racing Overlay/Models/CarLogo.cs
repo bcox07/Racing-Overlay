@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class CarLogo
     {
@@ -13,17 +13,13 @@ namespace IRacing_Standings
         {
             switch (carPath)
             {
-                case "acuraarx06gtp":
-                case "acuransxevo22gt3":
+                case string s when s.StartsWith("acura"):
                     return "acura-logo";
                 case "amvantagegt4":
                     return "aston-martin-logo";
-                case "audir8gt3":
-                case "audir8lmsevo2gt3":
+                case string s when s.StartsWith("audi"):
                     return "audi-logo";
-                case "bmwm4evogt4":
-                case "bmwlmdh":
-                case "bmwm4gt3":
+                case string s when s.StartsWith("bmw"):
                     return "bmw-logo";
                 case "cadillacvseriesrgtp":
                     return "cadillac-logo";
@@ -31,22 +27,17 @@ namespace IRacing_Standings
                     return "chevrolet-logo";
                 case "dallarap217":
                     return "dallara-logo";
-                case "ferrari296gt3":
-                case "ferrari499p":
+                case string s when s.StartsWith("ferrari"):
                     return "ferrari-logo";
                 case "fordmustanggt3":
                     return "ford-logo";
-                case "mclaren570sgt4":
-                case "mclaren720sgt3":
+                case string s when s.StartsWith("mclaren"):
                     return "mclaren-logo";
                 case "ligierjsp320":
                     return "ligier-logo";
-                case "mercedesamggt4":
-                case "mercedesamgevogt3":
+                case string s when s.StartsWith("mercedes"):
                     return "mercedes-logo";
-                case "porsche718gt4":
-                case "porsche992rgt3":
-                case "porsche963gtp":
+                case string s when s.StartsWith("porsche"):
                     return "porsche-logo";
                 default:
                     return "default-logo";
