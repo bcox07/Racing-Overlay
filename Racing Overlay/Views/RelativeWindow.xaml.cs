@@ -1,4 +1,4 @@
-﻿using IRacing_Standings.Helpers;
+﻿using RacingOverlay.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using static iRacingSDK.SessionData._DriverInfo;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     /// <summary>
     /// Interaction logic for RelativeWindow.xaml

@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     /// <summary>
     /// Interaction logic for TireWindow.xaml

@@ -11,7 +11,7 @@ using System.Windows.Media.Effects;
 using System.Xml.Linq;
 using static iRacingSDK.SessionData._DriverInfo;
 
-namespace IRacing_Standings.Helpers
+namespace RacingOverlay.Helpers
 {
     public class UIHelper
     {

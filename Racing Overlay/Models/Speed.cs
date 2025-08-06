@@ -1,6 +1,6 @@
 ﻿using iRacingSDK;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class Speed
     {

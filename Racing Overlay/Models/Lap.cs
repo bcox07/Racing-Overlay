@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using NLog;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class Lap
     {

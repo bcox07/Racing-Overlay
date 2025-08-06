@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     /// <summary>
     /// Interaction logic for App.xaml

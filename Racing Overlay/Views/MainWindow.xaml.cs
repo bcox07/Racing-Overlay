@@ -1,4 +1,4 @@
-﻿using IRacing_Standings.Windows;
+﻿using RacingOverlay.Windows;
 using iRacingSDK;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -235,7 +235,8 @@ namespace IRacing_Standings
                         }
                         try
                         {
-                            FullTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            if (FullTrackWindow.HasTrackMap())
+                                FullTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                         }
                         catch (Exception ex)
                         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class Driver
     {

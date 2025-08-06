@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class WindowSettings
     {

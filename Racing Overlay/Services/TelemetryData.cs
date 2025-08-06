@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using NLog;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class TelemetryData
     {
@@ -63,6 +63,7 @@ namespace IRacing_Standings
 
                 if (allResultsPositions.Count == 0 && CurrentSession?.IsRace == true && FeedSessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.ToUpper().Contains("QUALI")) != null)
                 {
+                    //TODO fix null reference error
                     allResultsPositions = FeedSessionData.SessionInfo.Sessions.Where(s => s.SessionType.ToUpper().Contains("QUALI")).First().ResultsPositions.ToList();
                 }
                 return allResultsPositions;
