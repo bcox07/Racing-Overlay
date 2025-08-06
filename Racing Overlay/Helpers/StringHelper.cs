@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IRacing_Standings
+namespace RacingOverlay
 {
     public class StringHelper
     {
@@ -9,9 +9,9 @@ namespace IRacing_Standings
             var timespanInSeconds = TimeSpan.FromSeconds(timeInSeconds);
             var timeStringFormat = @"hh\:mm\:ss\.fff";
 
-            if (timespanInSeconds.TotalSeconds >= 3600)
+            if (Math.Abs(timespanInSeconds.TotalSeconds) >= 3600)
                 timeStringFormat = @"hh\:mm\:ss\.fff";
-            else if (timespanInSeconds.TotalSeconds >= 60)
+            else if (Math.Abs(timespanInSeconds.TotalSeconds) >= 60)
                 timeStringFormat = @"mm\:ss\.fff";
             else
                 timeStringFormat = @"ss\.fff";
@@ -22,7 +22,10 @@ namespace IRacing_Standings
                 timeStringFormat = timeStringFormat.Substring(0, timeStringFormat.Length - 5);
             }
 
-            return timespanInSeconds.ToString(timeStringFormat).TrimStart('h', 'm', 's', '0');
+            var timeString = timespanInSeconds.ToString(timeStringFormat).TrimStart('h', 'm', 's', '0');
+            if (timeInSeconds < 0)
+                timeString = $"-{timeString}";
+            return timeString;
         }
     }
 }
