@@ -258,18 +258,25 @@ namespace RacingOverlay
                     if (telemetryData.IsRace)
                     {
                         textBlock.Foreground = position.InPit ? fadedWhiteBrush : Brushes.White;
-                        if (position.CarId == viewedCar.CarId)
-                            textBlock.Foreground = position.InPit ? fadedGoldBrush : Brushes.Gold;
-                        else if (position.Distance > viewedCar.Distance && position.Delta < 0 || position.Distance - viewedCar.Distance > telemetryData.TrackLength)
-                            textBlock.Foreground = position.InPit ? fadedRedBrush : Brushes.Red;
-                        else if (position.Distance < viewedCar.Distance && position.Delta > 0 || viewedCar.Distance - position.Distance > telemetryData.TrackLength)
-                            textBlock.Foreground = position.InPit ? fadedBlueBrush : blueBrush;
+                        if (LocalTelemetry.FeedTelemetry.RadioTransmitCarIdx == position.CarId)
+                            textBlock.Foreground = Brushes.LimeGreen;
+                        else
+                        {
+                            if (position.CarId == viewedCar.CarId)
+                                textBlock.Foreground = position.InPit ? fadedGoldBrush : Brushes.Gold;
+                            else if (position.Distance > viewedCar.Distance && position.Delta < 0 || position.Distance - viewedCar.Distance > telemetryData.TrackLength)
+                                textBlock.Foreground = position.InPit ? fadedRedBrush : Brushes.Red;
+                            else if (position.Distance < viewedCar.Distance && position.Delta > 0 || viewedCar.Distance - position.Distance > telemetryData.TrackLength)
+                                textBlock.Foreground = position.InPit ? fadedBlueBrush : blueBrush;
+                        }                
                     }
                     else
                     {
                         textBlock.Foreground = position.InPit ? fadedWhiteBrush : Brushes.White;
 
-                        if (position.CarId == viewedCar.CarId)
+                        if (LocalTelemetry.FeedTelemetry.RadioTransmitCarIdx == position.CarId)
+                            textBlock.Foreground = Brushes.LimeGreen;
+                        else if (position.CarId == viewedCar.CarId)
                             textBlock.Foreground = position.InPit ? fadedGoldBrush : Brushes.Gold;
                     }
                     break;
