@@ -292,6 +292,9 @@
     <Content Include="images\mclaren-logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="SpeedFiles\18-roadamerica\ligierjsp320.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TrackMaps\127-road atlanta\coordinates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
