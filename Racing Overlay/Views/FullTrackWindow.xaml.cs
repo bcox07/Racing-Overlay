@@ -152,64 +152,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 185.5, 224   });
-
-            points.Add(118, new List<double> { 211, 221.5 });
-            points.Add(236, new List<double> { 236, 214.5 });
-            points.Add(354, new List<double> { 259, 205.5 });
-            points.Add(414, new List<double> { 271, 196 });
-            points.Add(474 , new List<double> { 275, 184     });
-            points.Add(522, new List<double> { 269, 172   });
-            points.Add(570, new List<double> { 255, 167.4 });
-            points.Add(618 , new List<double> { 241, 166     });
-            points.Add(680 , new List<double> { 230, 159     });
-            points.Add(914, new List<double> { 182, 157.5 });
-
-            points.Add(936, new List<double> { 175, 155 });
-
-            points.Add(958 , new List<double> { 172.5, 149   });
-
-            points.Add(980, new List<double> { 176, 143 });
-
-            points.Add(1002, new List<double> { 181, 140.5 });
-            points.Add(1060, new List<double> { 194, 138.5 });
-            points.Add(1430, new List<double> { 274, 137     });
-            points.Add(1498, new List<double> { 288, 129 });
-            points.Add(1708, new List<double> { 324, 100 });
-            points.Add(1760, new List<double> { 335, 101     });
-            points.Add(1828, new List<double> { 337, 113 });
-            points.Add(1922, new List<double> { 324, 131 });
-            points.Add(2090, new List<double> { 293, 158 });
-            points.Add(2140, new List<double> { 287, 169     });
-            points.Add(2178, new List<double> { 292, 176 });
-            points.Add(2224, new List<double> { 304, 182 });
-            points.Add(2284, new List<double> { 318, 182     });
-            points.Add(2394, new List<double> { 338.5, 170 });
-            points.Add(2504, new List<double> { 358, 150   });
-            points.Add(2614, new List<double> { 367.5, 127 });
-            points.Add(2726, new List<double> { 368, 101   });
-            points.Add(2834, new List<double> { 359, 78    });
-            points.Add(2946, new List<double> { 344, 61    });
-            points.Add(3056, new List<double> { 321, 49 });
-            points.Add(3166, new List<double> { 295, 44.5    });
-            points.Add(3784, new List<double> { 162, 43.5    });
-            points.Add(3858, new List<double> { 148, 52 });
-            points.Add(3892, new List<double> { 139, 54 });
-            points.Add(3930, new List<double> { 129, 53 });
-            points.Add(3980, new List<double> { 121, 45.5 });
-            points.Add(4006, new List<double> { 115, 43.5    });
-            points.Add(4146, new List<double> { 82 , 43   });
-            points.Add(4286, new List<double> { 50 , 48   });
-            points.Add(4426, new List<double> { 24 , 64   });
-            points.Add(4566, new List<double> { 8  , 86   });
-            points.Add(4706, new List<double> { 2  , 112  });
-            points.Add(4846, new List<double> { 8  , 138  });
-            points.Add(4986, new List<double> { 24 , 161  });
-            points.Add(5126, new List<double> { 52 , 180  });
-            points.Add(5266, new List<double> { 83 , 193  });
-            points.Add(5406, new List<double> { 115, 206  });
-            points.Add(5546, new List<double> { 149, 218 });
-            points.Add(5686, new List<double> { 185.5, 224   });
+            points.Add(0   , new List<double> { 342, 91.5 });
 
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
@@ -259,10 +202,10 @@ namespace RacingOverlay.Windows
                     textBox.Margin = new Thickness(4);
                     var loc = GetTrackJsonData();
 
-                    if (driver.Name.StartsWith("Dylan Hs"))
-                    {
-                        Console.WriteLine((int)driver.PosOnTrack);
-                    }
+                    //if (driver.Name.StartsWith("Drew D"))
+                    //{
+                    //    Console.WriteLine((int)driver.PosOnTrack);
+                    //}
 
                     if (loc == null)
                     {

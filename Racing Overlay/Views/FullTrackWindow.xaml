@@ -16,19 +16,66 @@
             </TextBox.Resources>
         </TextBox>
         <TextBox Width="30" 
-                 Height="30" 
-                 BorderThickness="14" 
-                 Canvas.Left="175" 
-                 Canvas.Top="155" 
-                 Panel.ZIndex="99" 
-                 BorderBrush="Transparent" 
-                 HorizontalAlignment="Left" 
-                 VerticalAlignment="Center"
-                 Background="Purple" 
-                 Visibility="Hidden"
-                 TextChanged="TextBox_TextChanged" />
+            Height="30" 
+            BorderThickness="14" 
+            Canvas.Left="90" Canvas.Top="194.5" 
+            Panel.ZIndex="99" 
+            BorderBrush="Transparent" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Background="Transparent" />
+        <TextBox Width="30" 
+            Height="30" 
+            BorderThickness="14" 
+            Canvas.Left="79" Canvas.Top="201" 
+            Panel.ZIndex="99" 
+            BorderBrush="Transparent" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Center"
+            Background="Transparent"  />
+        <TextBox Width="30" 
+            Height="30" 
+            BorderThickness="14" 
+            Canvas.Left="67" Canvas.Top="209" 
+            Panel.ZIndex="99" 
+            BorderBrush="Transparent" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Center"
+            Background="Transparent" />
+        <TextBox Width="30" 
+            Height="30" 
+            BorderThickness="14" 
+            Canvas.Left="56.69" Canvas.Top="216.87" 
+            Panel.ZIndex="99" 
+            BorderBrush="Transparent" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            Background="Transparent" />
+        <TextBox Width="30" 
+            Height="30" 
+            BorderThickness="14" 
+            Canvas.Left="45" Canvas.Top="224" 
+            Panel.ZIndex="99" 
+            BorderBrush="Transparent" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            Background="Transparent" />
+        <TextBox Width="30" 
+            Height="30" BorderThickness="14" Panel.ZIndex="99" BorderBrush="Transparent" 
+            Canvas.Left="342" Canvas.Top="75" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Top"
+            Background="Transparent" />
+        <TextBox Width="30" 
+            Height="30" BorderThickness="14" Panel.ZIndex="99" BorderBrush="Transparent" 
+            Canvas.Left="342" Canvas.Top="90.5" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            Background="Transparent" />
 
-        <Image x:Name="TrackMap" Width="400" Height="300" Source="/TrackMaps/192-daytona/map.png"></Image>
+
+
+        <Image x:Name="TrackMap" Width="400" Height="300" Source="/TrackMaps/127-road atlanta/map.png"></Image>
 
     </Canvas>
 </Window>

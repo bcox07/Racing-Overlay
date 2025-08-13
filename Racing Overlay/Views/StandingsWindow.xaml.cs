@@ -39,6 +39,7 @@ namespace RacingOverlay
         private int ColumnsWidth = 0;
 
         private double? RaceStartOffset = null;
+        private SessionState? PrevSessionState = null;
 
         public StandingsWindow(TelemetryData telemetryData)
         {
@@ -138,12 +139,13 @@ namespace RacingOverlay
 
                 // Set offset for the race start when watching a replay
                 // For some reason in replays the race timer starts at the beginning of the formation lap
-                if (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" && sessionState == SessionState.Racing && RaceStartOffset == null && elapsedTime < 300)
+                if (sessionType.ToUpper() == "RACE" && sessionState == SessionState.Racing && PrevSessionState == SessionState.ParadeLaps && RaceStartOffset == null)
                     RaceStartOffset = elapsedTime;
 
 
+                // IsReplayPlaying value is always set to true, so we shouldn't use this
                 var sessionTimeString = StringHelper.GetTimeString(sessionTime, false);
-                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime - (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" ? (RaceStartOffset ?? 0) : 0), false);
+                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime - (sessionType.ToUpper() == "RACE" ? (RaceStartOffset ?? 0) : 0), false);
 
                 title.Text = $"{sessionType}";
                 title.FontSize = 18;
@@ -214,6 +216,8 @@ namespace RacingOverlay
                 var classTitleCount = StandingsGrid.RowDefinitions.Where(r => r.Name.Equals("ClassTitle")).ToList().Count;
                 StandingsGrid.Width = 550;
             });
+
+            PrevSessionState = _TelemetryData.FeedTelemetry.SessionState;
             Thread.Sleep(16);
         }
 
