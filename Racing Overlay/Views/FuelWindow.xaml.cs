@@ -109,21 +109,21 @@ namespace RacingOverlay
             });
             _TelemetryData = telemetryData;
 
-            //if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
-            //    || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
-            //    || _TelemetryData.FeedTelemetry.IsReplayPlaying)
-            //{
-                //Dispatcher.Invoke(() =>
-                //{
-                //    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-                //    {
-                //        return;
-                //    }
-                //    Hide();
-                //});
-            //}
-            //else
-            //{
+            if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
+                || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
+                || _TelemetryData.FeedTelemetry.IsReplayPlaying)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
+                    {
+                        return;
+                    }
+                    Hide();
+                });
+            }
+            else
+            {
                 Dispatcher.Invoke(() =>
                 {
                     if (!Application.Current.Windows.OfType<FuelWindow>().Any())
@@ -132,7 +132,8 @@ namespace RacingOverlay
                     }
                     Show();
                 });
-            //}
+            }
+
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             
@@ -147,7 +148,7 @@ namespace RacingOverlay
             if (!FuelUseList.Select(f => f.LapNumber).Contains(CurrentLapFuelUse.LapNumber) 
                 && !CurrentLapFuelUse.InPit
                 && _TelemetryData.FeedTelemetry.CarIdxEstTime[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] <= _TelemetryData.FeedSessionData.DriverInfo.DriverCarEstLapTime + 15
-                && _TelemetryData.TrackLength - (_TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] * _TelemetryData.TrackLength) <= 10)
+                && _TelemetryData.TrackLength - (_TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] * _TelemetryData.TrackLength) <= 20)
             {
                 if (CurrentLapFuelUse.FuelUsed > 0 )
                     FuelUseList.Add(CurrentLapFuelUse);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RacingOverlay
 {
-    public class FuelUse
+    public struct FuelUse
     {
         public FuelUse(int lapNumber, double fuelUsed, double fuelInTank, bool inPit = false)
         {

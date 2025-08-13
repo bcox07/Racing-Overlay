@@ -2,7 +2,7 @@
 
 namespace RacingOverlay
 {
-    public class Speed
+    public struct Speed
     {
         public int Meter { get; set; }
         public double SpeedMS { get; set; }

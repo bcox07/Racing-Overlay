@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RacingOverlay
 {
-    public class CarLogo
+    public struct CarLogo
     {
 
         public static string GetLogoUri(string carPath)

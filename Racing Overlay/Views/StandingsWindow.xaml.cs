@@ -138,11 +138,12 @@ namespace RacingOverlay
 
                 // Set offset for the race start when watching a replay
                 // For some reason in replays the race timer starts at the beginning of the formation lap
-                if (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" && sessionState == SessionState.Racing && RaceStartOffset == null)
+                if (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" && sessionState == SessionState.Racing && RaceStartOffset == null && elapsedTime < 300)
                     RaceStartOffset = elapsedTime;
 
+
                 var sessionTimeString = StringHelper.GetTimeString(sessionTime, false);
-                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime - (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" ? (RaceStartOffset ?? 200) : 0), false);
+                var elapsedTimeString = StringHelper.GetTimeString(elapsedTime - (_TelemetryData.FeedTelemetry.IsReplayPlaying && sessionType.ToUpper() == "RACE" ? (RaceStartOffset ?? 0) : 0), false);
 
                 title.Text = $"{sessionType}";
                 title.FontSize = 18;

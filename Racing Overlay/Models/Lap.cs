@@ -167,7 +167,7 @@ namespace RacingOverlay
                     {
                         foreach (var meter in SpeedData)
                         {
-                            writer.WriteLine($"{meter.Meter}, {meter.SpeedMS}, {meter.TimeInSeconds}");
+                            writer.WriteLine($"{meter.Meter}, {Math.Round(meter.SpeedMS, 2)}, {Math.Round(meter.TimeInSeconds, 3)}");
                         }
                     }
                 }
