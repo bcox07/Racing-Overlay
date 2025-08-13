@@ -9,10 +9,10 @@
 1. The Bend (International Circuit)
 1. Daytona (Road Course)
 1. Magny-Cours
+1. Road Atlanta
 
 ### Next
 
-1. Road Atlanta
 1. Zolder (Alternate)
 1. VIR
 1. Hockenheim
