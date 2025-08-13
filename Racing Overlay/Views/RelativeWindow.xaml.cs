@@ -1,4 +1,5 @@
-﻿using RacingOverlay.Helpers;
+﻿using NLog;
+using RacingOverlay.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,8 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
-using static iRacingSDK.SessionData._DriverInfo;
 
 namespace RacingOverlay
 {
@@ -33,18 +32,27 @@ namespace RacingOverlay
         private int IRatingWidth = 4;
         private double ColumnsWidth = 0;
         private int ColumnIndex = 0;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public RelativeWindow(TelemetryData telemetryData)
         {
-            LocalTelemetry = telemetryData;
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            Locked = bool.Parse(mainWindow.WindowSettings.RelativeSettings["Locked"]);
-            Left = double.Parse(mainWindow.WindowSettings.RelativeSettings["XPos"]);
-            Top = double.Parse(mainWindow.WindowSettings.RelativeSettings["YPos"]);
-            ColumnsWidth = PosNumberWidth + ClassColorWidth + CarNumberWidth + SafetyRatingWidth + DriverNameWidth + DeltaWidth + IRatingWidth;
-            WindowWidth = 350;
-            Width = WindowWidth;
             InitializeComponent();
-            InitializeGrid();
+            try
+            {
+                LocalTelemetry = telemetryData;
+                var mainWindow = (MainWindow)Application.Current.MainWindow;
+                Locked = bool.Parse(mainWindow.WindowSettings.RelativeSettings["Locked"]);
+                Left = double.Parse(mainWindow.WindowSettings.RelativeSettings["XPos"]);
+                Top = double.Parse(mainWindow.WindowSettings.RelativeSettings["YPos"]);
+                ColumnsWidth = PosNumberWidth + ClassColorWidth + CarNumberWidth + SafetyRatingWidth + DriverNameWidth + DeltaWidth + IRatingWidth;
+                WindowWidth = 350;
+                Width = WindowWidth;
+                InitializeGrid();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                Trace.WriteLine(ex);
+            }
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -217,13 +225,6 @@ namespace RacingOverlay
             });
             rowIndex++;
             return rowIndex;
-        }
-
-        private void SetCellFormat(TextBlock textBlock, int columnWidth, int rowIndex)
-        {
-            Grid.SetColumnSpan(textBlock, columnWidth);
-            Grid.SetColumn(textBlock, ColumnIndex);
-            Grid.SetRow(textBlock, rowIndex);
         }
 
         private void UpdateDriverCell(

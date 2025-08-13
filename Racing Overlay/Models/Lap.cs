@@ -82,7 +82,7 @@ namespace RacingOverlay
         public static List<Speed> GetSpeedData(int trackId, string trackName, string carPath)
         {
             List<Speed> speedData = null;
-            var trackDirectory = Directory.GetDirectories($"..\\..\\SpeedFiles", $"{trackId}-{trackName.Replace(" ", "").ToLower()}").FirstOrDefault();
+            var trackDirectory = Directory.GetDirectories($"SpeedFiles", $"{trackId}-{trackName.Replace(" ", "").ToLower()}").FirstOrDefault();
             if (trackDirectory != null)
             {
                 var speedFile = $"{trackDirectory}\\{carPath}.csv";
