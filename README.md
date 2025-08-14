@@ -10,10 +10,10 @@
 1. Daytona (Road Course)
 1. Magny-Cours
 1. Road Atlanta
+1. Zolder (Alternate)
 
 ### Next
 
-1. Zolder (Alternate)
 1. VIR
 1. Hockenheim
 1. Imola
