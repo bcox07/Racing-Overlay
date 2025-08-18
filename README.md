@@ -11,10 +11,10 @@
 1. Magny-Cours
 1. Road Atlanta
 1. Zolder (Alternate)
+1. VIR
 
 ### Next
 
-1. VIR
 1. Hockenheim
 1. Imola
 1. Nurburgring (BES/WEC)
@@ -50,3 +50,32 @@
 1. Spa
 1. Watkins Glen
 1. Zandvoort
+
+
+## Badges
+
+### Completed
+
+1. Acura
+1. Aston Martin
+1. Audi
+1. BMW
+1. Cadillac
+1. Chevrolet
+1. Dallara
+1. Ferrari
+1. Ford
+1. Ligier
+1. McLaren
+1. Mercedes
+1. Porsche
+
+
+### Next
+
+1. Lamborghini
+1. Mazda
+1. Toyota
+1. Renault
+1. Nissan
+1. Subaru

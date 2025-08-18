@@ -295,6 +295,12 @@
     <None Include="TrackMaps\200-zolder\coordinates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TrackMaps\465-vir\map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TrackMaps\465-vir\coordinates.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TrackMaps\200-zolder\map.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
