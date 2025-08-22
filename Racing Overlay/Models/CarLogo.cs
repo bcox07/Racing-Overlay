@@ -21,18 +21,22 @@ namespace RacingOverlay
                     return "audi-logo";
                 case string s when s.StartsWith("bmw"):
                     return "bmw-logo";
-                case "cadillacvseriesrgtp":
+                case string s when s.StartsWith("cadillac"):
                     return "cadillac-logo";
                 case "chevyvettez06rgt3":
                     return "chevrolet-logo";
-                case "dallarap217":
+                case string s when s.StartsWith("dallara"):
                     return "dallara-logo";
                 case string s when s.StartsWith("ferrari"):
                     return "ferrari-logo";
-                case "fordmustanggt3":
+                case string s when s.StartsWith("ford"):
                     return "ford-logo";
+                case string s when s.StartsWith("lamborghini"):
+                    return "lamborghini-logo";
                 case string s when s.StartsWith("mclaren"):
                     return "mclaren-logo";
+                case "mx5 mx52016":
+                    return "mazda-logo";
                 case "ligierjsp320":
                     return "ligier-logo";
                 case string s when s.StartsWith("mercedes"):

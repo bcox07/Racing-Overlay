@@ -51,7 +51,6 @@
 1. Watkins Glen
 1. Zandvoort
 
-
 ## Badges
 
 ### Completed
@@ -69,12 +68,11 @@
 1. McLaren
 1. Mercedes
 1. Porsche
-
+1. Lamborghini
+1. Mazda
 
 ### Next
 
-1. Lamborghini
-1. Mazda
 1. Toyota
 1. Renault
 1. Nissan
