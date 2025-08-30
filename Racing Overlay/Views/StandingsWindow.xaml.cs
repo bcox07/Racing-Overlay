@@ -114,7 +114,7 @@ namespace RacingOverlay
 
             if (sessionLapsTotal == 0)
             {
-                sessionLapsTotal = (long)(sessionTime / (viewedCar.FastestLap ?? 1 * 1.03)) + 1;
+                sessionLapsTotal = (sessionLapCurrent ?? 0) +  (long)(_TelemetryData.FeedTelemetry.SessionTimeRemain / (viewedCar.FastestLap ?? 1 * 1.03)) + 1;
             }
 
             var rowIndex = 0;
