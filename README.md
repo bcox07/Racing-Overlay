@@ -4,19 +4,19 @@
 
 ### Completed 
 
+1. Daytona (Road Course)
+1. Imola
+1. Magny-Cours
 1. Road America
+1. Road Atlanta
 1. Silverstone
 1. The Bend (International Circuit)
-1. Daytona (Road Course)
-1. Magny-Cours
-1. Road Atlanta
-1. Zolder (Alternate)
 1. VIR
+1. Zolder (Alternate)
 
 ### Next
 
 1. Hockenheim
-1. Imola
 1. Nurburgring (BES/WEC)
 1. Indianapolis (Road Course)
 1. Okayama
@@ -64,12 +64,12 @@
 1. Dallara
 1. Ferrari
 1. Ford
+1. Lamborghini
 1. Ligier
+1. Mazda
 1. McLaren
 1. Mercedes
 1. Porsche
-1. Lamborghini
-1. Mazda
 
 ### Next
 
