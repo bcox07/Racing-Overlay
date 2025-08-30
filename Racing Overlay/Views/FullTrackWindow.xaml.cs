@@ -152,7 +152,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 342, 91.5 });
+            points.Add(0   , new List<double> { 134, 190.9 });
 
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
@@ -185,8 +185,20 @@ namespace RacingOverlay.Windows
             }
         }
 
+        private void GetPointsBetween(int pointCount, int a, int b)
+        {
+            var step = (b - a) / (pointCount + 1);
+
+            for (int i = a; i <= b; i += step)
+            {
+                Console.Write(i + " ");
+            }
+
+        }
+
         private void DisplayTrackMap()
         {
+            //GetPointsBetween(2, 570, 688);
             //GenerateCoordinates();
             
             foreach (var driver in LocalTelemetry.AllPositions)
@@ -202,7 +214,7 @@ namespace RacingOverlay.Windows
                     textBox.Margin = new Thickness(4);
                     var loc = GetTrackJsonData();
 
-                    //if (driver.Name.StartsWith("Drew D"))
+                    //if (driver.Name.StartsWith("Brian D"))
                     //{
                     //    Console.WriteLine((int)driver.PosOnTrack);
                     //}
