@@ -82,10 +82,10 @@ namespace RacingOverlay
         public static List<Speed> GetSpeedData(int trackId, string trackName, string carPath)
         {
             List<Speed> speedData = null;
-            var trackDirectory = Directory.GetDirectories($"SpeedFiles", $"{trackId}-{trackName.Replace(" ", "").ToLower()}").FirstOrDefault();
+            var trackDirectory = Directory.GetDirectories($"assets/tracks/", $"{trackId}-{trackName.ToLower()}").FirstOrDefault();
             if (trackDirectory != null)
             {
-                var speedFile = $"{trackDirectory}\\{carPath}.csv";
+                var speedFile = $"{trackDirectory}/{carPath}.csv";
                 if (File.Exists(speedFile))
                 {
                     try
@@ -150,7 +150,7 @@ namespace RacingOverlay
 
         public void SaveLap()
         {
-            var parentDirectory = $"..\\..\\SpeedFiles\\{TrackId}-{TrackName.Replace(" ", "").ToLower()}";
+            var parentDirectory = $"..\\..\\assets\\tracks\\{TrackId}-{TrackName.ToLower()}";
             var fileLocation = $"{parentDirectory}\\{CarPath}.csv";
             if (!Directory.Exists(parentDirectory))
             {

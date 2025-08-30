@@ -342,7 +342,7 @@ namespace RacingOverlay
                     Image carLogo = new Image();
                     carLogo.Tag = "CarLogo";
                     carLogo.Stretch = Stretch.UniformToFill;
-                    carLogo.Source = new BitmapImage(new Uri($"images/{CarLogo.GetLogoUri(position.CarPath)}{(rowIndex % 2 == 1 ? "-gray" : "")}.png", UriKind.Relative));
+                    carLogo.Source = new BitmapImage(new Uri($"assets/images/{CarLogo.GetLogoUri(position.CarPath)}{(rowIndex % 2 == 1 ? "-gray" : "")}.png", UriKind.Relative));
                     carLogo.Source.Freeze();
                     UIHelper.AddOrInsertChild(StandingsGrid, carLogo, CellIndex);
                     UIHelper.SetCellFormat(carLogo, columnIndex, CarLogoWidth, rowIndex);

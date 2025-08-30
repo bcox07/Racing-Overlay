@@ -42,7 +42,7 @@ namespace RacingOverlay.Windows
             if (HasTrackMap())
             {
                 var nonGenericTrack = new BitmapImage();
-                using (var stream = File.OpenRead($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png"))
+                using (var stream = File.OpenRead($"assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png"))
                 {
                     nonGenericTrack.BeginInit();
                     nonGenericTrack.CacheOption = BitmapCacheOption.OnLoad; // Crucial for releasing the file lock
@@ -68,12 +68,12 @@ namespace RacingOverlay.Windows
 
         public bool HasTrackMap()
         {
-            return File.Exists($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png");
+            return File.Exists($"assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png");
         }
 
         public bool HasTrackCoordinates()
         {
-            return File.Exists($"TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/coordinates.json");
+            return File.Exists($"assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/coordinates.json");
         }
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
@@ -140,7 +140,7 @@ namespace RacingOverlay.Windows
                 return null;
 
             var items = new Dictionary<string, List<double>>();
-            using (var reader = new StreamReader($"./TrackMaps/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName}/coordinates.json"))
+            using (var reader = new StreamReader($"./assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName}/coordinates.json"))
             {
                 string json = reader.ReadToEnd();
                 items = JsonConvert.DeserializeObject<Dictionary<string, List<double>>>(json);

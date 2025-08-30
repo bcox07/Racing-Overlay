@@ -39,7 +39,7 @@
             Canvas.Left="352" Canvas.Top="133"  />
         <TextBox Style="{StaticResource Pixel}" Background="Violet"
             Canvas.Left="234" Canvas.Top="140"  />
-        <Image x:Name="TrackMap" Width="400" Height="300" Source="/TrackMaps/200-zolder/map.png"></Image>
+        <Image x:Name="TrackMap" Width="400" Height="300" Source="/assets/tracks/hockenheim.png"></Image>
 
     </Canvas>
 </Window>
