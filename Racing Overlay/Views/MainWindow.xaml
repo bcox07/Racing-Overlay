@@ -109,5 +109,20 @@
                 <Button x:Name="fullTrackReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
             </Grid>
         </TabItem>
+        <TabItem Header="Settings">
+            <Grid Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Foreground="White">UI Zoom</Label>
+                <Slider x:Name="uiZoom" Width="120" Maximum="2" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1"/>
+                
+            </Grid>
+        </TabItem>
     </TabControl>
 </Window>

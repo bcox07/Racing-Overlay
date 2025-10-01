@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RacingOverlay.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,8 +17,10 @@ namespace RacingOverlay.Windows
     {
         TelemetryData LocalTelemetry;
         public bool Locked = false;
-        public SimpleTrackWindow(TelemetryData telemetryData)
+        private UISize UISize;
+        public SimpleTrackWindow(TelemetryData telemetryData, int uiSize)
         {
+            UISize = new UISize(uiSize);
             LocalTelemetry = telemetryData;
             InitializeComponent();
             var mainWindow = (MainWindow)Application.Current.MainWindow;
@@ -35,8 +38,9 @@ namespace RacingOverlay.Windows
             }
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData)
+        public void UpdateTelemetryData(TelemetryData telemetryData, int uiSize)
         {
+            UISize.SizePreset = uiSize;
             Dispatcher.Invoke(() =>
             {
                 Topmost = false;
@@ -56,20 +60,26 @@ namespace RacingOverlay.Windows
             {
                 Dispatcher.Invoke(() =>
                 {
+                    MainBorder.Height = UISize.SimpleTrackSettings["PositionDiameter"] + 2;
+                    MainBorder.Clip = new RectangleGeometry(new Rect(0, 0, 1296, UISize.SimpleTrackSettings["PositionDiameter"] + 2), UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 4, UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 2);
+                    TrackCanvas.Height = UISize.SimpleTrackSettings["PositionDiameter"] + 2;
+                    CanvasBorder.Height = UISize.SimpleTrackSettings["PositionDiameter"] + 2;
+                    CanvasBorder.Margin = new Thickness(0, (UISize.SimpleTrackSettings["PositionDiameter"] * -1) - 3, 0, 0);
+                    CanvasBorder.CornerRadius = new CornerRadius(UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 2);
                     var textBox = new TextBox();
                     textBox.Visibility = Visibility.Visible;
                     textBox.Text = driver.ClassPosition.ToString();
                     textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
-                    textBox.Width = 25;
-                    textBox.Height = 25;
-                    
-                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1296 - 12.5, 0, 0, 0);
+                    textBox.Width = UISize.SimpleTrackSettings["PositionDiameter"];
+                    textBox.Height = UISize.SimpleTrackSettings["PositionDiameter"];
+
+                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1296 - (textBox.Height / 2), 0, 0, 0);
                     textBox.FontWeight = FontWeights.Bold;
-                    textBox.FontSize = 14;
+                    textBox.FontSize = UISize.SimpleTrackSettings["FontSize"];
                     textBox.TextAlignment = TextAlignment.Center;
                     textBox.HorizontalAlignment = HorizontalAlignment.Center;
                     textBox.VerticalAlignment = VerticalAlignment.Center;
-                    textBox.Padding = new Thickness(0, 3, 0, 0);
+                    textBox.Padding = new Thickness(0, UISize.SimpleTrackSettings["PaddingTop"], 0, 0);
                     textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
                     textBox.Foreground = Brushes.Black;
                     textBox.Resources = Player.Resources;

@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using RacingOverlay.Models;
 
 namespace RacingOverlay
 {
@@ -33,6 +34,7 @@ namespace RacingOverlay
         public WindowSettings WindowSettings;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
         Configuration _configuration;
+        UISize UISize;
         public MainWindow(Configuration config)
         {
             InitializeComponent();
@@ -42,6 +44,8 @@ namespace RacingOverlay
             telemetryData = new TelemetryData();
             telemetryData.StartOperation(telemetryData.RetrieveData);
 
+            UISize = new UISize(int.Parse(WindowSettings.StandingsSettings["UIZoom"]));
+            uiZoom.Value = UISize.SizePreset;
             standingsLock.Content = bool.Parse(WindowSettings.StandingsSettings["Locked"]) ? "Unlock" : "Lock";
             relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? "Unlock" : "Lock";
             fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? "Unlock" : "Lock";
@@ -90,7 +94,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData));
+                            StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData), UISize.SizePreset);
                             StandingsWindow.Show();
                         });
                     }
@@ -102,7 +106,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset);
                         }
                         catch (Exception ex)
                         {
@@ -146,7 +150,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData));
+                            RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData), UISize.SizePreset);
                             RelativeWindow.Show();
                         });
                     }
@@ -158,7 +162,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset);
                         }
                         catch (Exception ex)
                         {
@@ -195,7 +199,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            SimpleTrackWindow = new SimpleTrackWindow(new TelemetryData(telemetryData));
+                            SimpleTrackWindow = new SimpleTrackWindow(new TelemetryData(telemetryData), UISize.SizePreset);
                             SimpleTrackWindow.Show();
                         });
                     }
@@ -207,7 +211,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            SimpleTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            SimpleTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset);
                         }
                         catch (Exception ex)
                         {
@@ -336,6 +340,7 @@ namespace RacingOverlay
         {
             if (StandingsWindow != null)
             {
+                _configuration.AppSettings.Settings["UIZoom"].Value = UISize.SizePreset.ToString();
                 _configuration.AppSettings.Settings["StandingsWindowLocked"].Value = StandingsWindow.Locked.ToString();
                 _configuration.AppSettings.Settings["StandingsWindowXPos"].Value = StandingsWindow.Left.ToString();
                 _configuration.AppSettings.Settings["StandingsWindowYPos"].Value = StandingsWindow.Top.ToString();
@@ -512,6 +517,13 @@ namespace RacingOverlay
                 FullTrackWindow.Left = 0;
                 FullTrackWindow.Top = 0;
             }
+        }
+
+        private void uiZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (StandingsWindow != null)
+                UISize = new UISize((int)uiZoom.Value);
+            
         }
     }
 }
