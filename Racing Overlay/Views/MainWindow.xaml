@@ -118,12 +118,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label Foreground="White" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0">UI Zoom</Label>
                 <Slider x:Name="uiZoom" Width="120" Maximum="2" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" Grid.Column="1"/>
                 <Label Foreground="White" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1">Driver Display Count</Label>
                 <Slider x:Name="driverDisplayCount" Width="120" Maximum="5" Minimum="3" ValueChanged="driverDisplayCount_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="16"/>
-
+                <Button Grid.ColumnSpan="2" Grid.Row="2" Click="globalSettingsSaveBtn_Click">Save</Button>
             </Grid>
         </TabItem>
     </TabControl>

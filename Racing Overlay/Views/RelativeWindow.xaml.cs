@@ -33,24 +33,22 @@ namespace RacingOverlay
         private double ColumnsWidth = 0;
         private int ColumnIndex = 0;
 
-        private UISize UISize = new UISize(1);
-        private DriverDisplay DriverDisplay;
+        private GlobalSettings _GlobalSettings;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        public RelativeWindow(TelemetryData telemetryData, int uiSize, int driverCount)
+        public RelativeWindow(TelemetryData telemetryData, GlobalSettings globalSettings)
         {
             InitializeComponent();
             try
             {
-                UISize = new UISize(uiSize);
-                DriverDisplay = new DriverDisplay(driverCount);
+                _GlobalSettings = globalSettings;
                 LocalTelemetry = telemetryData;
                 var mainWindow = (MainWindow)Application.Current.MainWindow;
                 Locked = bool.Parse(mainWindow.WindowSettings.RelativeSettings["Locked"]);
                 Left = double.Parse(mainWindow.WindowSettings.RelativeSettings["XPos"]);
                 Top = double.Parse(mainWindow.WindowSettings.RelativeSettings["YPos"]);
                 ColumnsWidth = PosNumberWidth + ClassColorWidth + CarNumberWidth + SafetyRatingWidth + DriverNameWidth + DeltaWidth + IRatingWidth;
-                Width = UISize.RelativeWindowWidth;
+                Width = _GlobalSettings.UISize.RelativeWindowWidth;
                 InitializeGrid();
             }
             catch (Exception ex)
@@ -78,7 +76,7 @@ namespace RacingOverlay
                 for (var i = 0; i < ColumnsWidth; i++)
                 {
                     var colDef = new ColumnDefinition();
-                    colDef.Width = new GridLength(UISize.RelativeWindowWidth / ColumnsWidth);
+                    colDef.Width = new GridLength(_GlobalSettings.UISize.RelativeWindowWidth / ColumnsWidth);
                     RelativeGrid.ColumnDefinitions.Add(colDef);
                 }
             });
@@ -88,19 +86,17 @@ namespace RacingOverlay
         {
             foreach (var colDef in RelativeGrid.ColumnDefinitions)
             {
-                if (colDef.Width.Value != UISize.RelativeWindowWidth / ColumnsWidth)
+                if (colDef.Width.Value != _GlobalSettings.UISize.RelativeWindowWidth / ColumnsWidth)
                 {
-                    colDef.Width = new GridLength(UISize.RelativeWindowWidth / ColumnsWidth);
-                    RelativeGeometry.Rect = new Rect(0, 0, UISize.RelativeWindowWidth, rowIndex * UISize.RowHeight);
-                    RelativeGrid.Width = UISize.RelativeWindowWidth;
-                    Width = UISize.RelativeWindowWidth;
+                    colDef.Width = new GridLength(_GlobalSettings.UISize.RelativeWindowWidth / ColumnsWidth);
+                    RelativeGeometry.Rect = new Rect(0, 0, _GlobalSettings.UISize.RelativeWindowWidth, rowIndex * _GlobalSettings.UISize.RowHeight);
+                    RelativeGrid.Width = _GlobalSettings.UISize.RelativeWindowWidth;
+                    Width = _GlobalSettings.UISize.RelativeWindowWidth;
                 }
             }
         }
-        public void UpdateTelemetryData(TelemetryData telemetryData, int uiSize, int driverCount)
+        public void UpdateTelemetryData(TelemetryData telemetryData)
         {
-            UISize.SizePreset = uiSize;
-            DriverDisplay.DisplayCount = driverCount;
             LocalTelemetry = new TelemetryData(telemetryData);
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
@@ -123,8 +119,8 @@ namespace RacingOverlay
                     surroundingCars.Add(localPosition);
                 }
             }
-            var closestCarsAhead = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(DriverDisplay.DisplayCount + 1).ToList();
-            var closestCarsBehind = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(DriverDisplay.DisplayCount).ToList();
+            var closestCarsAhead = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
+            var closestCarsBehind = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount).ToList();
             surroundingCars = closestCarsAhead.Concat(closestCarsBehind).OrderByDescending(s => s.Delta).ToList();
 
             var rowIndex = 0;
@@ -136,9 +132,9 @@ namespace RacingOverlay
             }
             Dispatcher.Invoke(() =>
             {
-                Height = UISize.RowHeight * rowIndex;
-                RelativeGeometry.Rect = new Rect(0, 0, UISize.RelativeWindowWidth, rowIndex * UISize.RowHeight);
-                RelativeGrid.Width = UISize.RelativeWindowWidth;
+                Height = _GlobalSettings.UISize.RowHeight * rowIndex;
+                RelativeGeometry.Rect = new Rect(0, 0, _GlobalSettings.UISize.RelativeWindowWidth, rowIndex * _GlobalSettings.UISize.RowHeight);
+                RelativeGrid.Width = _GlobalSettings.UISize.RelativeWindowWidth;
             });
             Dispatcher.Invoke(() =>
             {
@@ -165,14 +161,14 @@ namespace RacingOverlay
                 if (rowIndex >= RelativeGrid.RowDefinitions.Count)
                 {
                     var rowDef = new RowDefinition();
-                    rowDef.Height = new GridLength(UISize.RowHeight);
+                    rowDef.Height = new GridLength(_GlobalSettings.UISize.RowHeight);
                     RelativeGrid.RowDefinitions.Add(rowDef);
                 }
 
-                if (RelativeGrid.RowDefinitions[rowIndex]?.Height.Value != UISize.RowHeight)
-                    RelativeGrid.RowDefinitions[rowIndex].Height = new GridLength(UISize.RowHeight);
+                if (RelativeGrid.RowDefinitions[rowIndex]?.Height.Value != _GlobalSettings.UISize.RowHeight)
+                    RelativeGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.UISize.RowHeight);
 
-                var posNumber = UIHelper.CreateTextBlock(null, fontSize: UISize.DataFontSize);
+                var posNumber = UIHelper.CreateTextBlock(null, fontSize: _GlobalSettings.UISize.DataFontSize);
                 posNumber.Tag = "PosNumber";
                 posNumber.Text = driver.ClassPosition.ToString();
                 UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData, null, null);
@@ -192,7 +188,7 @@ namespace RacingOverlay
                 ColumnIndex += ClassColorWidth;
                 CellIndex++;
 
-                var carNumber = UIHelper.CreateTextBlock(new Thickness(0, 4, 0, 4), fontSize: UISize.DataFontSize);
+                var carNumber = UIHelper.CreateTextBlock(new Thickness(0, 4, 0, 4), fontSize: _GlobalSettings.UISize.DataFontSize);
                 carNumber.Tag = "CarNumber";
                 UpdateDriverCell(carNumber, rowIndex, driver, viewedDriver, telemetryData, FontWeights.SemiBold, null);
                 carNumber.Text = $"#{driver.CarNumber}";
@@ -204,7 +200,7 @@ namespace RacingOverlay
                 ColumnIndex += CarNumberWidth;
                 CellIndex++;
 
-                var driverName = UIHelper.CreateTextBlock(new Thickness(6, 3, 6, 3), textAlignment: TextAlignment.Left, fontSize: UISize.DataFontSize);
+                var driverName = UIHelper.CreateTextBlock(new Thickness(6, 3, 6, 3), textAlignment: TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
                 driverName.Tag = "DriverName";
                 UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData, null, null);
                 driverName.Text = Regex.Replace(driver.Name, @"( .+ )", " ");
@@ -217,7 +213,7 @@ namespace RacingOverlay
                 CellIndex++;
 
 
-                var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3), UISize.DataFontSize);
+                var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3), _GlobalSettings.UISize.DataFontSize);
                 border.VerticalAlignment = VerticalAlignment.Stretch;
                 UIHelper.SetCellFormat(border, ColumnIndex, SafetyRatingWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, border, CellIndex);
@@ -225,7 +221,7 @@ namespace RacingOverlay
                 ColumnIndex += SafetyRatingWidth;
                 CellIndex++;
 
-                var iRating = UIHelper.CreateTextBlock(null, fontSize: UISize.DataFontSize);
+                var iRating = UIHelper.CreateTextBlock(null, fontSize: _GlobalSettings.UISize.DataFontSize);
                 iRating.Tag = "IRating";
                 UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData, null, null);
                 iRating.Text = $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k";
@@ -236,7 +232,7 @@ namespace RacingOverlay
                 ColumnIndex += IRatingWidth;
                 CellIndex++;
 
-                var delta = UIHelper.CreateTextBlock(new Thickness(2, 3, 7, 3), textAlignment: TextAlignment.Right, fontSize: UISize.DataFontSize);
+                var delta = UIHelper.CreateTextBlock(new Thickness(2, 3, 7, 3), textAlignment: TextAlignment.Right, fontSize: _GlobalSettings.UISize.DataFontSize);
                 delta.Tag = "Delta";
                 UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData, null, null); 
                 delta.Text = ((driver.PosOnTrack < 0 && driver.LapsComplete < 0) || driver == viewedDriver) ? "  -  " : driver.Delta.ToString("N1");
