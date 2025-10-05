@@ -110,7 +110,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData), GlobalSettings);
+                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                         }
                         catch (Exception ex)
                         {

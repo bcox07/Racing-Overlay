@@ -50,7 +50,7 @@ namespace RacingOverlay
             try
             {
                 InitializeOverlay(globalSettings);
-                UpdateTelemetryData(telemetryData, globalSettings);
+                UpdateTelemetryData(telemetryData);
             }
             catch (Exception ex)
             {
@@ -89,9 +89,8 @@ namespace RacingOverlay
             });
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData, GlobalSettings globalSettings)
+        public void UpdateTelemetryData(TelemetryData telemetryData)
         {
-            _GlobalSettings = globalSettings;
             _TelemetryData = telemetryData;
             if (telemetryData.IsReady)
             {
