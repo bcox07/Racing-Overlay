@@ -35,6 +35,7 @@ namespace RacingOverlay
         CancellationTokenSource tokenSource = new CancellationTokenSource();
         Configuration _configuration;
         UISize UISize;
+        DriverDisplay DriverDisplay;
         public MainWindow(Configuration config)
         {
             InitializeComponent();
@@ -44,8 +45,12 @@ namespace RacingOverlay
             telemetryData = new TelemetryData();
             telemetryData.StartOperation(telemetryData.RetrieveData);
 
-            UISize = new UISize(int.Parse(WindowSettings.StandingsSettings["UIZoom"]));
+            UISize = new UISize(int.Parse(WindowSettings.GlobalSettings["UIZoom"]));
             uiZoom.Value = UISize.SizePreset;
+
+            DriverDisplay = new DriverDisplay(int.Parse(WindowSettings.GlobalSettings["DriverCount"]));
+            driverDisplayCount.Value = DriverDisplay.DisplayCount;
+
             standingsLock.Content = bool.Parse(WindowSettings.StandingsSettings["Locked"]) ? "Unlock" : "Lock";
             relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? "Unlock" : "Lock";
             fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? "Unlock" : "Lock";
@@ -94,7 +99,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData), UISize.SizePreset);
+                            StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData), UISize.SizePreset, DriverDisplay.DisplayCount);
                             StandingsWindow.Show();
                         });
                     }
@@ -106,7 +111,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset);
+                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset, DriverDisplay.DisplayCount);
                         }
                         catch (Exception ex)
                         {
@@ -150,7 +155,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData), UISize.SizePreset);
+                            RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData), UISize.SizePreset, DriverDisplay.DisplayCount);
                             RelativeWindow.Show();
                         });
                     }
@@ -162,7 +167,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset);
+                            RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData), UISize.SizePreset, DriverDisplay.DisplayCount);
                         }
                         catch (Exception ex)
                         {
@@ -521,9 +526,12 @@ namespace RacingOverlay
 
         private void uiZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (StandingsWindow != null)
-                UISize = new UISize((int)uiZoom.Value);
-            
+            UISize = new UISize((int)uiZoom.Value);
+        }
+
+        private void driverDisplayCount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            DriverDisplay = new DriverDisplay((int)driverDisplayCount.Value);
         }
     }
 }

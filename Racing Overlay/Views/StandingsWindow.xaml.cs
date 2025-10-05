@@ -40,17 +40,18 @@ namespace RacingOverlay
         private int ColumnsWidth = 0;
 
         private UISize UISize = new UISize(1);
+        private DriverDisplay DriverDisplay;
 
         private double? RaceStartOffset = null;
         private SessionState? PrevSessionState = null;
 
-        public StandingsWindow(TelemetryData telemetryData, int uiSize)
+        public StandingsWindow(TelemetryData telemetryData, int uiSize, int driverCount)
         {
             InitializeComponent();
             try
             {
-                InitializeOverlay(uiSize);
-                UpdateTelemetryData(telemetryData, uiSize);
+                InitializeOverlay(uiSize, driverCount);
+                UpdateTelemetryData(telemetryData, uiSize, driverCount);
             }
             catch (Exception ex)
             {
@@ -67,9 +68,10 @@ namespace RacingOverlay
             }
         }
 
-        private void InitializeOverlay(int uiSize)
+        private void InitializeOverlay(int uiSize, int driverCount)
         {
             UISize = new UISize(uiSize);
+            DriverDisplay = new DriverDisplay(driverCount);
             var mainWindow = (MainWindow)(Application.Current.MainWindow);
             Locked = bool.Parse(mainWindow.WindowSettings.StandingsSettings["Locked"]);
             Left = double.Parse(mainWindow.WindowSettings.StandingsSettings["XPos"]);
@@ -89,9 +91,10 @@ namespace RacingOverlay
             });
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData, int uiSize)
+        public void UpdateTelemetryData(TelemetryData telemetryData, int uiSize, int driverCount)
         {
             UISize = new UISize(uiSize);
+            DriverDisplay.DisplayCount = driverCount;
             _TelemetryData = telemetryData;
             if (telemetryData.IsReady)
             {
@@ -234,8 +237,8 @@ namespace RacingOverlay
             var viewedClassGroup = driverClassGroup.Key == viewedCar.ClassId;
             var surroundingPositions = driverClassGroup.Value.Where(
                 p => p.ClassPosition != null 
-                && (Math.Abs( p.ClassPosition.Value - viewedCar.ClassPosition.Value) < 4 
-                && viewedClassGroup) || p.ClassPosition < 4).ToList();
+                && (Math.Abs( p.ClassPosition.Value - viewedCar.ClassPosition.Value) < DriverDisplay.DisplayCount + 1
+                && viewedClassGroup) || p.ClassPosition < DriverDisplay.DisplayCount + 1).ToList();
 
             if (viewedCar.ClassPosition < 4 && viewedClassGroup)
             {

@@ -34,14 +34,16 @@ namespace RacingOverlay
         private int ColumnIndex = 0;
 
         private UISize UISize = new UISize(1);
+        private DriverDisplay DriverDisplay;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        public RelativeWindow(TelemetryData telemetryData, int uiSize)
+        public RelativeWindow(TelemetryData telemetryData, int uiSize, int driverCount)
         {
             InitializeComponent();
             try
             {
                 UISize = new UISize(uiSize);
+                DriverDisplay = new DriverDisplay(driverCount);
                 LocalTelemetry = telemetryData;
                 var mainWindow = (MainWindow)Application.Current.MainWindow;
                 Locked = bool.Parse(mainWindow.WindowSettings.RelativeSettings["Locked"]);
@@ -95,9 +97,10 @@ namespace RacingOverlay
                 }
             }
         }
-        public void UpdateTelemetryData(TelemetryData telemetryData, int uiSize)
+        public void UpdateTelemetryData(TelemetryData telemetryData, int uiSize, int driverCount)
         {
             UISize.SizePreset = uiSize;
+            DriverDisplay.DisplayCount = driverCount;
             LocalTelemetry = new TelemetryData(telemetryData);
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
@@ -120,8 +123,8 @@ namespace RacingOverlay
                     surroundingCars.Add(localPosition);
                 }
             }
-            var closestCarsAhead = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(4).ToList();
-            var closestCarsBehind = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(3).ToList();
+            var closestCarsAhead = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(DriverDisplay.DisplayCount + 1).ToList();
+            var closestCarsBehind = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(DriverDisplay.DisplayCount).ToList();
             surroundingCars = closestCarsAhead.Concat(closestCarsBehind).OrderByDescending(s => s.Delta).ToList();
 
             var rowIndex = 0;
@@ -133,6 +136,7 @@ namespace RacingOverlay
             }
             Dispatcher.Invoke(() =>
             {
+                Height = UISize.RowHeight * rowIndex;
                 RelativeGeometry.Rect = new Rect(0, 0, UISize.RelativeWindowWidth, rowIndex * UISize.RowHeight);
                 RelativeGrid.Width = UISize.RelativeWindowWidth;
             });

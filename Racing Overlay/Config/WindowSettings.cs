@@ -5,6 +5,7 @@ namespace RacingOverlay
 {
     public class WindowSettings
     {
+        public Dictionary<string, string> GlobalSettings { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> StandingsSettings { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> RelativeSettings { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> FuelSettings { get; set; } = new Dictionary<string, string>
@@ -38,30 +39,31 @@ namespace RacingOverlay
         {
             if (appSettings != null)
             {
+                GlobalSettings = new Dictionary<string, string>()
+                {
+                    { "DriverCount", appSettings.Settings["DriverCount"].Value },
+                    { "UIZoom", appSettings.Settings["UIZoom"].Value }
+                };
                 StandingsSettings = new Dictionary<string, string>()
                 {
-                    { "UIZoom", appSettings.Settings["UIZoom"].Value },
                     { "Locked", appSettings.Settings["StandingsWindowLocked"].Value },
                     { "XPos", appSettings.Settings["StandingsWindowXPos"].Value },
                     { "YPos", appSettings.Settings["StandingsWindowYPos"].Value }
                 };
                 RelativeSettings = new Dictionary<string, string>()
                 {
-                    { "UISize", appSettings.Settings["UIZoom"].Value },
                     { "Locked", appSettings.Settings["RelativeWindowLocked"].Value },
                     { "XPos", appSettings.Settings["RelativeWindowXPos"].Value },
                     { "YPos", appSettings.Settings["RelativeWindowYPos"].Value }
                 };
                 FuelSettings = new Dictionary<string, string>()
                 {
-                    { "UISize", appSettings.Settings["UIZoom"].Value },
                     { "Locked", appSettings.Settings["FuelWindowLocked"].Value },
                     { "XPos", appSettings.Settings["FuelWindowXPos"].Value },
                     { "YPos", appSettings.Settings["FuelWindowYPos"].Value }
                 };
                 TireSettings = new Dictionary<string, string>()
                 {
-                    { "UISize", appSettings.Settings["UIZoom"].Value },
                     { "Locked", appSettings.Settings["TireWindowLocked"].Value },
                     { "XPos", appSettings.Settings["TireWindowXPos"].Value },
                     { "YPos", appSettings.Settings["TireWindowYPos"].Value }
@@ -74,7 +76,6 @@ namespace RacingOverlay
                 };
                 FullTrackSettings = new Dictionary<string, string>()
                 {
-                    { "UISize", appSettings.Settings["UIZoom"].Value },
                     { "Locked", appSettings.Settings["FullTrackWindowLocked"].Value },
                     { "XPos", appSettings.Settings["FullTrackWindowXPos"].Value },
                     { "YPos", appSettings.Settings["FullTrackWindowYPos"].Value }

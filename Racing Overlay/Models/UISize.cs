@@ -7,6 +7,16 @@ using System.Windows;
 
 namespace RacingOverlay.Models
 {
+    public class DriverDisplay
+    {
+        public DriverDisplay(int count)
+        {
+            DisplayCount = count;
+        }
+
+        public int DisplayCount { get; set; }
+    }
+
     public class UISize
     {
         public UISize(int sizePreset)
