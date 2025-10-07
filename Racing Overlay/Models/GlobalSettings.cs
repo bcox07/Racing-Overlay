@@ -157,5 +157,46 @@ namespace RacingOverlay.Models
                 }
             }
         }
+
+        public Dictionary<string, int> FuelWindowSettings
+        {
+            get
+            {
+                switch (SizePreset)
+                {
+                    case 0:
+                        return new Dictionary<string, int>
+                        {
+                            { "WindowWidth", 180 },
+                            { "WindowHeight", 80 },
+                            { "TitleFontSize", 11 },
+                            { "DataFontSize", 11 },
+                        };
+                    case 1:
+                        return new Dictionary<string, int>
+                        {
+                            { "WindowWidth", 220 },
+                            { "WindowHeight", 100 },
+                            { "TitleFontSize", 14 },
+                            { "DataFontSize", 14 },
+                        };
+                    case 2:
+                        return new Dictionary<string, int>
+                        {
+                            { "WindowWidth", 260 },
+                            { "WindowHeight", 120 },
+                            { "TitleFontSize", 16 },
+                            { "DataFontSize", 16 },
+                        };
+                    default:
+                        return new Dictionary<string, int>
+                        {
+                            { "WindowWidth", 260 },
+                            { "WindowHeight", 120 },
+                            { "DataFontSize", 16 },
+                        };
+                }
+            }
+        }
     }
 }

@@ -126,7 +126,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            FuelWindow = new FuelWindow(new TelemetryData(telemetryData));
+                            FuelWindow = new FuelWindow(new TelemetryData(telemetryData), GlobalSettings);
                             FuelWindow.Show();
                         });
                     }
@@ -138,7 +138,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            FuelWindow.UpdateTelemetryData(new TelemetryData(telemetryData), false);
+                            FuelWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                         }
                         catch (Exception ex)
                         {
@@ -288,7 +288,7 @@ namespace RacingOverlay
         {
             if (FuelWindow == null)
             {
-                FuelWindow = new FuelWindow(telemetryData); 
+                FuelWindow = new FuelWindow(telemetryData, GlobalSettings); 
                 FuelWindow.Show();
             }
         }

@@ -1,11 +1,13 @@
 ﻿<Application x:Class="RacingOverlay.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RacingOverlay"
+             xmlns:local="clr-namespace:RacingOverlay" xmlns:system="clr-namespace:System;assembly=mscorlib"
              Startup="App_Startup"
              Exit="App_Exit"
              >
     <Application.Resources>
-         
+        <system:Double x:Key="RowHeight1">14</system:Double>
+        <system:Double x:Key="TitleFontSize">14</system:Double>
+        <system:Double x:Key="DataFontSize">14</system:Double>
     </Application.Resources>
 </Application>
