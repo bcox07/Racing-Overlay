@@ -233,10 +233,10 @@ namespace RacingOverlay
             var viewedClassGroup = driverClassGroup.Key == viewedCar.ClassId;
             var surroundingPositions = driverClassGroup.Value.Where(
                 p => p.ClassPosition != null 
-                && (Math.Abs( p.ClassPosition.Value - viewedCar.ClassPosition.Value) < _GlobalSettings.DriverDisplay.DisplayCount + 1
+                && (Math.Abs(p.ClassPosition.Value - viewedCar.ClassPosition.Value) < _GlobalSettings.DriverDisplay.DisplayCount + 1
                 && viewedClassGroup) || p.ClassPosition < _GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
 
-            if (viewedCar.ClassPosition < 4 && viewedClassGroup)
+            if (viewedCar.ClassPosition + _GlobalSettings.DriverDisplay.DisplayCount < 6 && viewedClassGroup)
             {
                 surroundingPositions = driverClassGroup.Value.Where(
                 p => p.ClassPosition < 7 && viewedClassGroup).ToList();
