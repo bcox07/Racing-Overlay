@@ -7,17 +7,158 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Closed="Window_Closed"
-        Title="MainWindow" Height="257" Width="408" HorizontalAlignment="Center" Background="#D8000000" Opacity="0.85" WindowStyle="None" AllowsTransparency="True">
+        Title="MainWindow" Height="257" Width="408" HorizontalAlignment="Center" Background="#2a2e8e" WindowStyle="None" Opacity="0.85" AllowsTransparency="True">
     <Window.Resources>
         <Style x:Key="TabItemStyle" TargetType="TabItem">
-            <Setter Property="Background" Value="White"></Setter>
-            <Setter Property="Foreground" Value="Black"></Setter>
-            <Setter Property="BorderBrush" Value="Transparent"></Setter>
-            <Setter Property="Margin" Value="0"></Setter>
+            <Setter Property="Background" Value="#8f2865"></Setter>
+            <Setter Property="Foreground" Value="#C6C6C6"></Setter>
+            <Setter Property="BorderBrush" Value="#141126"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="FontWeight" Value="Black"></Setter>
             <Setter Property="MinWidth" Value="80"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border x:Name="Bd" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="5 5 0 0">
+                                <ContentPresenter x:Name="Content" 
+                                              ContentSource="Header" 
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Foreground" Value="#C6C6C6"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#8f2865"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="#C6C6C6"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#471b33"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#B62c7F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="BorderBrush" Value="#141126"></Setter>
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <Setter Property="Background" Value="#8f2865"></Setter>
+            <Setter Property="Foreground" Value="#C6C6C6"></Setter>
+            <Setter Property="Width" Value="115"></Setter>
+            <Setter Property="Height" Value="50"></Setter>
+            <Setter Property="FontSize" Value="30"></Setter>
+            <Setter Property="FontWeight" Value="Black"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#B62c7F"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#471b33"/>
+                            </Trigger>
+                            <!-- Add other triggers for IsPressed, IsEnabled, etc. if needed -->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border  BorderThickness="1" BorderBrush="#141126" Background="#6a224b" Height="5"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" BorderBrush="#141126" Background="#de2f9b"  BorderThickness="1" Height="7"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="15" Width="15" Fill="#471b33" Stroke="#141126" StrokeThickness="1.5" ></Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" x:Name="PART_Track"   >
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Horizontal_Slider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
-    <TabControl x:Name="tabControl" Background="Transparent" FontSize="20" FontWeight="Bold">
+    <TabControl x:Name="tabControl" Background="Transparent" BorderBrush="#8f2865" BorderThickness="3"  FontSize="20" FontWeight="Bold">
         <TabItem Header="Standings" Style="{DynamicResource TabItemStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -28,28 +169,27 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="standingsLock" Content="Lock" HorizontalAlignment="Center" VerticalAlignment="Center" Width="115" Height="50" Click="standingsLock_Click" FontSize="30" FontWeight="Bold" Grid.Row="0" Grid.Column="0"/>
-                <Button x:Name="standingsSave" Content="Save" HorizontalAlignment="Center" VerticalAlignment="Center" Width="115" Height="50" Click="standingsSave_Click" FontSize="30" FontWeight="Bold" Grid.Row="0" Grid.Column="1"/>
-                <Button x:Name="standingsReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="standingsReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="standingsLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="standingsLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="standingsSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="standingsSave_Click" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="standingsReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="standingsReset_Click" Grid.Row="1" />
             </Grid>
         </TabItem>
-        <TabItem Header="Relative">
+        <TabItem Header="Relative" Style="{DynamicResource TabItemStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*"></ColumnDefinition>
-                    <ColumnDefinition Width="17*"/>
-                    <ColumnDefinition Width="23*"></ColumnDefinition>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="relativeLock" Content="Lock" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="relativeLock_Click" Height="50" Grid.Column="0" Grid.ColumnSpan="2" Margin="46,0,0,0"/>
-                <Button x:Name="relativeSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="relativeSave_Click" Height="50" Grid.Column="2"/>
-                <Button x:Name="relativeReset" Content="Reset" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="relativeReset_Click" Height="50" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="46,0,0,0"/>
+                <Button x:Name="relativeLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="relativeLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="relativeSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="relativeSave_Click" Grid.Column="1" Grid.Row="1"/>
+                <Button x:Name="relativeReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="relativeReset_Click" Grid.Row="1" />
             </Grid>
         </TabItem>
-        <TabItem Header="Fuel">
+        <TabItem Header="Fuel" Style="{DynamicResource TabItemStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -59,12 +199,12 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="fuelLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fuelLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
-                <Button x:Name="fuelSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fuelSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
-                <Button x:Name="fuelReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fuelReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="fuelLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="fuelSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="fuelSave_Click" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="fuelReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="fuelReset_Click" Grid.Row="1" />
             </Grid>
         </TabItem>
-        <TabItem Header="Tires">
+        <TabItem Header="Tires" Style="{DynamicResource TabItemStyle}">
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -74,12 +214,12 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="tiresLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="tiresLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
-                <Button x:Name="tiresSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="tiresSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
-                <Button x:Name="tiresReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="tiresReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="tiresLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="tiresSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="tiresSave_Click" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="tiresReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="tiresReset_Click" Grid.Row="1" />
             </Grid>
         </TabItem>
-        <TabItem Header="Simple Track">
+        <TabItem Header="Simple Track" Style="{DynamicResource TabItemStyle}">
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -89,12 +229,12 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="simpleTrackLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="simpleTrackLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
-                <Button x:Name="simpleTrackSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="simpleTrackSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
-                <Button x:Name="simpleTrackReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="simpleTrackReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="simpleTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="simpleTrackLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="simpleTrackSave_Click" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="simpleTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="simpleTrackReset_Click" Grid.Row="1" />
             </Grid>
         </TabItem>
-        <TabItem Header="Full Track">
+        <TabItem Header="Full Track" Style="{DynamicResource TabItemStyle}">
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -104,12 +244,12 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="fullTrackLock" Content="Lock" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackLock_Click"  Height="50" Grid.Row="0" Grid.Column="0"/>
-                <Button x:Name="fullTrackSave" Content="Save" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackSave_Click" Height="50" Grid.Row="0" Grid.Column="1"/>
-                <Button x:Name="fullTrackReset" Content="Reset" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="115" FontSize="30" FontWeight="Bold" Click="fullTrackReset_Click" Height="50" Grid.Row="1" Grid.Column="0"/>
+                <Button x:Name="fullTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="fullTrackLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="fullTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="fullTrackSave_Click" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="fullTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="fullTrackReset_Click" Grid.Row="1" />
             </Grid>
         </TabItem>
-        <TabItem Header="Settings">
+        <TabItem Header="Settings" Style="{DynamicResource TabItemStyle}">
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -120,11 +260,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Label Foreground="White" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0">UI Zoom</Label>
-                <Slider x:Name="uiZoom" Width="120" Maximum="2" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" Grid.Column="1"/>
-                <Label Foreground="White" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1">Driver Display Count</Label>
-                <Slider x:Name="driverDisplayCount" Width="120" Maximum="5" Minimum="3" ValueChanged="driverDisplayCount_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="16"/>
-                <Button Grid.ColumnSpan="2" Grid.Row="2" Click="globalSettingsSaveBtn_Click">Save</Button>
+                <Label Foreground="#C6C6C6" FontSize="16"  VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0">UI Zoom</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}"  x:Name="uiZoom" Width="120" Maximum="2" Foreground="#8f2865" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Column="1" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1">Driver Display Count</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="driverDisplayCount" Width="120" Maximum="5" Minimum="3" ValueChanged="driverDisplayCount_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="16"/>
+                <Button  Style="{DynamicResource ButtonStyle}" Width="200" Grid.ColumnSpan="2" Grid.Row="2" Click="globalSettingsSaveBtn_Click">Save</Button>
             </Grid>
         </TabItem>
     </TabControl>
