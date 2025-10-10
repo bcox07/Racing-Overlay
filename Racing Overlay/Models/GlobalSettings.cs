@@ -116,6 +116,20 @@ namespace RacingOverlay.Models
             }
         }
 
+        public int Percentage
+        {
+            get
+            {
+                switch (SizePreset)
+                {
+                    case 0: return 90;
+                    case 1: return 100;
+                    case 2: return 110;
+                    default: return 110;
+                }
+            }
+        }
+
         public Dictionary<string, int> SimpleTrackSettings
         {
             get
@@ -168,7 +182,7 @@ namespace RacingOverlay.Models
                         return new Dictionary<string, int>
                         {
                             { "WindowWidth", 180 },
-                            { "WindowHeight", 80 },
+                            { "WindowHeight", 90 },
                             { "TitleFontSize", 11 },
                             { "DataFontSize", 11 },
                         };

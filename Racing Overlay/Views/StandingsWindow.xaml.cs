@@ -236,10 +236,10 @@ namespace RacingOverlay
                 && (Math.Abs(p.ClassPosition.Value - viewedCar.ClassPosition.Value) < _GlobalSettings.DriverDisplay.DisplayCount + 1
                 && viewedClassGroup) || p.ClassPosition < _GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
 
-            if (viewedCar.ClassPosition + _GlobalSettings.DriverDisplay.DisplayCount < 6 && viewedClassGroup)
+            if (viewedCar.ClassPosition + _GlobalSettings.DriverDisplay.DisplayCount < 10 && viewedClassGroup)
             {
                 surroundingPositions = driverClassGroup.Value.Where(
-                p => p.ClassPosition < 7 && viewedClassGroup).ToList();
+                p => p.ClassPosition < 11 && viewedClassGroup).ToList();
             }
 
             Driver classFastestDriver = null;
@@ -275,12 +275,12 @@ namespace RacingOverlay
             {
                 
                 var classTitle = UIHelper.CreateTextBlock(new Thickness(5, 0, 0, 0), TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
-                classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
+                classTitle.Text = "Class Title";// _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
                 classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 classTitle.Foreground = Brushes.Black;
                 classTitle.FontWeight = FontWeights.Bold;
                 classTitle.Margin = new Thickness(0, 0, -1 , 0);
-                classTitle.Padding = new Thickness(2);
+                classTitle.Padding = new Thickness(6);
 
                 UIHelper.AddOrInsertChild(StandingsGrid, classTitle, CellIndex);
                 UIHelper.SetCellFormat(classTitle, 0, ColumnsWidth - FastestLapWidth - 20, rowIndex);
@@ -295,7 +295,7 @@ namespace RacingOverlay
                 carCountTitle.Foreground = Brushes.Black;
                 carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 carCountTitle.Margin = new Thickness(0, 0, -1, 0);
-                carCountTitle.Padding = new Thickness(2);
+                carCountTitle.Padding = new Thickness(6);
 
                 UIHelper.AddOrInsertChild(StandingsGrid, carCountTitle, CellIndex);
                 UIHelper.SetCellFormat(carCountTitle, ColumnsWidth - FastestLapWidth - 20, 10, rowIndex);
@@ -306,7 +306,7 @@ namespace RacingOverlay
                 sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 sofTitle.Foreground = Brushes.Black;
                 sofTitle.FontWeight = FontWeights.Bold;
-                sofTitle.Padding = new Thickness(2);
+                sofTitle.Padding = new Thickness(6);
 
                 UIHelper.AddOrInsertChild(StandingsGrid, sofTitle, CellIndex);
                 UIHelper.SetCellFormat(sofTitle, ColumnsWidth - FastestLapWidth - 10, 10, rowIndex);

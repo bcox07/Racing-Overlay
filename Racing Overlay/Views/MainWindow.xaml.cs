@@ -231,7 +231,7 @@ namespace RacingOverlay
                         }
                         Dispatcher.Invoke(() =>
                         {
-                            FullTrackWindow = new FullTrackWindow(new TelemetryData(telemetryData));
+                            FullTrackWindow = new FullTrackWindow(new TelemetryData(telemetryData), GlobalSettings);
                             FullTrackWindow.Show();
                         });
                     }

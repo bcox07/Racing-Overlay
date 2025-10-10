@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NLog;
+using RacingOverlay.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,14 +31,19 @@ namespace RacingOverlay.Windows
     {
         TelemetryData LocalTelemetry;
         public bool Locked = false;
-        public FullTrackWindow(TelemetryData telemetryData)
+        private GlobalSettings _GlobalSettings;
+        private int DefaultWidth = 400;
+        private double UpdatedWidth;
+        public FullTrackWindow(TelemetryData telemetryData, GlobalSettings globalSettings)
         {
             LocalTelemetry = telemetryData;
+            
             InitializeComponent();
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             Locked = bool.Parse(mainWindow.WindowSettings.FullTrackSettings["Locked"] ?? "false");
             Left = double.Parse(mainWindow.WindowSettings.FullTrackSettings["XPos"] ?? "0");
             Top = double.Parse(mainWindow.WindowSettings.FullTrackSettings["YPos"] ?? "0");
+            _GlobalSettings = globalSettings;
 
             if (HasTrackMap())
             {
@@ -125,8 +131,8 @@ namespace RacingOverlay.Windows
                         }
 
                         
-                        Canvas.SetLeft(textBoxTemp, coordinate.Value[0]);
-                        Canvas.SetTop(textBoxTemp, coordinate.Value[1]);
+                        Canvas.SetLeft(textBoxTemp, coordinate.Value[0] * (_GlobalSettings.UISize.Percentage / 100.0));
+                        Canvas.SetTop(textBoxTemp, coordinate.Value[1] * (_GlobalSettings.UISize.Percentage / 100.0));
                         
                         TrackCanvas.Children.Add(textBoxTemp);
                     }
@@ -198,9 +204,33 @@ namespace RacingOverlay.Windows
 
         private void DisplayTrackMap()
         {
+            if (UpdatedWidth != DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
+            {
+                UpdatedWidth = DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0);
+                Dispatcher.Invoke(() =>
+                {
+                    if (UpdatedWidth > DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
+                    {
+                        Width = UpdatedWidth;
+                        Height = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
+                        TrackMap.Width = UpdatedWidth;
+                        TrackMap.Height = Height;
+                    }
+                    else
+                    {
+                        TrackMap.Width = UpdatedWidth;
+                        TrackMap.Height = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
+                        Width = UpdatedWidth;
+                        Height = TrackMap.Height;
+                    }
+                    
+                });
+            }
+
+            
             //GetPointsBetween(2, 570, 688);
             //GenerateCoordinates();
-            
+
             foreach (var driver in LocalTelemetry.AllPositions)
             {
                 Dispatcher.Invoke(() =>
@@ -209,9 +239,9 @@ namespace RacingOverlay.Windows
                     textBox.Visibility = Visibility.Visible;
                     textBox.Text = driver.ClassPosition.ToString();
                     textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
-                    textBox.Width = 22;
-                    textBox.Height = 22;
-                    textBox.Margin = new Thickness(4);
+                    textBox.Width = 22 * (_GlobalSettings.UISize.Percentage / 100.0);
+                    textBox.Height = 22 * (_GlobalSettings.UISize.Percentage / 100.0);
+                    textBox.Margin = new Thickness((30 - textBox.Width) / 2);
                     var loc = GetTrackJsonData();
 
                     //if (driver.Name.StartsWith("Brian D"))
@@ -252,17 +282,18 @@ namespace RacingOverlay.Windows
                     }
                    
                     textBox.FontWeight = FontWeights.Bold;
-                    textBox.FontSize = 14;
+                    textBox.FontSize = _GlobalSettings.UISize.SimpleTrackSettings["FontSize"] + 2;
                     textBox.TextAlignment = TextAlignment.Center;
                     textBox.HorizontalAlignment = HorizontalAlignment.Center;
+                    textBox.VerticalAlignment = VerticalAlignment.Center;
                     textBox.Padding = new Thickness(0, 1, 0, 0);
                     textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
                     textBox.Foreground = Brushes.Black;
                     textBox.Resources = Player.Resources;
                     textBox.BorderThickness = new Thickness(0);
 
-                    Canvas.SetLeft(textBox, coordinates[0]);
-                    Canvas.SetTop(textBox, coordinates[1]);
+                    Canvas.SetLeft(textBox, coordinates[0] * (_GlobalSettings.UISize.Percentage / 100.0));
+                    Canvas.SetTop(textBox, coordinates[1] * (_GlobalSettings.UISize.Percentage / 100.0));
                     Canvas.SetZIndex(textBox, 99 - (driver.OverallPosition ?? 99));
 
                     if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx) 

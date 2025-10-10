@@ -107,6 +107,7 @@ namespace RacingOverlay
         {
             Width = _GlobalSettings.UISize.FuelWindowSettings["WindowWidth"];
             Height = _GlobalSettings.UISize.FuelWindowSettings["WindowHeight"];
+            LeftColDefinition.Width = new GridLength(Width / 2);
 
             var appResources = Application.Current.Resources;
             appResources["TitleFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["TitleFontSize"];
@@ -114,7 +115,7 @@ namespace RacingOverlay
 
             foreach (var rowDefinition in fuelGrid.RowDefinitions)
             {
-                rowDefinition.Height = new GridLength(_GlobalSettings.UISize.FuelWindowSettings["WindowHeight"] / 6.0);
+                rowDefinition.Height = new GridLength((Height - (Height * 0.025)) / 6.0);
             }
 
         }
@@ -130,21 +131,21 @@ namespace RacingOverlay
             });
             _TelemetryData = telemetryData;
 
-            //if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
-            //    || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
-            //    || _TelemetryData.FeedTelemetry.IsReplayPlaying)
-            //{
-            //    Dispatcher.Invoke(() =>
-            //    {
-            //        if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-            //        {
-            //            return;
-            //        }
-            //        Hide();
-            //    });
-            //}
-            //else
-            //{
+            if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
+                || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
+                || _TelemetryData.FeedTelemetry.IsReplayPlaying)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
+                    {
+                        return;
+                    }
+                    Hide();
+                });
+            }
+            else
+            {
                 Dispatcher.Invoke(() =>
                 {
                     if (!Application.Current.Windows.OfType<FuelWindow>().Any())
@@ -153,7 +154,7 @@ namespace RacingOverlay
                     }
                     Show();
                 });
-            //}
+            }
 
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];

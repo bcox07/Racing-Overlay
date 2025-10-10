@@ -21,7 +21,7 @@
         <TextBox x:Name="Player" Visibility="Hidden" TextWrapping="Wrap" Text="1" Width="30" Height="30" HorizontalAlignment="Left" TextAlignment="Center" >
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="20"/>
+                    <Setter Property="CornerRadius" Value="22"/>
                 </Style>
             </TextBox.Resources>
         </TextBox>
