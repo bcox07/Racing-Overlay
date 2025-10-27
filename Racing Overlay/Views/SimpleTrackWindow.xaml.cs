@@ -59,12 +59,15 @@ namespace RacingOverlay.Windows
             {
                 Dispatcher.Invoke(() =>
                 {
+                    Width = _GlobalSettings.UISize.SimpleTrackSettings["Width"];
                     MainBorder.Height = _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] + 2;
-                    MainBorder.Clip = new RectangleGeometry(new Rect(0, 0, 1296, _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] + 2), _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 4, _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 2);
+                    MainBorder.Clip = new RectangleGeometry(new Rect(0, 0, Width - 4, _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] + 2), _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 4, _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 2);
                     TrackCanvas.Height = _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] + 2;
                     CanvasBorder.Height = _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] + 2;
-                    CanvasBorder.Margin = new Thickness(0, (_GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] * -1) - 3, 0, 0);
-                    CanvasBorder.CornerRadius = new CornerRadius(_GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 2);
+                    CanvasBorder.Margin = new Thickness(0, (_GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] * -1) - 2, 0, 0);
+                    CanvasBorder.CornerRadius = new CornerRadius(_GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"] / 2 + 3);
+                    RelativeGeometry.Rect = new Rect(0, 0, Width - 4, 26);
+
                     var textBox = new TextBox();
                     textBox.Visibility = Visibility.Visible;
                     textBox.Text = driver.ClassPosition.ToString();
@@ -72,7 +75,7 @@ namespace RacingOverlay.Windows
                     textBox.Width = _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"];
                     textBox.Height = _GlobalSettings.UISize.SimpleTrackSettings["PositionDiameter"];
 
-                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * 1296 - (textBox.Height / 2), 0, 0, 0);
+                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * (Width - 4)  - (textBox.Height / 2), 0, 0, 0);
                     textBox.FontWeight = FontWeights.Bold;
                     textBox.FontSize = _GlobalSettings.UISize.SimpleTrackSettings["FontSize"];
                     textBox.TextAlignment = TextAlignment.Center;

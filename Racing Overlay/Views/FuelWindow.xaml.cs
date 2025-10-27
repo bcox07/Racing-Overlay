@@ -187,11 +187,11 @@ namespace RacingOverlay
                     else if (_TelemetryData.FeedTelemetry.FuelLevel < AvgFuelUsage * 5)
                         fuelRemainingCell.Foreground = Brushes.Yellow;
                     else
-                        fuelRemainingCell.Foreground = Brushes.White;
+                        fuelRemainingCell.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#C6C6C6");
                 }
                 else
                 {
-                    fuelRemainingCell.Foreground = Brushes.White;
+                    fuelRemainingCell.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#C6C6C6");
                 }
 
                 fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : _TelemetryData.FeedTelemetry.FuelLevel.ToString("N2");    

@@ -23,6 +23,9 @@ namespace RacingOverlay
 
         public double CalculateFuelToAdd(double lapsToEnd, double avgFuelUse)
         {
+            if (avgFuelUse < 0)
+                return -1.0;
+
             return (lapsToEnd * avgFuelUse) - FuelInTank;
         }
 

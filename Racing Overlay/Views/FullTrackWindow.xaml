@@ -16,7 +16,7 @@
             <Setter Property="Visibility" Value="Hidden"/>
         </Style>
     </Window.Resources>
-    
+
     <Canvas Name="TrackCanvas" Opacity="0.9" Cursor="Arrow" ClipToBounds="True" Margin="0,0,0,0">
         <TextBox x:Name="Player" Visibility="Hidden" TextWrapping="Wrap" Text="1" Width="30" Height="30" HorizontalAlignment="Left" TextAlignment="Center" >
             <TextBox.Resources>
@@ -26,20 +26,20 @@
             </TextBox.Resources>
         </TextBox>
         <TextBox Style="{StaticResource Pixel}" Background="Red"
-            Canvas.Left="56" Canvas.Top="228"   />
+            Canvas.Left="90" Canvas.Top="89" HorizontalAlignment="Left" VerticalAlignment="Center"   />
         <TextBox Style="{StaticResource Pixel}" Background="Orange"
-            Canvas.Left="343" Canvas.Top="136"  />
+            Canvas.Left="94" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"  />
         <TextBox Style="{StaticResource Pixel}" Background="Yellow"
-            Canvas.Left="332" Canvas.Top="136"  />
+            Canvas.Left="99.7" Canvas.Top="102" HorizontalAlignment="Left" VerticalAlignment="Center"  />
         <TextBox Style="{StaticResource Pixel}" Background="Green"
-            Canvas.Left="321" Canvas.Top="140"  />
+            Canvas.Left="107" Canvas.Top="106.7" HorizontalAlignment="Center" VerticalAlignment="Top"  />
         <TextBox Style="{StaticResource Pixel}" Background="Blue"
-            Canvas.Left="70" Canvas.Top="165"   />
+            Canvas.Left="115" Canvas.Top="110" HorizontalAlignment="Left" VerticalAlignment="Center"   />
         <TextBox Style="{StaticResource Pixel}" Background="Indigo"
-            Canvas.Left="352" Canvas.Top="133"  />
+            Canvas.Left="63" Canvas.Top="214" HorizontalAlignment="Left" VerticalAlignment="Top"  />
         <TextBox Style="{StaticResource Pixel}" Background="Violet"
-            Canvas.Left="234" Canvas.Top="140"  />
-        <Image x:Name="TrackMap" Width="400" Height="300" Source="/assets/tracks/hockenheim.png"></Image>
+            Canvas.Left="76" Canvas.Top="222" HorizontalAlignment="Center" VerticalAlignment="Top"  />
+        <Image x:Name="TrackMap" Width="400" Height="300" RenderOptions.BitmapScalingMode="HighQuality" Source="/assets/tracks/212-interlagos/map.png"></Image>
 
     </Canvas>
 </Window>

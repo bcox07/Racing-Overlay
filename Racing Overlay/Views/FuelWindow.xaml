@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RacingOverlay"
         mc:Ignorable="d"
-        Title="FuelWindow" Height="80" Width="180" Background="#00000000" Foreground="#D8000000" Opacity="0.85" WindowStyle="None" AllowsTransparency="True">
+        Title="FuelWindow" Height="80" Width="180" Background="Transparent" Foreground="#D8000000" Opacity="0.85" WindowStyle="None" AllowsTransparency="True">
     <Window.Resources >
         <Style x:Name="TitleFieldStyle" x:Key="TitleField" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="{DynamicResource TitleFontSize}" />
@@ -18,7 +18,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </Window.Resources>
-    <Border CornerRadius="10" Grid.Row="0" Grid.Column="0" Background="#471b33">
+    <Border CornerRadius="10" Grid.Row="0" Grid.Column="0" Background="#321324">
         <Grid x:Name="fuelGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftColDefinition" Width="90"></ColumnDefinition>
@@ -33,17 +33,17 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Border CornerRadius="10, 0, 0, 0" Background="#B62c7F">
-                <TextBlock Text="Fuel" Style="{StaticResource TitleField}" Foreground="#141126" TextAlignment="Center" Grid.RowSpan="1" />
+            <Border CornerRadius="10, 0, 0, 0" Background="#a42872">
+                <TextBlock Text="Fuel" Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Center" Grid.RowSpan="1" />
             </Border>
             <TextBlock x:Name="fuelRemainingCell" Style="{StaticResource DataField}" Text="49.57" Foreground="#C6C6C6" TextAlignment="Center" Grid.Row="1"  />
-            <TextBlock Text="Add" Style="{StaticResource TitleField}" Foreground="#141126" Background="#B62c7F" TextAlignment="Center" Grid.Row="2" Grid.Column="0" />
+            <TextBlock Text="Add" Style="{StaticResource TitleField}" Foreground="#C6C6C6" Background="#a42872" TextAlignment="Center" Grid.Row="2" Grid.Column="0" />
             <TextBlock x:Name="fuelToAddCell" Style="{StaticResource DataField}" Text="19.99 - 23.34" Foreground="#C6C6C6" TextAlignment="Center" Padding="5" Grid.Row="3" Grid.RowSpan="3" Grid.Column="0"/>
-            <Border CornerRadius="0, 10, 0, 0" Background="#B62c7F" Grid.Row="0" Grid.Column="1"  Grid.ColumnSpan="2">
-                <TextBlock Text="Est Laps"  Style="{StaticResource TitleField}" Foreground="#141126" TextAlignment="Center" VerticalAlignment="Center" />
+            <Border CornerRadius="0, 10, 0, 0" Background="#a42872" Grid.Row="0" Grid.Column="1"  Grid.ColumnSpan="2">
+                <TextBlock Text="Est Laps"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Center" VerticalAlignment="Center" />
             </Border>
             <TextBlock x:Name="lapsRemainingCell" Style="{StaticResource DataField}" Text="8.56" Foreground="#C6C6C6" TextAlignment="Center" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
-            <TextBlock Text="Usage"  Style="{StaticResource TitleField}" Foreground="#141126" Background="#B62c7F" TextAlignment="Center"  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Usage"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" Background="#a42872" TextAlignment="Center"  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
             <TextBlock Text="Avg:"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Right" Grid.Row="3" Grid.Column="1"/>
             <TextBlock Text="Last 5:"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Right" Grid.Row="4" Grid.Column="1"/>
             <TextBlock Text="Last:"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Right" Grid.Row="5" Grid.Column="1"/>

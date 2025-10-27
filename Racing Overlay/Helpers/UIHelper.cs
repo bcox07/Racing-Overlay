@@ -51,13 +51,9 @@ namespace RacingOverlay.Helpers
             var outerBorder = new Border();
             Color myShadowColor = Color.FromArgb(0, 0, 0, 0);
             if (rowIndex % 2 == 1)
-            {
-                outerBorder.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525");
-            }
+                outerBorder.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#521439");
             else
-            {
-                outerBorder.Background = Brushes.Black;
-            }
+                outerBorder.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
 
             outerBorder.HorizontalAlignment = HorizontalAlignment.Stretch;
             outerBorder.VerticalAlignment = VerticalAlignment.Stretch;

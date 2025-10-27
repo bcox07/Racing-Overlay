@@ -104,7 +104,7 @@ namespace RacingOverlay.Windows
             {
                 foreach (var coordinate in loc)
                 {
-                    if (int.Parse(coordinate.Key) % 8 == 0)
+                    if (int.Parse(coordinate.Key) % 4 == 0)
                     {
                         var textBoxTemp = new TextBox();
                         textBoxTemp.Visibility = Visibility.Visible;
@@ -118,16 +118,16 @@ namespace RacingOverlay.Windows
                         textBoxTemp.Background = Brushes.Green;
                         Canvas.SetZIndex(textBoxTemp, 99);
 
-                        if (int.Parse(coordinate.Key) % 100 == 0)
+                        if (int.Parse(coordinate.Key) % 200 == 0)
                         {
-                            //textBoxTemp.FontSize = 12;
-                            //textBoxTemp.FontWeight = FontWeights.Bold;
-                            //textBoxTemp.Width = 20;
-                            //textBoxTemp.Height = 20;
-                            //textBoxTemp.Margin = new Thickness(5);
-                            //textBoxTemp.Background = Brushes.Transparent;
-                            //textBoxTemp.Foreground = Brushes.White;
-                            //Canvas.SetZIndex(textBoxTemp, 100);
+                            textBoxTemp.FontSize = 10;
+                            textBoxTemp.FontWeight = FontWeights.Bold;
+                            textBoxTemp.Width = 20;
+                            textBoxTemp.Height = 20;
+                            textBoxTemp.Margin = new Thickness(5);
+                            textBoxTemp.Background = Brushes.Transparent;
+                            textBoxTemp.Foreground = Brushes.White;
+                            Canvas.SetZIndex(textBoxTemp, 100);
                         }
 
                         
@@ -158,7 +158,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 134, 190.9 });
+            points.Add(0   , new List<double> { 264, 184 });
 
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
@@ -199,7 +199,7 @@ namespace RacingOverlay.Windows
             {
                 Console.Write(i + " ");
             }
-
+            Console.WriteLine();
         }
 
         private void DisplayTrackMap()
@@ -227,8 +227,9 @@ namespace RacingOverlay.Windows
                 });
             }
 
-            
-            //GetPointsBetween(2, 570, 688);
+
+            //GetPointsBetween(3, 1533, 1630);
+            //GetPointsBetween(5, 3312, 3607);
             //GenerateCoordinates();
 
             foreach (var driver in LocalTelemetry.AllPositions)

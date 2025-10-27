@@ -139,6 +139,7 @@ namespace RacingOverlay.Models
                     case 0:
                         return new Dictionary<string, int>
                         {
+                            { "Width", 900 },
                             { "FontSize", 10 },
                             { "ContainerHeight", 20 },
                             { "PositionDiameter", 17 },
@@ -147,6 +148,7 @@ namespace RacingOverlay.Models
                     case 1:
                         return new Dictionary<string, int>
                         {
+                            { "Width", 1100 },
                             { "FontSize", 12 },
                             { "ContainerHeight", 25 },
                             { "PositionDiameter", 21 },
@@ -155,6 +157,7 @@ namespace RacingOverlay.Models
                     case 2:
                         return new Dictionary<string, int>
                         {
+                            { "Width", 1300 },
                             { "FontSize", 14 },
                             { "ContainerHeight", 30 },
                             { "PositionDiameter", 25 },
@@ -163,6 +166,7 @@ namespace RacingOverlay.Models
                     default:
                         return new Dictionary<string, int>
                         {
+                            { "Width", 1300 },
                             { "FontSize", 14 },
                             { "ContainerHeight", 30 },
                             { "PositionDiameter", 25 },

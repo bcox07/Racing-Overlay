@@ -215,6 +215,7 @@ namespace RacingOverlay
 
                 var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3), _GlobalSettings.UISize.DataFontSize);
                 border.VerticalAlignment = VerticalAlignment.Stretch;
+                
                 UIHelper.SetCellFormat(border, ColumnIndex, SafetyRatingWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, border, CellIndex);
 
@@ -266,7 +267,7 @@ namespace RacingOverlay
             textBlock.FontWeight = fontWeight ?? FontWeights.Bold;
             textBlock.Foreground = Brushes.White;
             if (backgroundColor == null)
-                textBlock.Background = posIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#FF262525"): Brushes.Black;
+                textBlock.Background = posIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#521439") : (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
             else
                 textBlock.Background = backgroundColor;
 
