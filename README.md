@@ -6,6 +6,7 @@
 
 1. Daytona (Road Course)
 1. Imola
+1. Interlagos (Grand Prix)
 1. Magny-Cours
 1. Road America
 1. Road Atlanta
@@ -24,7 +25,6 @@
 1. Le Mans (24 Heures du Mans)
 1. Autodromo Hermanos Rodriguez (Grand Prix)
 1. Nurburgring Nordschleife (Industriefahrten)
-1. Interlagos (Grand Prix)
 1. Brands Hatch (Grand Prix)
 
 ### Future
