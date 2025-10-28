@@ -342,18 +342,24 @@ namespace RacingOverlay
                     columnIndex += PosNumberWidth;
                     CellIndex++;
 
+                    DrawingGroup test3 = (DrawingGroup)App.Current.Resources[CarLogo.GetLogoUri(position.CarPath)];
+                    DrawingImage drawingImage = new DrawingImage(test3);
                     Image carLogo = new Image();
+                    
                     carLogo.Tag = "CarLogo";
                     carLogo.Stretch = Stretch.Uniform;
-                    carLogo.Source = new BitmapImage(new Uri($"assets/images/{CarLogo.GetLogoUri(position.CarPath)}{(rowIndex % 2 == 1 ? "-gray" : "")}.png", UriKind.Relative));
+                    carLogo.Source = drawingImage;
                     carLogo.Source.Freeze();
 
                     var carLogoBorder = new Border();
                     carLogoBorder.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#521439") : (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
-                    carLogoBorder.HorizontalAlignment = HorizontalAlignment.Left;
+                    carLogoBorder.HorizontalAlignment = HorizontalAlignment.Center;
+                    carLogoBorder.Padding = new Thickness(2);
+                    carLogoBorder.Margin = new Thickness(-2, 0, -2, 0);
+                    carLogoBorder.Width = CarLogoWidth * (Width / ColumnsWidth);
                     carLogoBorder.Child = carLogo;
                     UIHelper.AddOrInsertChild(StandingsGrid, carLogoBorder, CellIndex);
-                    UIHelper.SetCellFormat(carLogoBorder, columnIndex, SafetyRatingWidth, rowIndex);
+                    UIHelper.SetCellFormat(carLogoBorder, columnIndex, CarLogoWidth, rowIndex);
                     columnIndex += CarLogoWidth;
                     CellIndex++;
 
