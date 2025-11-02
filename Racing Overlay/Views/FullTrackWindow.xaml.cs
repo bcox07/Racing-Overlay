@@ -45,18 +45,11 @@ namespace RacingOverlay.Windows
             Top = double.Parse(mainWindow.WindowSettings.FullTrackSettings["YPos"] ?? "0");
             _GlobalSettings = globalSettings;
 
-            if (HasTrackMap())
+            if (HasTrackMap(out DrawingImage map))
             {
-                var nonGenericTrack = new BitmapImage();
-                using (var stream = File.OpenRead($"assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png"))
-                {
-                    nonGenericTrack.BeginInit();
-                    nonGenericTrack.CacheOption = BitmapCacheOption.OnLoad; // Crucial for releasing the file lock
-                    nonGenericTrack.StreamSource = stream;
-                    nonGenericTrack.EndInit();
-                }
-
-                TrackMap.Source = nonGenericTrack;
+                TrackMap.Tag = "MapImage";
+                TrackMap.Source = map;
+                TrackMap.Visibility = Visibility.Hidden;
                 TrackMap.Source.Freeze();
             }
             
@@ -72,9 +65,42 @@ namespace RacingOverlay.Windows
             }
         }
 
-        public bool HasTrackMap()
+        public bool HasTrackMap(out DrawingImage map)
         {
-            return File.Exists($"assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/map.png");
+            var test = (ResourceDictionary)Application.Current.Resources[$"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}"];
+            map = (DrawingImage)test["di_Image"];
+
+            return map != null;
+        }
+
+        public (string, double, double, double) GetTrackMapTransformData()
+        {
+            var transformData = new List<(string, double, double, double)>();
+            var trackDirectory = Directory.GetDirectories("assets/tracks/");
+            var transformFile = $"assets/tracks/transform.csv";
+            if (File.Exists(transformFile))
+            {
+                try
+                {
+                    using (var reader = new StreamReader(transformFile))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            var data = line.Split(',');
+                            if (data[0] == "trackname")
+                                continue;
+                            transformData.Add((data[0], double.Parse(data[1]), double.Parse(data[2]), double.Parse(data[3])));
+                        }
+                    }
+                }
+                catch (IOException ex)
+                {
+                    Trace.WriteLine(ex);
+                }
+            }
+
+            return transformData.Where(t => t.Item1 == $"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}").FirstOrDefault();
         }
 
         public bool HasTrackCoordinates()
@@ -207,26 +233,29 @@ namespace RacingOverlay.Windows
             if (UpdatedWidth != DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
             {
                 UpdatedWidth = DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0);
+                var updatedHeight = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
                 Dispatcher.Invoke(() =>
                 {
+                    var transformData = GetTrackMapTransformData();
                     if (UpdatedWidth > DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
                     {
                         Width = UpdatedWidth;
-                        Height = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
-                        TrackMap.Width = UpdatedWidth;
-                        TrackMap.Height = Height;
+                        Height = updatedHeight;
+                        TrackMapViewbox.Width = UpdatedWidth * transformData.Item2;
+                        TrackMapViewbox.Height = updatedHeight * transformData.Item2;
+                        TrackMapViewbox.Margin = new Thickness(transformData.Item3, transformData.Item4, 0, 0);
                     }
                     else
                     {
-                        TrackMap.Width = UpdatedWidth;
-                        TrackMap.Height = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
+                        TrackMapViewbox.Width = UpdatedWidth * transformData.Item2;
+                        TrackMapViewbox.Height = updatedHeight * transformData.Item2;
+                        TrackMapViewbox.Margin = new Thickness(transformData.Item3, transformData.Item4, 0, 0);
                         Width = UpdatedWidth;
-                        Height = TrackMap.Height;
+                        Height = updatedHeight;
                     }
-                    
+                    TrackMap.Visibility = Visibility.Visible;
                 });
             }
-
 
             //GetPointsBetween(3, 1533, 1630);
             //GetPointsBetween(5, 3312, 3607);

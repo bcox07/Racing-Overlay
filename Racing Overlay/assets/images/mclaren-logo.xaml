@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="Image">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,50.0,50.0"/>
+        </DrawingGroup.ClipGeometry>
+        <GeometryDrawing Brush="#ffffffff">
+            <GeometryDrawing.Geometry>
+                <PathGeometry Figures="m 25.7464 39.0612 c 0 -0.146936 0.7228 -2.29742 1.60622 -4.77886 c 1.1158 -3.13415 1.64046 -4.93599 1.71836 -5.90132 c 0.109912 -1.362 0.09646 -1.40622 -0.676704 -2.2256 c -1.86443 -1.97588 -3.86017 -2.50975 -9.93177 -2.6568 c -5.39208 -0.130594 -7.93488 0.162841 -12.7732 1.47399 c -4.25193 1.15224 -4.76047 1.09683 -3.21969 -0.350799 c 1.05346 -0.989776 9.98153 -5.97201 13.5649 -7.5698 c 6.06458 -2.70411 12.6065 -4.86294 18.1569 -5.99178 c 2.093 -0.42567 3.42546 -0.537787 6.43938 -0.541827 c 3.44664 -0.0046 3.90964 0.04418 4.97536 0.524514 c 0.646286 0.291283 1.45385 0.856583 1.79458 1.25622 c 0.558991 0.655627 0.619517 0.881548 0.619517 2.31242 c 0 4.01645 -3.53159 9.07024 -11.0225 15.7735 c -5.37651 4.81116 -10.4701 8.94334 -11.0242 8.94334 c -0.124994 0 -0.227262 -0.120213 -0.227262 -0.267155 z" FillRule="Nonzero"/>
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+    </DrawingGroup>
+    <DrawingImage Drawing="{StaticResource Image}" x:Key="di_Image"/>
+</ResourceDictionary>

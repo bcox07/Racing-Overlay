@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="Image">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,52.173912,52.173912"/>
+        </DrawingGroup.ClipGeometry>
+        <GeometryDrawing Brush="#ffffffff">
+            <GeometryDrawing.Geometry>
+                <PathGeometry Figures="M 16.6409 34.6615 V 32.7967 H 8.76752 H 0.894155 v -0.802737 c 0 -1.02088 0.966544 -3.41578 3.09014 -7.65673 L 5.66205 20.9867 h 5.48942 h 5.48942 V 19.1219 V 17.2572 h 9.53092 h 9.53092 v 1.86475 v 1.86475 h 7.87336 h 7.87337 v 0.61434 c 0 1.0227 -0.548262 2.40023 -2.74482 6.89644 l -2.10036 4.29927 h -5.45077 h -5.45078 v 1.86474 v 1.86475 h -9.53092 h -9.53092 z" FillRule="Nonzero"/>
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+    </DrawingGroup>
+    <DrawingImage Drawing="{StaticResource Image}" x:Key="di_Image"/>
+</ResourceDictionary>

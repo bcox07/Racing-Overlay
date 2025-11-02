@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="LiveTrackWindow" Height="300" Width="400"  Background="#00000000"  WindowStyle="None"
-        Opacity="0.9" AllowsTransparency="True">
+        Title="LiveTrackWindow" Height="300" Width="400" Background="Transparent"  WindowStyle="None"
+        Opacity="0.9" AllowsTransparency="True" >
     <Window.Resources>
         <Style x:Key="Pixel" TargetType="{x:Type TextBox}">
             <Setter Property="Width" Value="30" />
@@ -39,7 +39,12 @@
             Canvas.Left="63" Canvas.Top="214" HorizontalAlignment="Left" VerticalAlignment="Top"  />
         <TextBox Style="{StaticResource Pixel}" Background="Violet"
             Canvas.Left="76" Canvas.Top="222" HorizontalAlignment="Center" VerticalAlignment="Top"  />
-        <Image x:Name="TrackMap" Width="400" Height="300" RenderOptions.BitmapScalingMode="HighQuality" Source="/assets/tracks/212-interlagos/map.png"></Image>
+        <Viewbox x:Name="TrackMapViewbox" Stretch="Uniform">
+            <Image x:Name="TrackMap" Width="Auto" Height="Auto"></Image>
+        </Viewbox>
+        
+
+
 
     </Canvas>
 </Window>
