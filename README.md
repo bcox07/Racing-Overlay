@@ -4,6 +4,7 @@
 
 ### Completed 
 
+1. CTMP/Mosport
 1. Daytona (Road Course)
 1. Imola
 1. Interlagos (Grand Prix)
@@ -34,7 +35,6 @@
 1. Barber (Full Course)
 1. Barcelona
 1. COTA
-1. CTMP/Mosport
 1. Detroit Grand Prix
 1. Donington Park
 1. Hungaroring

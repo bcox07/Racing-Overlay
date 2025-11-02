@@ -13,7 +13,7 @@
             <Setter Property="BorderThickness" Value="14"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Panel.ZIndex" Value="99"/>
-            <Setter Property="Visibility" Value="Visible"/>
+            <Setter Property="Visibility" Value="Hidden"/>
         </Style>
         <ResourceDictionary x:Key="MapDictionary">
             <ResourceDictionary.MergedDictionaries>
