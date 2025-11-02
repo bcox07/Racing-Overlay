@@ -75,7 +75,7 @@ namespace RacingOverlay.Windows
 
         public (string, double, double, double) GetTrackMapTransformData()
         {
-            var transformData = new List<(string, double, double, double)>();
+            var transformDataList = new List<(string, double, double, double)>();
             var trackDirectory = Directory.GetDirectories("assets/tracks/");
             var transformFile = $"assets/tracks/transform.csv";
             if (File.Exists(transformFile))
@@ -90,7 +90,7 @@ namespace RacingOverlay.Windows
                             var data = line.Split(',');
                             if (data[0] == "trackname")
                                 continue;
-                            transformData.Add((data[0], double.Parse(data[1]), double.Parse(data[2]), double.Parse(data[3])));
+                            transformDataList.Add((data[0], double.Parse(data[1]), double.Parse(data[2]), double.Parse(data[3])));
                         }
                     }
                 }
@@ -100,7 +100,12 @@ namespace RacingOverlay.Windows
                 }
             }
 
-            return transformData.Where(t => t.Item1 == $"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}").FirstOrDefault();
+            var transformData = transformDataList.Where(t => t.Item1 == $"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}").FirstOrDefault();
+
+            if (transformData.Item1 == null)
+                transformData = transformDataList.Where(t => t.Item1 == "default").FirstOrDefault();
+
+            return transformData;
         }
 
         public bool HasTrackCoordinates()
@@ -184,7 +189,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 264, 184 });
+            points.Add(0   , new List<double> { 37.5, 74.5 });
 
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
@@ -257,7 +262,7 @@ namespace RacingOverlay.Windows
                 });
             }
 
-            //GetPointsBetween(3, 1533, 1630);
+            //GetPointsBetween(5, 3600, 3914);
             //GetPointsBetween(5, 3312, 3607);
             //GenerateCoordinates();
 

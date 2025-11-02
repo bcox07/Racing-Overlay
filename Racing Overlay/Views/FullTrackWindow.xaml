@@ -13,10 +13,14 @@
             <Setter Property="BorderThickness" Value="14"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Panel.ZIndex" Value="99"/>
-            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="Visibility" Value="Visible"/>
         </Style>
+        <ResourceDictionary x:Key="MapDictionary">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/assets/tracks/127-road atlanta/map.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
-
     <Canvas Name="TrackCanvas" Opacity="0.9" Cursor="Arrow" ClipToBounds="True" Margin="0,0,0,0">
         <TextBox x:Name="Player" Visibility="Hidden" TextWrapping="Wrap" Text="1" Width="30" Height="30" HorizontalAlignment="Left" TextAlignment="Center" >
             <TextBox.Resources>
@@ -26,25 +30,26 @@
             </TextBox.Resources>
         </TextBox>
         <TextBox Style="{StaticResource Pixel}" Background="Red"
-            Canvas.Left="90" Canvas.Top="89" HorizontalAlignment="Left" VerticalAlignment="Center"   />
+            Canvas.Left="7.8" Canvas.Top="112.6" HorizontalAlignment="Center" VerticalAlignment="Top"   />
         <TextBox Style="{StaticResource Pixel}" Background="Orange"
-            Canvas.Left="94" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+            Canvas.Left="18" Canvas.Top="131" HorizontalAlignment="Center" VerticalAlignment="Top"  />
         <TextBox Style="{StaticResource Pixel}" Background="Yellow"
-            Canvas.Left="99.7" Canvas.Top="102" HorizontalAlignment="Left" VerticalAlignment="Center"  />
+            Canvas.Left="9.3" Canvas.Top="121" HorizontalAlignment="Center" VerticalAlignment="Top"  />
         <TextBox Style="{StaticResource Pixel}" Background="Green"
-            Canvas.Left="107" Canvas.Top="106.7" HorizontalAlignment="Center" VerticalAlignment="Top"  />
+            Canvas.Left="11.8" Canvas.Top="105" HorizontalAlignment="Left" VerticalAlignment="Center"  />
         <TextBox Style="{StaticResource Pixel}" Background="Blue"
-            Canvas.Left="115" Canvas.Top="110" HorizontalAlignment="Left" VerticalAlignment="Center"   />
+            Canvas.Left="19.8" Canvas.Top="95" HorizontalAlignment="Left" VerticalAlignment="Top"   />
         <TextBox Style="{StaticResource Pixel}" Background="Indigo"
-            Canvas.Left="63" Canvas.Top="214" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+            Canvas.Left="28.3" Canvas.Top="85" HorizontalAlignment="Left" VerticalAlignment="Center"  />
         <TextBox Style="{StaticResource Pixel}" Background="Violet"
-            Canvas.Left="76" Canvas.Top="222" HorizontalAlignment="Center" VerticalAlignment="Top"  />
-        <Viewbox x:Name="TrackMapViewbox" Stretch="Uniform">
-            <Image x:Name="TrackMap" Width="Auto" Height="Auto"></Image>
+            Canvas.Left="36.5" Canvas.Top="75.5" HorizontalAlignment="Left" VerticalAlignment="Center"  />
+        <Viewbox x:Name="TrackMapViewbox" Stretch="Uniform" Width="360" Height="270" Margin="20,15,0,0">
+            <Image x:Name="TrackMap" Width="Auto" Height="Auto">
+                <Image.Source>
+                    <DrawingImage Drawing="{StaticResource map_xaml}">
+                    </DrawingImage>
+                </Image.Source>
+            </Image>
         </Viewbox>
-        
-
-
-
     </Canvas>
 </Window>
