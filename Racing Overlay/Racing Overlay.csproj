@@ -181,7 +181,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="assets\tracks\145-brandshatch\map.xaml">
+    <Page Include="assets\tracks\145-brands hatch\map.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -347,7 +347,10 @@
     <None Include="assets\tracks\144-mosport\porsche992rgt3.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="assets\tracks\145-brandshatch\dallarap217.csv">
+    <None Include="assets\tracks\145-brands hatch\coordinates.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="assets\tracks\145-brands hatch\dallarap217.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\149-zandvoort\acuraarx06gtp.csv">

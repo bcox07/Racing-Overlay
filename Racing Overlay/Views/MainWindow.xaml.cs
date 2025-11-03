@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using RacingOverlay.Models;
+using System.Windows.Media;
 
 namespace RacingOverlay
 {
@@ -243,7 +244,7 @@ namespace RacingOverlay
                         }
                         try
                         {
-                            if (FullTrackWindow.HasTrackMap())
+                            if (FullTrackWindow.HasTrackMap(out DrawingImage map))
                                 FullTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                         }
                         catch (Exception ex)

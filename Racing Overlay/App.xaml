@@ -12,6 +12,7 @@
         <system:Double x:Key="DataFontSize">14</system:Double>
         <ResourceDictionary x:Key="18-road america" Source="pack://application:,,,/assets/tracks/18-road america/map.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="127-road atlanta" Source="pack://application:,,,/assets/tracks/127-road atlanta/map.xaml"></ResourceDictionary>
+        <ResourceDictionary x:Key="145-brands hatch" Source="pack://application:,,,/assets/tracks/145-brands hatch/map.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="144-mosport" Source="pack://application:,,,/assets/tracks/144-mosport/map.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="192-daytona" Source="pack://application:,,,/assets/tracks/192-daytona/map.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="200-zolder" Source="pack://application:,,,/assets/tracks/200-zolder/map.xaml"></ResourceDictionary>

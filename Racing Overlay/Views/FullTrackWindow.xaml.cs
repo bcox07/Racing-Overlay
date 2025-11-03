@@ -1,24 +1,14 @@
 ﻿using Newtonsoft.Json;
-using NLog;
 using RacingOverlay.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using static iRacingSDK.SessionData._DriverInfo;
 
 namespace RacingOverlay.Windows
 {
@@ -53,7 +43,7 @@ namespace RacingOverlay.Windows
                 TrackMap.Source.Freeze();
             }
             
-            //TraceTrackLine();
+            TraceTrackLine();
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -67,8 +57,8 @@ namespace RacingOverlay.Windows
 
         public bool HasTrackMap(out DrawingImage map)
         {
-            var test = (ResourceDictionary)Application.Current.Resources[$"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}"];
-            map = (DrawingImage)test["di_Image"];
+            var mapResourceDictionary = (ResourceDictionary)Application.Current.Resources[$"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}"];
+            map = (DrawingImage)mapResourceDictionary["di_Image"];
 
             return map != null;
         }
@@ -189,7 +179,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 37.5, 74.5 });
+            points.Add(0   , new List<double> { 9, 112 });
 
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
@@ -262,8 +252,7 @@ namespace RacingOverlay.Windows
                 });
             }
 
-            //GetPointsBetween(5, 3600, 3914);
-            //GetPointsBetween(5, 3312, 3607);
+            //GetPointsBetween(3, 2677, 2751);
             //GenerateCoordinates();
 
             foreach (var driver in LocalTelemetry.AllPositions)
@@ -360,11 +349,6 @@ namespace RacingOverlay.Windows
                     }
                 });
             }
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }
