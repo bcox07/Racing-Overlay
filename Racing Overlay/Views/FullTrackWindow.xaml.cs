@@ -43,7 +43,7 @@ namespace RacingOverlay.Windows
                 TrackMap.Source.Freeze();
             }
             
-            TraceTrackLine();
+            //TraceTrackLine();
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -175,12 +175,13 @@ namespace RacingOverlay.Windows
             return items;
         }
 
-        private void GenerateCoordinates()
+        private Dictionary<int, (double, double)> GenerateCoordinates()
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 9, 112 });
+            points.Add(0   , new List<double> { 282, 209 });
 
+            var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;
             var x = points.Values.First()[0];
             var y = points.Values.First()[1];
@@ -194,6 +195,12 @@ namespace RacingOverlay.Windows
 
                     while (locationOnTrack <= corner.Key)
                     {
+                        
+                        if (locationOnTrack == corner.Key)
+                            coordinatesDictionary.Add(locationOnTrack, (Math.Round(corner.Value[0], 2), Math.Round(corner.Value[1], 2)));
+                        else
+                            coordinatesDictionary.Add(locationOnTrack, (Math.Round(x, 2), Math.Round(y, 2)));
+
                         if (locationOnTrack % 2 == 0)
                         {
                             if (locationOnTrack == corner.Key)
@@ -210,15 +217,17 @@ namespace RacingOverlay.Windows
                 }
                 writer.WriteLine("}");
             }
+
+            return coordinatesDictionary;
         }
 
-        private void GetPointsBetween(int pointCount, int a, int b)
+        private void GetPointsBetween(int pointCount, int a, int b, Dictionary<int, (double, double)> coordinates)
         {
             var step = (b - a) / (pointCount + 1);
 
             for (int i = a; i <= b; i += step)
             {
-                Console.Write(i + " ");
+                Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\" Canvas.Top=\"{coordinates[i].Item2}\"");
             }
             Console.WriteLine();
         }
@@ -252,8 +261,10 @@ namespace RacingOverlay.Windows
                 });
             }
 
-            //GetPointsBetween(3, 2677, 2751);
-            //GenerateCoordinates();
+            
+            //var generatedCoordinates = GenerateCoordinates();
+            //GetPointsBetween(3, 3718, 3801, generatedCoordinates);
+            //GetPointsBetween(3, 3970, 4283, generatedCoordinates);
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
