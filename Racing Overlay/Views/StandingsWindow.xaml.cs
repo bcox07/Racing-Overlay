@@ -153,7 +153,7 @@ namespace RacingOverlay
                 title.Text = $"{sessionType}";
                 title.FontSize = _GlobalSettings.UISize.TitleFontSize;
                 title.Foreground = Brushes.White;
-                title.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                title.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor);
                 
                 title.FontWeight = FontWeights.Black;
                 title.Padding = new Thickness(5);
@@ -173,7 +173,7 @@ namespace RacingOverlay
                 timeTitle.Padding = new Thickness(5);
                 timeTitle.Margin = new Thickness(0, 0, -1, 0);
                 timeTitle.Foreground = Brushes.White;
-                timeTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                timeTitle.Background = title.Background;
 
                 UIHelper.SetCellFormat(timeTitle, 12, 14, rowIndex);
                 UIHelper.AddOrInsertChild(StandingsGrid, timeTitle, CellIndex);
@@ -187,7 +187,7 @@ namespace RacingOverlay
                 lapsTitle.VerticalAlignment = VerticalAlignment.Center;
                 lapsTitle.Padding = new Thickness(5);
                 lapsTitle.Foreground = Brushes.White;
-                lapsTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                lapsTitle.Background = title.Background;
 
                 UIHelper.SetCellFormat(lapsTitle, 26, 11, rowIndex);
                 UIHelper.AddOrInsertChild(StandingsGrid, lapsTitle, CellIndex);
@@ -352,7 +352,7 @@ namespace RacingOverlay
                     carLogo.Source.Freeze();
 
                     var carLogoBorder = new Border();
-                    carLogoBorder.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#521439") : (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                    carLogoBorder.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor) : (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
                     carLogoBorder.HorizontalAlignment = HorizontalAlignment.Center;
                     carLogoBorder.Padding = new Thickness(2);
                     carLogoBorder.Margin = new Thickness(-2, 0, -2, 0);
@@ -388,7 +388,7 @@ namespace RacingOverlay
                     columnIndex += IRatingWidth;
                     CellIndex++;
 
-                    var border = UIHelper.DesignSafetyRating(rowIndex, position, new Thickness(7, 3, 7, 3), _GlobalSettings.UISize.DataFontSize);
+                    var border = UIHelper.DesignSafetyRating(rowIndex, position, new Thickness(7, 3, 7, 3), _GlobalSettings.UISize.DataFontSize, _GlobalSettings.PrimaryColor, _GlobalSettings.SecondaryColor);
                     border.Margin = new Thickness(-1, 0, -1, 0);
                     UIHelper.AddOrInsertChild(StandingsGrid, border, CellIndex);
                     UIHelper.SetCellFormat(border, columnIndex, SafetyRatingWidth, rowIndex);
@@ -432,7 +432,7 @@ namespace RacingOverlay
                 textBlock.Foreground = Brushes.White;
 
             if (tag != "LastLap")
-                textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#521439") : (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor) : (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
 
 
             switch (tag)
@@ -529,7 +529,7 @@ namespace RacingOverlay
             else
             {
                 var timeText = StringHelper.GetTimeString(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000, true);
-                textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#521439") : (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                textBlock.Background = rowIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor) : (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
                 if (textBlock.Text != timeText)
                 {
                     text = timeText;

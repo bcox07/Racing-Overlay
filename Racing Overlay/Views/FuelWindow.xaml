@@ -18,7 +18,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </Window.Resources>
-    <Border CornerRadius="10" Grid.Row="0" Grid.Column="0" Background="#321324">
+    <Border CornerRadius="10" Grid.Row="0" Grid.Column="0" x:Name="MainContainer"  Background="#321324">
         <Grid x:Name="fuelGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftColDefinition" Width="90"></ColumnDefinition>
@@ -33,17 +33,17 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Border CornerRadius="10, 0, 0, 0" Background="#a42872">
+            <Border x:Name="FuelTitle" CornerRadius="10, 0, 0, 0" >
                 <TextBlock Text="Fuel" Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Center" Grid.RowSpan="1" />
             </Border>
             <TextBlock x:Name="fuelRemainingCell" Style="{StaticResource DataField}" Text="49.57" Foreground="#C6C6C6" TextAlignment="Center" Grid.Row="1"  />
-            <TextBlock Text="Add" Style="{StaticResource TitleField}" Foreground="#C6C6C6" Background="#a42872" TextAlignment="Center" Grid.Row="2" Grid.Column="0" />
+            <TextBlock x:Name="AddTitle" Text="Add" Style="{StaticResource TitleField}" Foreground="#C6C6C6"  TextAlignment="Center" Grid.Row="2" Grid.Column="0" />
             <TextBlock x:Name="fuelToAddCell" Style="{StaticResource DataField}" Text="19.99 - 23.34" Foreground="#C6C6C6" TextAlignment="Center" Padding="5" Grid.Row="3" Grid.RowSpan="3" Grid.Column="0"/>
-            <Border CornerRadius="0, 10, 0, 0" Background="#a42872" Grid.Row="0" Grid.Column="1"  Grid.ColumnSpan="2">
+            <Border x:Name="EstLapsTitle" CornerRadius="0, 10, 0, 0" Grid.Row="0" Grid.Column="1"  Grid.ColumnSpan="2">
                 <TextBlock Text="Est Laps"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Center" VerticalAlignment="Center" />
             </Border>
             <TextBlock x:Name="lapsRemainingCell" Style="{StaticResource DataField}" Text="8.56" Foreground="#C6C6C6" TextAlignment="Center" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
-            <TextBlock Text="Usage"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" Background="#a42872" TextAlignment="Center"  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <TextBlock x:Name="UsageTitle" Text="Usage"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Center"  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
             <TextBlock Text="Avg:"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Right" Grid.Row="3" Grid.Column="1"/>
             <TextBlock Text="Last 5:"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Right" Grid.Row="4" Grid.Column="1"/>
             <TextBlock Text="Last:"  Style="{StaticResource TitleField}" Foreground="#C6C6C6" TextAlignment="Right" Grid.Row="5" Grid.Column="1"/>

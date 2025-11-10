@@ -213,7 +213,7 @@ namespace RacingOverlay
                 CellIndex++;
 
 
-                var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3), _GlobalSettings.UISize.DataFontSize);
+                var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3), _GlobalSettings.UISize.DataFontSize, _GlobalSettings.PrimaryColor, _GlobalSettings.SecondaryColor);
                 border.VerticalAlignment = VerticalAlignment.Stretch;
                 
                 UIHelper.SetCellFormat(border, ColumnIndex, SafetyRatingWidth, rowIndex);
@@ -267,7 +267,7 @@ namespace RacingOverlay
             textBlock.FontWeight = fontWeight ?? FontWeights.Bold;
             textBlock.Foreground = Brushes.White;
             if (backgroundColor == null)
-                textBlock.Background = posIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#521439") : (SolidColorBrush)new BrushConverter().ConvertFrom("#280f1d");
+                textBlock.Background = posIndex % 2 == 1 ? (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor) : (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
             else
                 textBlock.Background = backgroundColor;
 

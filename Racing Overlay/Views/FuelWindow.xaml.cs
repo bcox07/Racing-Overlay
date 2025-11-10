@@ -109,6 +109,12 @@ namespace RacingOverlay
             Height = _GlobalSettings.UISize.FuelWindowSettings["WindowHeight"];
             LeftColDefinition.Width = new GridLength(Width / 2);
 
+            MainContainer.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor);
+            FuelTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
+            EstLapsTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
+            AddTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
+            UsageTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
+
             var appResources = Application.Current.Resources;
             appResources["TitleFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["TitleFontSize"];
             appResources["DataFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["DataFontSize"];

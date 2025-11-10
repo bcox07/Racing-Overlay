@@ -37,6 +37,16 @@ namespace RacingOverlay.Windows
 
             if (HasTrackMap(out DrawingImage map))
             {
+                try
+                {
+                    var mapColor = (GeometryDrawing)((DrawingGroup)map.Drawing).Children[0];
+                    mapColor.Brush = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
+                }
+                catch (Exception)
+                {
+                    
+                }
+                
                 TrackMap.Tag = "MapImage";
                 TrackMap.Source = map;
                 TrackMap.Visibility = Visibility.Hidden;
@@ -118,49 +128,6 @@ namespace RacingOverlay.Windows
             }
         }
 
-        private void TraceTrackLine()
-        {
-            var loc = GetTrackJsonData();
-            if (loc != null)
-            {
-                foreach (var coordinate in loc)
-                {
-                    if (int.Parse(coordinate.Key) % 4 == 0)
-                    {
-                        var textBoxTemp = new TextBox();
-                        textBoxTemp.Visibility = Visibility.Visible;
-                        textBoxTemp.Text = $"{Math.Round(double.Parse(coordinate.Key) / 1000, 1)}";
-                        textBoxTemp.VerticalAlignment = VerticalAlignment.Center;
-                        textBoxTemp.TextAlignment = TextAlignment.Center;
-                        textBoxTemp.Width = 2;
-                        textBoxTemp.Height = 2;
-                        textBoxTemp.Margin = new Thickness(14);
-                        textBoxTemp.BorderThickness = new Thickness(0);
-                        textBoxTemp.Background = Brushes.Green;
-                        Canvas.SetZIndex(textBoxTemp, 99);
-
-                        if (int.Parse(coordinate.Key) % 200 == 0)
-                        {
-                            textBoxTemp.FontSize = 10;
-                            textBoxTemp.FontWeight = FontWeights.Bold;
-                            textBoxTemp.Width = 20;
-                            textBoxTemp.Height = 20;
-                            textBoxTemp.Margin = new Thickness(5);
-                            textBoxTemp.Background = Brushes.Transparent;
-                            textBoxTemp.Foreground = Brushes.White;
-                            Canvas.SetZIndex(textBoxTemp, 100);
-                        }
-
-                        
-                        Canvas.SetLeft(textBoxTemp, coordinate.Value[0] * (_GlobalSettings.UISize.Percentage / 100.0));
-                        Canvas.SetTop(textBoxTemp, coordinate.Value[1] * (_GlobalSettings.UISize.Percentage / 100.0));
-                        
-                        TrackCanvas.Children.Add(textBoxTemp);
-                    }
-                }
-            }
-        }
-
         private Dictionary<string, List<double>> GetTrackJsonData()
         {
             if (!HasTrackCoordinates())
@@ -173,63 +140,6 @@ namespace RacingOverlay.Windows
                 items = JsonConvert.DeserializeObject<Dictionary<string, List<double>>>(json);
             }
             return items;
-        }
-
-        private Dictionary<int, (double, double)> GenerateCoordinates()
-        {
-            var fileLocation = $"..\\..\\trackline.txt";
-            var points = new Dictionary<int, List<double>>();
-            points.Add(0   , new List<double> { 282, 209 });
-
-            var coordinatesDictionary = new Dictionary<int, (double, double)>();
-            var locationOnTrack = 0;
-            var x = points.Values.First()[0];
-            var y = points.Values.First()[1];
-            using (StreamWriter writer = new StreamWriter(fileLocation))
-            {
-                writer.WriteLine("{");
-                foreach (var corner in points)
-                {
-                    var xDev = (corner.Value[0] - x) / (corner.Key - locationOnTrack == 0 ? 1 : corner.Key - locationOnTrack);
-                    var yDev = (corner.Value[1] - y) / (corner.Key - locationOnTrack == 0 ? 1 : corner.Key - locationOnTrack);
-
-                    while (locationOnTrack <= corner.Key)
-                    {
-                        
-                        if (locationOnTrack == corner.Key)
-                            coordinatesDictionary.Add(locationOnTrack, (Math.Round(corner.Value[0], 2), Math.Round(corner.Value[1], 2)));
-                        else
-                            coordinatesDictionary.Add(locationOnTrack, (Math.Round(x, 2), Math.Round(y, 2)));
-
-                        if (locationOnTrack % 2 == 0)
-                        {
-                            if (locationOnTrack == corner.Key)
-                                writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(corner.Value[0], 2)}, {Math.Round(corner.Value[1], 2)}]");
-                            else
-                                writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(x, 2)}, {Math.Round(y, 2)}]");
-                        }
-                            
-
-                        locationOnTrack++;
-                        x += xDev;
-                        y += yDev;
-                    }
-                }
-                writer.WriteLine("}");
-            }
-
-            return coordinatesDictionary;
-        }
-
-        private void GetPointsBetween(int pointCount, int a, int b, Dictionary<int, (double, double)> coordinates)
-        {
-            var step = (b - a) / (pointCount + 1);
-
-            for (int i = a; i <= b; i += step)
-            {
-                Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\" Canvas.Top=\"{coordinates[i].Item2}\"");
-            }
-            Console.WriteLine();
         }
 
         private void DisplayTrackMap()
@@ -317,7 +227,7 @@ namespace RacingOverlay.Windows
                     }
                    
                     textBox.FontWeight = FontWeights.Bold;
-                    textBox.FontSize = _GlobalSettings.UISize.SimpleTrackSettings["FontSize"] + 2;
+                    textBox.FontSize = _GlobalSettings.UISize.SimpleTrackSettings.FontSize + 2;
                     textBox.TextAlignment = TextAlignment.Center;
                     textBox.HorizontalAlignment = HorizontalAlignment.Center;
                     textBox.VerticalAlignment = VerticalAlignment.Center;
@@ -360,6 +270,106 @@ namespace RacingOverlay.Windows
                     }
                 });
             }
+        }
+
+        private void TraceTrackLine()
+        {
+            var loc = GetTrackJsonData();
+            if (loc != null)
+            {
+                foreach (var coordinate in loc)
+                {
+                    if (int.Parse(coordinate.Key) % 4 == 0)
+                    {
+                        var textBoxTemp = new TextBox();
+                        textBoxTemp.Visibility = Visibility.Visible;
+                        textBoxTemp.Text = $"{Math.Round(double.Parse(coordinate.Key) / 1000, 1)}";
+                        textBoxTemp.VerticalAlignment = VerticalAlignment.Center;
+                        textBoxTemp.TextAlignment = TextAlignment.Center;
+                        textBoxTemp.Width = 2;
+                        textBoxTemp.Height = 2;
+                        textBoxTemp.Margin = new Thickness(14);
+                        textBoxTemp.BorderThickness = new Thickness(0);
+                        textBoxTemp.Background = Brushes.Green;
+                        Canvas.SetZIndex(textBoxTemp, 99);
+
+                        if (int.Parse(coordinate.Key) % 200 == 0)
+                        {
+                            textBoxTemp.FontSize = 10;
+                            textBoxTemp.FontWeight = FontWeights.Bold;
+                            textBoxTemp.Width = 20;
+                            textBoxTemp.Height = 20;
+                            textBoxTemp.Margin = new Thickness(5);
+                            textBoxTemp.Background = Brushes.Transparent;
+                            textBoxTemp.Foreground = Brushes.White;
+                            Canvas.SetZIndex(textBoxTemp, 100);
+                        }
+
+
+                        Canvas.SetLeft(textBoxTemp, coordinate.Value[0] * (_GlobalSettings.UISize.Percentage / 100.0));
+                        Canvas.SetTop(textBoxTemp, coordinate.Value[1] * (_GlobalSettings.UISize.Percentage / 100.0));
+
+                        TrackCanvas.Children.Add(textBoxTemp);
+                    }
+                }
+            }
+        }
+
+        private Dictionary<int, (double, double)> GenerateCoordinates()
+        {
+            var fileLocation = $"..\\..\\trackline.txt";
+            var points = new Dictionary<int, List<double>>();
+            points.Add(0, new List<double> { 282, 209 });
+
+            var coordinatesDictionary = new Dictionary<int, (double, double)>();
+            var locationOnTrack = 0;
+            var x = points.Values.First()[0];
+            var y = points.Values.First()[1];
+            using (StreamWriter writer = new StreamWriter(fileLocation))
+            {
+                writer.WriteLine("{");
+                foreach (var corner in points)
+                {
+                    var xDev = (corner.Value[0] - x) / (corner.Key - locationOnTrack == 0 ? 1 : corner.Key - locationOnTrack);
+                    var yDev = (corner.Value[1] - y) / (corner.Key - locationOnTrack == 0 ? 1 : corner.Key - locationOnTrack);
+
+                    while (locationOnTrack <= corner.Key)
+                    {
+
+                        if (locationOnTrack == corner.Key)
+                            coordinatesDictionary.Add(locationOnTrack, (Math.Round(corner.Value[0], 2), Math.Round(corner.Value[1], 2)));
+                        else
+                            coordinatesDictionary.Add(locationOnTrack, (Math.Round(x, 2), Math.Round(y, 2)));
+
+                        if (locationOnTrack % 2 == 0)
+                        {
+                            if (locationOnTrack == corner.Key)
+                                writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(corner.Value[0], 2)}, {Math.Round(corner.Value[1], 2)}]");
+                            else
+                                writer.WriteLine($"\t\"{locationOnTrack}\": [{Math.Round(x, 2)}, {Math.Round(y, 2)}]");
+                        }
+
+
+                        locationOnTrack++;
+                        x += xDev;
+                        y += yDev;
+                    }
+                }
+                writer.WriteLine("}");
+            }
+
+            return coordinatesDictionary;
+        }
+
+        private void GetPointsBetween(int pointCount, int a, int b, Dictionary<int, (double, double)> coordinates)
+        {
+            var step = (b - a) / (pointCount + 1);
+
+            for (int i = a; i <= b; i += step)
+            {
+                Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\" Canvas.Top=\"{coordinates[i].Item2}\"");
+            }
+            Console.WriteLine();
         }
     }
 }

@@ -12,6 +12,10 @@ namespace RacingOverlay.Models
     {
         public DriverDisplay DriverDisplay { get; set; }
         public UISize UISize { get; set; }
+        public SimpleTrackSettings SimpleTrackSettings { get; set; }
+
+        public string PrimaryColor = "#280f1d";
+        public string SecondaryColor = "#521439";
     }
 
     public class DriverDisplay
@@ -130,51 +134,7 @@ namespace RacingOverlay.Models
             }
         }
 
-        public Dictionary<string, int> SimpleTrackSettings
-        {
-            get
-            {
-                switch (SizePreset)
-                {
-                    case 0:
-                        return new Dictionary<string, int>
-                        {
-                            { "Width", 900 },
-                            { "FontSize", 10 },
-                            { "ContainerHeight", 20 },
-                            { "PositionDiameter", 17 },
-                            { "PaddingTop", 1 }
-                        };
-                    case 1:
-                        return new Dictionary<string, int>
-                        {
-                            { "Width", 1100 },
-                            { "FontSize", 12 },
-                            { "ContainerHeight", 25 },
-                            { "PositionDiameter", 21 },
-                            { "PaddingTop", 2 }
-                        };
-                    case 2:
-                        return new Dictionary<string, int>
-                        {
-                            { "Width", 1300 },
-                            { "FontSize", 14 },
-                            { "ContainerHeight", 30 },
-                            { "PositionDiameter", 25 },
-                            { "PaddingTop", 3 }
-                        };
-                    default:
-                        return new Dictionary<string, int>
-                        {
-                            { "Width", 1300 },
-                            { "FontSize", 14 },
-                            { "ContainerHeight", 30 },
-                            { "PositionDiameter", 25 },
-                            { "PaddingTop", 3 }
-                        };
-                }
-            }
-        }
+        public SimpleTrackSettings SimpleTrackSettings => new SimpleTrackSettings(SizePreset, 0);
 
         public Dictionary<string, int> FuelWindowSettings
         {
@@ -185,32 +145,33 @@ namespace RacingOverlay.Models
                     case 0:
                         return new Dictionary<string, int>
                         {
-                            { "WindowWidth", 180 },
-                            { "WindowHeight", 90 },
+                            { "WindowWidth", 200 },
+                            { "WindowHeight", 100 },
                             { "TitleFontSize", 11 },
                             { "DataFontSize", 11 },
                         };
                     case 1:
                         return new Dictionary<string, int>
                         {
-                            { "WindowWidth", 220 },
-                            { "WindowHeight", 100 },
+                            { "WindowWidth", 240 },
+                            { "WindowHeight", 120 },
                             { "TitleFontSize", 14 },
                             { "DataFontSize", 14 },
                         };
                     case 2:
                         return new Dictionary<string, int>
                         {
-                            { "WindowWidth", 260 },
-                            { "WindowHeight", 120 },
+                            { "WindowWidth", 280 },
+                            { "WindowHeight", 140 },
                             { "TitleFontSize", 16 },
                             { "DataFontSize", 16 },
                         };
                     default:
                         return new Dictionary<string, int>
                         {
-                            { "WindowWidth", 260 },
-                            { "WindowHeight", 120 },
+                            { "WindowWidth", 280 },
+                            { "WindowHeight", 140 },
+                            { "TitleFontSize", 16 },
                             { "DataFontSize", 16 },
                         };
                 }
