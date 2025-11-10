@@ -36,20 +36,24 @@ namespace RacingOverlay
         CancellationTokenSource tokenSource = new CancellationTokenSource();
         Configuration _configuration;
         GlobalSettings GlobalSettings = new GlobalSettings();
+        private bool _Initialized = false;
         public MainWindow(Configuration config)
         {
             InitializeComponent();
-            _configuration = config;
+            _Initialized = true;
 
-            WindowSettings = new WindowSettings(_configuration.AppSettings);
             telemetryData = new TelemetryData();
             telemetryData.StartOperation(telemetryData.RetrieveData);
 
+            _configuration = config;
+            WindowSettings = new WindowSettings(_configuration.AppSettings);
             GlobalSettings.UISize = new UISize(int.Parse(WindowSettings.GlobalSettings["UIZoom"]));
             GlobalSettings.DriverDisplay = new DriverDisplay(int.Parse(WindowSettings.GlobalSettings["DriverCount"]));
+            GlobalSettings.SimpleTrackSettings = new SimpleTrackSettings(int.Parse(WindowSettings.GlobalSettings["UIZoom"]), int.Parse(WindowSettings.SimpleTrackSettings["Width"]));
 
             uiZoom.Value = GlobalSettings.UISize.SizePreset;
             driverDisplayCount.Value = GlobalSettings.DriverDisplay.DisplayCount;
+            SimpleTrackWidth.Value = GlobalSettings.SimpleTrackSettings.ContainerWidth;
 
             standingsLock.Content = bool.Parse(WindowSettings.StandingsSettings["Locked"]) ? "Unlock" : "Lock";
             relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? "Unlock" : "Lock";
@@ -265,7 +269,7 @@ namespace RacingOverlay
         {
             while (true)
             {
-                var sessionFastestLap = telemetryData.LapList?.Where(l => l.ValidLap)?.OrderBy(l => l.SpeedData.OrderBy(m => m.Meter).Last().TimeInSeconds)?.FirstOrDefault();
+                var sessionFastestLap = telemetryData?.LapList?.Where(l => l.ValidLap)?.OrderBy(l => l.SpeedData.OrderBy(m => m.Meter).Last().TimeInSeconds)?.FirstOrDefault();
 
                 if (sessionFastestLap != null) 
                 {
@@ -476,6 +480,7 @@ namespace RacingOverlay
                 _configuration.AppSettings.Settings["SimpleTrackWindowLocked"].Value = SimpleTrackWindow.Locked.ToString();
                 _configuration.AppSettings.Settings["SimpleTrackWindowXPos"].Value = SimpleTrackWindow.Left.ToString();
                 _configuration.AppSettings.Settings["SimpleTrackWindowYPos"].Value = SimpleTrackWindow.Top.ToString();
+                _configuration.AppSettings.Settings["SimpleTrackWindowWidth"].Value = SimpleTrackWidth.Value.ToString();
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
@@ -531,6 +536,12 @@ namespace RacingOverlay
         private void driverDisplayCount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             GlobalSettings.DriverDisplay = new DriverDisplay((int)driverDisplayCount.Value);
+        }
+
+        private void SimpleTrackWidth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_Initialized)
+               GlobalSettings.SimpleTrackSettings.ContainerWidth = (int)SimpleTrackWidth.Value;
         }
 
         private void globalSettingsSaveBtn_Click(object sender, RoutedEventArgs e)

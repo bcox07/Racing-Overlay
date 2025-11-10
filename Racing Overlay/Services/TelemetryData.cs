@@ -197,10 +197,13 @@ namespace RacingOverlay
 
         public TelemetryData(TelemetryData original)
         {
-            _DataSample = original._DataSample;
-            AllPositions = original.AllPositions;
-            SortedPositions = original.SortedPositions;
-            IsRace = original.IsRace;
+            if (original != null)
+            {
+                _DataSample = original._DataSample;
+                AllPositions = original.AllPositions;
+                SortedPositions = original.SortedPositions;
+                IsRace = original.IsRace;
+            }
         }
         public void StartOperation(Action action)
         {

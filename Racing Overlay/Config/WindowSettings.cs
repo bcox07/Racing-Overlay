@@ -25,7 +25,8 @@ namespace RacingOverlay
         {
             { "Locked", "false" },
             { "XPos", "0" },
-            { "YPos", "0" }
+            { "YPos", "0" },
+            { "Width", "600" }
         };
 
         public Dictionary<string, string> FullTrackSettings { get; set; } = new Dictionary<string, string>
@@ -72,7 +73,8 @@ namespace RacingOverlay
                 {
                     { "Locked", appSettings.Settings["SimpleTrackWindowLocked"].Value },
                     { "XPos", appSettings.Settings["SimpleTrackWindowXPos"].Value },
-                    { "YPos", appSettings.Settings["SimpleTrackWindowYPos"].Value }
+                    { "YPos", appSettings.Settings["SimpleTrackWindowYPos"].Value },
+                    { "Width", appSettings.Settings["SimpleTrackWindowWidth"].Value }
                 };
                 FullTrackSettings = new Dictionary<string, string>()
                 {

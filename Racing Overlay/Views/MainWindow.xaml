@@ -229,9 +229,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="simpleTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="simpleTrackLock_Click" Grid.ColumnSpan="2" />
+                <Button x:Name="simpleTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="simpleTrackLock_Click" />
                 <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="simpleTrackSave_Click" Grid.Row="1" Grid.Column="1" />
-                <Button x:Name="simpleTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="simpleTrackReset_Click" Grid.Row="1" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Margin="0,11,0,0">Width</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackWidth" Width="120" Maximum="2000" Minimum="600" ValueChanged="SimpleTrackWidth_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="1" FontSize="16"/>
+                <Button x:Name="simpleTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="simpleTrackReset_Click" Grid.Column="1" />
             </Grid>
         </TabItem>
         <TabItem Header="Full Track" Style="{DynamicResource TabItemStyle}">
