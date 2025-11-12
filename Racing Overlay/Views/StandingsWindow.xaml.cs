@@ -381,7 +381,7 @@ namespace RacingOverlay
                     columnIndex += DriverNameWidth;
                     CellIndex++;
 
-                    var iRating = UIHelper.CreateTextBlock(null, fontSize: _GlobalSettings.UISize.DataFontSize);
+                    var iRating = UIHelper.CreateTextBlock(new Thickness(4), fontSize: _GlobalSettings.UISize.DataFontSize);
                     UpdateCell(iRating, "IRating", $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k", rowIndex, position, viewedCar, null);
                     UIHelper.AddOrInsertChild(StandingsGrid, iRating, CellIndex);
                     UIHelper.SetCellFormat(iRating, columnIndex, IRatingWidth, rowIndex);

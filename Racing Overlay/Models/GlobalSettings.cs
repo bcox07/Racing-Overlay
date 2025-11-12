@@ -126,10 +126,10 @@ namespace RacingOverlay.Models
             {
                 switch (SizePreset)
                 {
-                    case 0: return 90;
+                    case 0: return 80;
                     case 1: return 100;
-                    case 2: return 110;
-                    default: return 110;
+                    case 2: return 120;
+                    default: return 120;
                 }
             }
         }

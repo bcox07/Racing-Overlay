@@ -200,7 +200,7 @@ namespace RacingOverlay
                 ColumnIndex += CarNumberWidth;
                 CellIndex++;
 
-                var driverName = UIHelper.CreateTextBlock(new Thickness(6, 3, 6, 3), textAlignment: TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
+                var driverName = UIHelper.CreateTextBlock(new Thickness(6, 4, 6, 4), textAlignment: TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
                 driverName.Tag = "DriverName";
                 UpdateDriverCell(driverName, rowIndex, driver, viewedDriver, telemetryData, null, null);
                 driverName.Text = Regex.Replace(driver.Name, @"( .+ )", " ");
@@ -222,7 +222,7 @@ namespace RacingOverlay
                 ColumnIndex += SafetyRatingWidth;
                 CellIndex++;
 
-                var iRating = UIHelper.CreateTextBlock(null, fontSize: _GlobalSettings.UISize.DataFontSize);
+                var iRating = UIHelper.CreateTextBlock(new Thickness(4), fontSize: _GlobalSettings.UISize.DataFontSize);
                 iRating.Tag = "IRating";
                 UpdateDriverCell(iRating, rowIndex, driver, viewedDriver, telemetryData, null, null);
                 iRating.Text = $"{driver.iRating / 1000}.{driver.iRating % 1000 / 100}k";
@@ -233,7 +233,7 @@ namespace RacingOverlay
                 ColumnIndex += IRatingWidth;
                 CellIndex++;
 
-                var delta = UIHelper.CreateTextBlock(new Thickness(2, 3, 7, 3), textAlignment: TextAlignment.Right, fontSize: _GlobalSettings.UISize.DataFontSize);
+                var delta = UIHelper.CreateTextBlock(new Thickness(2, 4, 7, 4), textAlignment: TextAlignment.Right, fontSize: _GlobalSettings.UISize.DataFontSize);
                 delta.Tag = "Delta";
                 UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData, null, null); 
                 delta.Text = ((driver.PosOnTrack < 0 && driver.LapsComplete < 0) || driver == viewedDriver) ? "  -  " : driver.Delta.ToString("N1");
