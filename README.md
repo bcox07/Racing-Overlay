@@ -7,6 +7,7 @@
 1. Brands Hatch (Grand Prix)
 1. CTMP/Mosport
 1. Daytona (Road Course)
+1. Hungaroring
 1. Imola
 1. Interlagos (Grand Prix)
 1. Magny-Cours
@@ -20,6 +21,9 @@
 
 ### Next
 
+1. Zandvoort
+1. Suzuka (Grand Prix)
+1. Spa (Grand Prix Pits)
 1. Charlotte (Roval 2025)
 1. Sebring (International)
 1. Indianapolis (Road Course)
@@ -38,7 +42,6 @@
 1. COTA
 1. Detroit Grand Prix
 1. Donington Park
-1. Hungaroring
 1. Lime Rock (Grand Prix)
 1. Long Beach
 1. Oulton Park (Intl w/o Brittens)
@@ -49,10 +52,7 @@
 1. Mugello
 1. Portland (Full Circuit)
 1. Snetterton
-1. Spa (Grand Prix Pits)
-1. Suzuka (Grand Prix)
 1. Watkins Glen
-1. Zandvoort
 
 ## Badges
 
