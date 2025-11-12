@@ -202,7 +202,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="assets\tracks\268-24heures\map.xaml">
+    <Page Include="assets\tracks\266-imola full\map.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="assets\tracks\268-24 heures\map.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -215,6 +219,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="assets\tracks\413-hungaroring\map.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="assets\tracks\463-magny-cours\map.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -545,10 +553,10 @@
     <None Include="assets\tracks\266-imola full\ligierjsp320.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="assets\tracks\268-24heures\bmwm4gt3.csv">
+    <None Include="assets\tracks\268-24 heures\bmwm4gt3.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="assets\tracks\268-24heures\cadillacvseriesrgtp.csv">
+    <None Include="assets\tracks\268-24 heures\cadillacvseriesrgtp.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\319-belleisle\dallaraf3.csv">
@@ -714,7 +722,7 @@
     <None Include="assets\tracks\212-interlagos\map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="assets\tracks\268-24heures\map.png">
+    <None Include="assets\tracks\268-24 heures\map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="NLog.config">
