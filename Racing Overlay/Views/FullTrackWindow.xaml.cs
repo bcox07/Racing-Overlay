@@ -171,7 +171,7 @@ namespace RacingOverlay.Windows
                 });
             }
 
-            
+
             //var generatedCoordinates = GenerateCoordinates();
             //GetPointsBetween(3, 3718, 3801, generatedCoordinates);
             //GetPointsBetween(3, 3970, 4283, generatedCoordinates);
@@ -319,7 +319,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0, new List<double> { 282, 209 });
+            points.Add(0, new List<double> { 290.8, 119.5 });
 
             var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;
@@ -363,11 +363,11 @@ namespace RacingOverlay.Windows
 
         private void GetPointsBetween(int pointCount, int a, int b, Dictionary<int, (double, double)> coordinates)
         {
-            var step = (b - a) / (pointCount + 1);
+            var step = (double)(b - a) / (double)(pointCount + 1);
 
-            for (int i = a; i <= b; i += step)
+            for (int i = a; i <= b; i += (int)step)
             {
-                Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\" Canvas.Top=\"{coordinates[i].Item2}\"");
+                Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\"\t\tCanvas.Top=\"{coordinates[i].Item2}\"");
             }
             Console.WriteLine();
         }

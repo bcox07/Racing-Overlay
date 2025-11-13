@@ -15,21 +15,24 @@
 1. Road America
 1. Road Atlanta
 1. Silverstone
+1. Suzuka (Grand Prix)
 1. The Bend (International Circuit)
 1. VIR
 1. Zolder (Alternate)
 
+### In Progress
+
+1. Le Mans (24 Heures du Mans)
+
 ### Next
 
 1. Zandvoort
-1. Suzuka (Grand Prix)
 1. Spa (Grand Prix Pits)
 1. Charlotte (Roval 2025)
 1. Sebring (International)
 1. Indianapolis (Road Course)
 1. Laguna Seca (Full Course)
 1. Fuji (Grand Prix)
-1. Le Mans (24 Heures du Mans)
 1. Autodromo Hermanos Rodriguez (Grand Prix)
 1. Nurburgring Nordschleife (Industriefahrten)
 
