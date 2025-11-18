@@ -9,6 +9,7 @@
 1. Daytona (Road Course)
 1. Hungaroring
 1. Imola
+1. Indianapolis (Road Course)
 1. Interlagos (Grand Prix)
 1. Magny-Cours
 1. Red Bull Ring (Grand Prix)
@@ -30,7 +31,6 @@
 1. Spa (Grand Prix Pits)
 1. Charlotte (Roval 2025)
 1. Sebring (International)
-1. Indianapolis (Road Course)
 1. Laguna Seca (Full Course)
 1. Fuji (Grand Prix)
 1. Autodromo Hermanos Rodriguez (Grand Prix)
