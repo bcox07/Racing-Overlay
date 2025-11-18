@@ -17,7 +17,7 @@
         </Style>
         <ResourceDictionary x:Key="MapDictionary">
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/assets/tracks/127-road atlanta/map.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="/assets/tracks/403-spielberg/map.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -29,20 +29,15 @@
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBox Style="{StaticResource Pixel}" Background="Red"
-            Canvas.Left="7.8" Canvas.Top="112.6" HorizontalAlignment="Center" VerticalAlignment="Top"   />
-        <TextBox Style="{StaticResource Pixel}" Background="Orange"
-            Canvas.Left="18" Canvas.Top="131" HorizontalAlignment="Center" VerticalAlignment="Top"  />
-        <TextBox Style="{StaticResource Pixel}" Background="Yellow"
-            Canvas.Left="9.3" Canvas.Top="121" HorizontalAlignment="Center" VerticalAlignment="Top"  />
-        <TextBox Style="{StaticResource Pixel}" Background="Green"
-            Canvas.Left="11.8" Canvas.Top="105" HorizontalAlignment="Left" VerticalAlignment="Center"  />
-        <TextBox Style="{StaticResource Pixel}" Background="Blue"
-            Canvas.Left="19.8" Canvas.Top="95" HorizontalAlignment="Left" VerticalAlignment="Top"   />
-        <TextBox Style="{StaticResource Pixel}" Background="Indigo"
-            Canvas.Left="28.3" Canvas.Top="85" HorizontalAlignment="Left" VerticalAlignment="Center"  />
-        <TextBox Style="{StaticResource Pixel}" Background="Violet"
-            Canvas.Left="36.5" Canvas.Top="75.5" HorizontalAlignment="Left" VerticalAlignment="Center"  />
+        <TextBox Style="{StaticResource Pixel}" Background="Red"        Canvas.Left="98.8"		Canvas.Top="249"        HorizontalAlignment="Left" VerticalAlignment="Top"      />
+        <TextBox Style="{StaticResource Pixel}" Background="OrangeRed"  Canvas.Left="97.4"    Canvas.Top="255.5"     HorizontalAlignment="Left" VerticalAlignment="Top"      />
+        <TextBox Style="{StaticResource Pixel}" Background="Orange"     Canvas.Left="94  "		Canvas.Top="261  "     HorizontalAlignment="Left" VerticalAlignment="Top"      />
+        <TextBox Style="{StaticResource Pixel}" Background="Yellow"     Canvas.Left="88  "	    Canvas.Top="264.5"     HorizontalAlignment="Left" VerticalAlignment="Top"      />
+        <TextBox Style="{StaticResource Pixel}" Background="Green"      Canvas.Left="81.55"	Canvas.Top="265.2"      HorizontalAlignment="Left" VerticalAlignment="Center"      />
+        <TextBox Style="{StaticResource Pixel}" Background="Blue"       Canvas.Left="93.33"	Canvas.Top="129.86"     HorizontalAlignment="Left" VerticalAlignment="Center"      />
+        <TextBox Style="{StaticResource Pixel}" Background="Indigo"     Canvas.Left="99.88"	Canvas.Top="131.47"      HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Style="{StaticResource Pixel}" Background="Purple"     Canvas.Left="309.7 "	Canvas.Top="239   "     HorizontalAlignment="Left" VerticalAlignment="Top"  />
+        <TextBox Style="{StaticResource Pixel}" Background="Violet"     Canvas.Left="339"		Canvas.Top="237   "        HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Viewbox x:Name="TrackMapViewbox" Stretch="Uniform" Width="360" Height="270" Margin="20,15,0,0">
             <Image x:Name="TrackMap" Width="Auto" Height="Auto">
                 <Image.Source>

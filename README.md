@@ -18,6 +18,7 @@
 1. Suzuka (Grand Prix)
 1. The Bend (International Circuit)
 1. VIR
+1. Zandvoort
 1. Zolder (Alternate)
 
 ### In Progress
@@ -26,7 +27,6 @@
 
 ### Next
 
-1. Zandvoort
 1. Spa (Grand Prix Pits)
 1. Charlotte (Roval 2025)
 1. Sebring (International)
