@@ -186,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="assets\tracks\448-indianapolis\map.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="assets\tracks\485-zandvoort\map.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
