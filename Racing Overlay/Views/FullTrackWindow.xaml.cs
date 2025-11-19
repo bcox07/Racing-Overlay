@@ -171,10 +171,9 @@ namespace RacingOverlay.Windows
                 });
             }
 
-
+            
             //var generatedCoordinates = GenerateCoordinates();
-            //GetPointsBetween(3, 3718, 3801, generatedCoordinates);
-            //GetPointsBetween(3, 3970, 4283, generatedCoordinates);
+            //GetPointsBetween(3, 3069, 3142, generatedCoordinates);
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
@@ -189,7 +188,7 @@ namespace RacingOverlay.Windows
                     textBox.Margin = new Thickness((30 - textBox.Width) / 2);
                     var loc = GetTrackJsonData();
 
-                    //if (driver.Name.StartsWith("Brian D"))
+                    //if (driver.Name.StartsWith("Odell D"))
                     //{
                     //    Console.WriteLine((int)driver.PosOnTrack);
                     //}
@@ -209,6 +208,8 @@ namespace RacingOverlay.Windows
                         loc.TryGetValue((((int)driver.PosOnTrack) - 1).ToString(), out prevCoordinates);
                         loc.TryGetValue((((int)driver.PosOnTrack) + 1).ToString(), out nextCoordinates);
                     }
+
+                    //GetSamplePoints(loc);
 
                     if (prevCoordinates == null || nextCoordinates == null)
                     {
@@ -319,7 +320,7 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0, new List<double> { 290.8, 119.5 });
+            points.Add(0, new List<double> { 226.0 , 219 });
 
             var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;
@@ -370,6 +371,15 @@ namespace RacingOverlay.Windows
                 Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\"\t\tCanvas.Top=\"{coordinates[i].Item2}\"");
             }
             Console.WriteLine();
+        }
+
+        private void GetSamplePoints(Dictionary<string, List<double>> coordinates)
+        {
+            foreach (var point in coordinates.ToDictionary(c => int.Parse(c.Key), c => c.Value)) 
+            {
+                if (point.Key % 10 == 0)
+                    Console.WriteLine($"points.Add({point.Key}, new List<double> {{{point.Value[0]},{point.Value[1]}}});");
+            }
         }
     }
 }
