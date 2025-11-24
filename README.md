@@ -12,6 +12,7 @@
 1. Indianapolis (Road Course)
 1. Interlagos (Grand Prix)
 1. Magny-Cours
+1. Mount Panorama
 1. Red Bull Ring (Grand Prix)
 1. Road America
 1. Road Atlanta
@@ -51,7 +52,6 @@
 1. Misano
 1. Monza
 1. Motegi
-1. Mount Panorama
 1. Mugello
 1. Portland (Full Circuit)
 1. Snetterton
