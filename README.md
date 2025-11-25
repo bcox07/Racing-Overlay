@@ -20,6 +20,7 @@
 1. Suzuka (Grand Prix)
 1. The Bend (International Circuit)
 1. VIR
+1. Watkins Glen
 1. Zandvoort
 1. Zolder (Alternate)
 
@@ -55,7 +56,7 @@
 1. Mugello
 1. Portland (Full Circuit)
 1. Snetterton
-1. Watkins Glen
+
 
 ## Badges
 
