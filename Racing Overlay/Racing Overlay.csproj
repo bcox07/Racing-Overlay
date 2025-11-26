@@ -396,6 +396,9 @@
     <None Include="assets\tracks\219-bathurst\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="assets\tracks\268-24 heures\coordinates.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="assets\tracks\434-watkins\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

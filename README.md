@@ -11,6 +11,7 @@
 1. Imola
 1. Indianapolis (Road Course)
 1. Interlagos (Grand Prix)
+1. Le Mans (24 Heures du Mans)
 1. Magny-Cours
 1. Mount Panorama
 1. Red Bull Ring (Grand Prix)
@@ -23,10 +24,6 @@
 1. Watkins Glen
 1. Zandvoort
 1. Zolder (Alternate)
-
-### In Progress
-
-1. Le Mans (24 Heures du Mans)
 
 ### Next
 
