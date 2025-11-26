@@ -15,5 +15,5 @@
             </GeometryDrawing>
         </DrawingGroup>
     </DrawingGroup>
-    <DrawingImage Drawing="{StaticResource map_xaml}" x:Key="di_Image"/>
+    <DrawingImage Drawing="{StaticResource map_xaml}" x:Key="di_map_xaml"/>
 </ResourceDictionary>

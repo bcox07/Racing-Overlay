@@ -68,7 +68,7 @@ namespace RacingOverlay.Windows
         public bool HasTrackMap(out DrawingImage map)
         {
             var mapResourceDictionary = (ResourceDictionary)Application.Current.Resources[$"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}"];
-            map = (DrawingImage)mapResourceDictionary["di_Image"];
+            map = (DrawingImage)mapResourceDictionary["di_map_xaml"];
 
             return map != null;
         }
@@ -171,9 +171,9 @@ namespace RacingOverlay.Windows
                 });
             }
 
-            
+
             //var generatedCoordinates = GenerateCoordinates();
-            //GetPointsBetween(3, 3069, 3142, generatedCoordinates);
+            //GetPointsBetween(3, 11824, 12125, generatedCoordinates);
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
@@ -188,7 +188,7 @@ namespace RacingOverlay.Windows
                     textBox.Margin = new Thickness((30 - textBox.Width) / 2);
                     var loc = GetTrackJsonData();
 
-                    //if (driver.Name.StartsWith("Odell D"))
+                    //if (driver.Name.StartsWith("Brian D"))
                     //{
                     //    Console.WriteLine((int)driver.PosOnTrack);
                     //}
@@ -296,7 +296,7 @@ namespace RacingOverlay.Windows
 
                         if (int.Parse(coordinate.Key) % 200 == 0)
                         {
-                            textBoxTemp.FontSize = 10;
+                            textBoxTemp.FontSize = 8;
                             textBoxTemp.FontWeight = FontWeights.Bold;
                             textBoxTemp.Width = 20;
                             textBoxTemp.Height = 20;
@@ -320,7 +320,8 @@ namespace RacingOverlay.Windows
         {
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
-            points.Add(0, new List<double> { 226.0 , 219 });
+
+            points.Add(0, new List<double> { 91.5, 216.3 });
 
             var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;
@@ -377,7 +378,7 @@ namespace RacingOverlay.Windows
         {
             foreach (var point in coordinates.ToDictionary(c => int.Parse(c.Key), c => c.Value)) 
             {
-                if (point.Key % 10 == 0)
+                if (point.Key % 20 == 0)
                     Console.WriteLine($"points.Add({point.Key}, new List<double> {{{point.Value[0]},{point.Value[1]}}});");
             }
         }
