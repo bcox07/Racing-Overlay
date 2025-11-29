@@ -7,13 +7,20 @@
         Title="LiveTrackWindow" Height="300" Width="400" Background="Transparent"  WindowStyle="None"
         Opacity="0.9" AllowsTransparency="True" >
     <Window.Resources>
-        <Style x:Key="Pixel" TargetType="{x:Type TextBox}">
+        <Style x:Key="PixelGrid" TargetType="{x:Type Grid}">
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30"/>
-            <Setter Property="BorderThickness" Value="14"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Panel.ZIndex" Value="99"/>
             <Setter Property="Visibility" Value="Hidden"/>
+        </Style>
+        <Style x:Key="PixelText" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="0.8" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="Pixel" TargetType="{x:Type Ellipse}">
+            <Setter Property="Width" Value="1.5" />
+            <Setter Property="Height" Value="1.5"/>
         </Style>
         <ResourceDictionary x:Key="MapDictionary">
             <ResourceDictionary.MergedDictionaries>
@@ -29,15 +36,16 @@
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBox Style="{StaticResource Pixel}" Background="Red"        Canvas.Left="98.8"		Canvas.Top="249"        HorizontalAlignment="Left" VerticalAlignment="Top"      />
-        <TextBox Style="{StaticResource Pixel}" Background="OrangeRed"  Canvas.Left="97.4"    Canvas.Top="255.5"     HorizontalAlignment="Left" VerticalAlignment="Top"      />
-        <TextBox Style="{StaticResource Pixel}" Background="Orange"     Canvas.Left="94  "		Canvas.Top="261  "     HorizontalAlignment="Left" VerticalAlignment="Top"      />
-        <TextBox Style="{StaticResource Pixel}" Background="Yellow"     Canvas.Left="88  "	    Canvas.Top="264.5"     HorizontalAlignment="Left" VerticalAlignment="Top"      />
-        <TextBox Style="{StaticResource Pixel}" Background="Green"      Canvas.Left="81.55"	Canvas.Top="265.2"      HorizontalAlignment="Left" VerticalAlignment="Center"      />
-        <TextBox Style="{StaticResource Pixel}" Background="Blue"       Canvas.Left="93.33"	Canvas.Top="129.86"     HorizontalAlignment="Left" VerticalAlignment="Center"      />
-        <TextBox Style="{StaticResource Pixel}" Background="Indigo"     Canvas.Left="99.88"	Canvas.Top="131.47"      HorizontalAlignment="Left" VerticalAlignment="Top"  />
-        <TextBox Style="{StaticResource Pixel}" Background="Purple"     Canvas.Left="309.7 "	Canvas.Top="239   "     HorizontalAlignment="Left" VerticalAlignment="Top"  />
-        <TextBox Style="{StaticResource Pixel}" Background="Violet"     Canvas.Left="339"		Canvas.Top="237   "        HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="37.5" Canvas.Top="74.5" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Red"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="175.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="OrangeRed"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="173.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Orange"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="171.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Yellow"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="169.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="GreenYellow"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="167.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Green"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="165.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Blue"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="163.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Indigo"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="161.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Violet"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        
         <Viewbox x:Name="TrackMapViewbox" Stretch="Uniform" Width="360" Height="270" Margin="20,15,0,0">
             <Image x:Name="TrackMap" Width="Auto" Height="Auto">
                 <Image.Source>
