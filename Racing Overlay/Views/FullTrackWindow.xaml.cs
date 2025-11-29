@@ -171,7 +171,7 @@ namespace RacingOverlay.Windows
                 });
             }
 
-
+            var loc = GetTrackJsonData();
             //var generatedCoordinates = GenerateCoordinates();
             //GetPointsBetween(3, 11824, 12125, generatedCoordinates);
 
@@ -186,7 +186,6 @@ namespace RacingOverlay.Windows
                     textBox.Width = 22 * (_GlobalSettings.UISize.Percentage / 100.0);
                     textBox.Height = 22 * (_GlobalSettings.UISize.Percentage / 100.0);
                     textBox.Margin = new Thickness((30 - textBox.Width) / 2);
-                    var loc = GetTrackJsonData();
 
                     //if (driver.Name.StartsWith("Brian D"))
                     //{
