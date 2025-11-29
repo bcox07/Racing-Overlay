@@ -12,7 +12,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
 
 namespace RacingOverlay
 {
@@ -77,7 +76,7 @@ namespace RacingOverlay
             ColumnsWidth = PosNumberWidth + CarNumberWidth + CarLogoWidth + DriverNameWidth + IRatingWidth + SafetyRatingWidth + DeltaWidth + FastestLapWidth + LastLapWidth;
             Dispatcher.Invoke(() =>
             {
-                
+
                 StandingsGrid.Background = Brushes.Transparent;
                 for (var i = 0; i < ColumnsWidth; i++)
                 {
@@ -99,10 +98,10 @@ namespace RacingOverlay
 
         private void GetData(TelemetryData telemetryData)
         {
-            Dispatcher.Invoke(() => 
-            { 
+            Dispatcher.Invoke(() =>
+            {
                 Topmost = false;
-                Topmost = true; 
+                Topmost = true;
             });
             var sessionTimeString1 = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionTime;
             var sessionType = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionType;
@@ -112,11 +111,11 @@ namespace RacingOverlay
             var viewedCarPosition = telemetryData.AllResultsPositions?.FirstOrDefault(r => r.CarIdx == viewedCar.CarId) ?? telemetryData.AllResultsPositions.FirstOrDefault() ?? new SessionData._SessionInfo._Sessions._ResultsPositions();
             var sessionLapCurrent = viewedCar.LapsComplete;
 
-            var driverClasses = telemetryData.SortedPositions.Select(s => s.Key);     
+            var driverClasses = telemetryData.SortedPositions.Select(s => s.Key);
 
             if (sessionLapsTotal == 0)
             {
-                sessionLapsTotal = (sessionLapCurrent ?? 0) +  (long)(_TelemetryData.FeedTelemetry.SessionTimeRemain / (viewedCar.FastestLap ?? 1 * 1.03)) + 1;
+                sessionLapsTotal = (sessionLapCurrent ?? 0) + (long)(_TelemetryData.FeedTelemetry.SessionTimeRemain / (viewedCar.FastestLap ?? 1 * 1.03)) + 1;
             }
 
             var rowIndex = 0;
@@ -154,7 +153,7 @@ namespace RacingOverlay
                 title.FontSize = _GlobalSettings.UISize.TitleFontSize;
                 title.Foreground = Brushes.White;
                 title.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.PrimaryColor);
-                
+
                 title.FontWeight = FontWeights.Black;
                 title.Padding = new Thickness(5);
                 title.Margin = new Thickness(0, 0, -1, 0);
@@ -212,7 +211,7 @@ namespace RacingOverlay
                 {
                     StandingsGrid.Children.RemoveAt(CellIndex + 1);
                 }
-                                                      
+
                 var shownDriverCount = StandingsGrid.RowDefinitions.Where(r => r.Name.StartsWith("Driver")).ToList().Count;
                 var classTitleCount = StandingsGrid.RowDefinitions.Where(r => r.Name.Equals("ClassTitle")).ToList().Count;
                 StandingsGrid.Width = _GlobalSettings.UISize.StandingsWindowWidth;
@@ -231,7 +230,7 @@ namespace RacingOverlay
         {
             var viewedClassGroup = driverClassGroup.Key == viewedCar.ClassId;
             var surroundingPositions = driverClassGroup.Value.Where(
-                p => p.ClassPosition != null 
+                p => p.ClassPosition != null
                 && (Math.Abs(p.ClassPosition.Value - viewedCar.ClassPosition.Value) < _GlobalSettings.DriverDisplay.DisplayCount + 1
                 && viewedClassGroup) || p.ClassPosition < _GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
 
@@ -257,7 +256,7 @@ namespace RacingOverlay
                 {
                     RowDefinition titleDef = new RowDefinition();
                     titleDef.Name = "ClassTitle";
-                    titleDef.Height = new GridLength(_GlobalSettings.UISize.RowHeight);   
+                    titleDef.Height = new GridLength(_GlobalSettings.UISize.RowHeight);
                     StandingsGrid.RowDefinitions.Add(titleDef);
                 }
                 else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != "ClassTitle")
@@ -272,13 +271,13 @@ namespace RacingOverlay
             var carClassName = test.Where(d => d != null && d.CarClassID == driverClassGroup.Key).ToList().First().CarClassShortName;
             Dispatcher.Invoke(() =>
             {
-                
+
                 var classTitle = UIHelper.CreateTextBlock(new Thickness(5, 0, 0, 0), TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
                 classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
                 classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 classTitle.Foreground = Brushes.Black;
                 classTitle.FontWeight = FontWeights.Bold;
-                classTitle.Margin = new Thickness(0, 0, -1 , 0);
+                classTitle.Margin = new Thickness(0, 0, -1, 0);
                 classTitle.Padding = new Thickness(6);
 
                 UIHelper.AddOrInsertChild(StandingsGrid, classTitle, CellIndex);
@@ -311,7 +310,7 @@ namespace RacingOverlay
                 UIHelper.SetCellFormat(sofTitle, ColumnsWidth - FastestLapWidth - 10, 10, rowIndex);
                 CellIndex++;
                 rowIndex++;
-            }); 
+            });
 
             foreach (var position in surroundingPositions.ToList())
             {
@@ -331,7 +330,7 @@ namespace RacingOverlay
                         StandingsGrid.RowDefinitions[rowIndex].Name = $"Driver{position.CarId}";
                         StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.UISize.RowHeight);
                     }
-                    
+
                     if (StandingsGrid.RowDefinitions[rowIndex]?.Height.Value != _GlobalSettings.UISize.RowHeight)
                         StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.UISize.RowHeight);
 
@@ -345,7 +344,7 @@ namespace RacingOverlay
                     DrawingGroup test3 = (DrawingGroup)App.Current.Resources[CarLogo.GetLogoUri(position.CarPath)];
                     DrawingImage drawingImage = new DrawingImage(test3);
                     Image carLogo = new Image();
-                    
+
                     carLogo.Tag = "CarLogo";
                     carLogo.Stretch = Stretch.Uniform;
                     carLogo.Source = drawingImage;
@@ -371,7 +370,7 @@ namespace RacingOverlay
                     columnIndex += CarNumberWidth;
                     CellIndex++;
 
-                    
+
 
                     var driverName = UIHelper.CreateTextBlock(new Thickness(7, 3.5, 0, 3.5), TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
                     driverName.TextTrimming = TextTrimming.CharacterEllipsis;
@@ -465,7 +464,7 @@ namespace RacingOverlay
             }
             else
             {
-                if (position.FastestLap != null && firstPosition.FastestLap != null &&  position.FastestLap.Value != firstPosition.FastestLap.Value)
+                if (position.FastestLap != null && firstPosition.FastestLap != null && position.FastestLap.Value != firstPosition.FastestLap.Value)
                 {
                     text = (position.FastestLap.Value - firstPosition.FastestLap.Value).ToString("N1");
                 }
@@ -478,12 +477,12 @@ namespace RacingOverlay
         {
             if (position.FastestLap != null && position.FastestLap.Value == (classFastestLap ?? 0))
             {
-                textBlock.Foreground = Brushes.Purple;       
+                textBlock.Foreground = Brushes.Purple;
             }
             else
             {
-                textBlock.Foreground = position.FastestLap != null && position.LastLap != null && 
-                    position.LastLap.Value == position.FastestLap.Value && 
+                textBlock.Foreground = position.FastestLap != null && position.LastLap != null &&
+                    position.LastLap.Value == position.FastestLap.Value &&
                     DateTime.UtcNow.Subtract(position.LapChangeTime).TotalSeconds <= SecondsForReset ? Brushes.LimeGreen : Brushes.White;
             }
 

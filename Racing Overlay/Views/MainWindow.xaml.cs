@@ -1,19 +1,13 @@
-﻿using RacingOverlay.Windows;
-using iRacingSDK;
+﻿using RacingOverlay.Models;
+using RacingOverlay.Windows;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using RacingOverlay.Models;
 using System.Windows.Media;
 
 namespace RacingOverlay
@@ -67,7 +61,7 @@ namespace RacingOverlay
             {
                 StartOperation(UpdateLapData, thread2);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex);
             }
@@ -259,7 +253,7 @@ namespace RacingOverlay
                 }
                 else
                 {
-                    CloseAllWindows(); 
+                    CloseAllWindows();
                 }
                 Thread.Sleep(16);
             }
@@ -271,7 +265,7 @@ namespace RacingOverlay
             {
                 var sessionFastestLap = telemetryData?.LapList?.Where(l => l.ValidLap)?.OrderBy(l => l.SpeedData.OrderBy(m => m.Meter).Last().TimeInSeconds)?.FirstOrDefault();
 
-                if (sessionFastestLap != null) 
+                if (sessionFastestLap != null)
                 {
                     var carPath = telemetryData.FeedSessionData.DriverInfo.Drivers.First(d => d.CarIdx == telemetryData.FeedSessionData.DriverInfo.DriverCarIdx).CarPath;
                     var carClass = telemetryData.FeedSessionData.DriverInfo.Drivers.First(d => d.CarIdx == telemetryData.FeedSessionData.DriverInfo.DriverCarIdx).CarClassID;
@@ -284,7 +278,7 @@ namespace RacingOverlay
                         Trace.WriteLine("New Fastest Lap Saved: " + sessionFastestLap.SpeedData.OrderBy(s => s.TimeInSeconds).First().TimeInSeconds);
                     }
                 }
-                
+
                 Thread.Sleep(1000 * 60);
             }
         }
@@ -293,7 +287,7 @@ namespace RacingOverlay
         {
             if (FuelWindow == null)
             {
-                FuelWindow = new FuelWindow(telemetryData, GlobalSettings); 
+                FuelWindow = new FuelWindow(telemetryData, GlobalSettings);
                 FuelWindow.Show();
             }
         }
@@ -312,19 +306,19 @@ namespace RacingOverlay
 
         private void CloseAllWindows()
         {
-            StandingsWindow = (StandingsWindow) CloseWindow(StandingsWindow);
-            FuelWindow = (FuelWindow) CloseWindow(FuelWindow);
-            RelativeWindow = (RelativeWindow) CloseWindow(RelativeWindow);
-            TireWindow = (TireWindow) CloseWindow(TireWindow);
-            SimpleTrackWindow = (SimpleTrackWindow) CloseWindow(SimpleTrackWindow);
-            FullTrackWindow = (FullTrackWindow) CloseWindow(FullTrackWindow);
+            StandingsWindow = (StandingsWindow)CloseWindow(StandingsWindow);
+            FuelWindow = (FuelWindow)CloseWindow(FuelWindow);
+            RelativeWindow = (RelativeWindow)CloseWindow(RelativeWindow);
+            TireWindow = (TireWindow)CloseWindow(TireWindow);
+            SimpleTrackWindow = (SimpleTrackWindow)CloseWindow(SimpleTrackWindow);
+            FullTrackWindow = (FullTrackWindow)CloseWindow(FullTrackWindow);
         }
 
         private Window CloseWindow(Window window)
         {
             if (window != null)
             {
-                if (tokenSource.IsCancellationRequested) { return null ; }
+                if (tokenSource.IsCancellationRequested) { return null; }
                 Dispatcher.Invoke(() =>
                 {
                     window.Close();
@@ -541,7 +535,7 @@ namespace RacingOverlay
         private void SimpleTrackWidth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (_Initialized)
-               GlobalSettings.SimpleTrackSettings.ContainerWidth = (int)SimpleTrackWidth.Value;
+                GlobalSettings.SimpleTrackSettings.ContainerWidth = (int)SimpleTrackWidth.Value;
         }
 
         private void globalSettingsSaveBtn_Click(object sender, RoutedEventArgs e)

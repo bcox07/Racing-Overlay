@@ -1,17 +1,17 @@
 ﻿using iRacingSDK;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using NLog;
 
 namespace RacingOverlay
 {
     public class Lap
     {
         public int TrackId { get; set; }
-        public string TrackName {get; set;}
+        public string TrackName { get; set; }
         public int TrackLength { get; set; }
         public string CarPath { get; set; }
         public int LapNumber { get; set; }
@@ -25,7 +25,7 @@ namespace RacingOverlay
             get
             {
                 var speedDataCopy = new List<Speed>(SpeedData);
-                if (speedDataCopy != null && speedDataCopy.Count >= TrackLength  * 0.80)
+                if (speedDataCopy != null && speedDataCopy.Count >= TrackLength * 0.80)
                 {
                     return true;
                 }
@@ -58,8 +58,8 @@ namespace RacingOverlay
                 else { return false; }
             }
         }
-        public bool ValidLap 
-        { 
+        public bool ValidLap
+        {
             get
             {
                 try
@@ -71,7 +71,7 @@ namespace RacingOverlay
                     }
                     else { return false; }
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Logger.Error(ex);
                     return false;
@@ -113,7 +113,7 @@ namespace RacingOverlay
                     }
                 }
             }
-           
+
             return speedData;
         }
 
@@ -176,7 +176,7 @@ namespace RacingOverlay
                     Logger.Error(ex);
                     return;
                 }
-                
+
 
                 Logger.Info($"New Fastest Lap Recorded for {CarPath} at {TrackName} : {SpeedData.Last().TimeInSeconds}");
             }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Collections.Generic;
 
 namespace RacingOverlay.Models
 {
@@ -39,18 +34,18 @@ namespace RacingOverlay.Models
         // 1 = Medium
         // 2 = Large
         public int SizePreset { get; set; }
-        public int TitleFontSize 
-        { 
-            get 
+        public int TitleFontSize
+        {
+            get
             {
                 switch (SizePreset)
                 {
-                    case 0:return 16;
+                    case 0: return 16;
                     case 1: return 17;
                     case 2: return 18;
                     default: return 18;
                 }
-            } 
+            }
         }
         public int SubtitleFontSize
         {

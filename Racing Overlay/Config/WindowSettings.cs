@@ -83,7 +83,7 @@ namespace RacingOverlay
                     { "YPos", appSettings.Settings["FullTrackWindowYPos"].Value }
                 };
             }
-           
+
         }
     }
 }

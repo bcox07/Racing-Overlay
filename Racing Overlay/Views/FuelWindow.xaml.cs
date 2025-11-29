@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -17,9 +16,9 @@ namespace RacingOverlay
     {
         public TelemetryData _TelemetryData;
         private GlobalSettings _GlobalSettings;
-        FuelUse CurrentLapFuelUse 
+        FuelUse CurrentLapFuelUse
         {
-            get 
+            get
             {
                 return new FuelUse(_TelemetryData.FeedTelemetry.Lap, LastLapFuelLevel - _TelemetryData.FeedTelemetry.FuelLevel, _TelemetryData.FeedTelemetry.FuelLevel, _TelemetryData.FeedTelemetry.OnPitRoad);
             }
@@ -127,7 +126,7 @@ namespace RacingOverlay
         }
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
-        {   
+        {
             Dispatcher.Invoke(() =>
             {
                 Topmost = false;
@@ -137,8 +136,8 @@ namespace RacingOverlay
             });
             _TelemetryData = telemetryData;
 
-            if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall 
-                || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld 
+            if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall
+                || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld
                 || _TelemetryData.FeedTelemetry.IsReplayPlaying)
             {
                 Dispatcher.Invoke(() =>
@@ -164,23 +163,23 @@ namespace RacingOverlay
 
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
-            
+
             //Reset calculator after leaving pits
             if (_TelemetryData.CurrentSession.SessionNum != ((int?)_TelemetryData._DataSample.LastSample?.Telemetry?.Session?.SessionNum ?? _TelemetryData.CurrentSession.SessionNum)
                 || (_TelemetryData.FeedSessionData.WeekendInfo.SessionID != (_TelemetryData._DataSample.LastSample?.SessionData.WeekendInfo.SessionID ?? _TelemetryData.FeedSessionData.WeekendInfo.SessionID)))
             {
                 FuelUseList = new List<FuelUse>();
-            } 
+            }
 
             //Only save laps that are not entering or exiting pits or are not representative
-            if (!FuelUseList.Select(f => f.LapNumber).Contains(CurrentLapFuelUse.LapNumber) 
+            if (!FuelUseList.Select(f => f.LapNumber).Contains(CurrentLapFuelUse.LapNumber)
                 && !CurrentLapFuelUse.InPit
                 && _TelemetryData.FeedTelemetry.CarIdxEstTime[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] <= _TelemetryData.FeedSessionData.DriverInfo.DriverCarEstLapTime + 15
                 && _TelemetryData.TrackLength - (_TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] * _TelemetryData.TrackLength) <= 20)
             {
-                if (CurrentLapFuelUse.FuelUsed > 0 )
+                if (CurrentLapFuelUse.FuelUsed > 0)
                     FuelUseList.Add(CurrentLapFuelUse);
-                
+
                 LastLapFuelLevel = _TelemetryData.FeedTelemetry.FuelLevel;
             }
 
@@ -200,7 +199,7 @@ namespace RacingOverlay
                     fuelRemainingCell.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#C6C6C6");
                 }
 
-                fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : _TelemetryData.FeedTelemetry.FuelLevel.ToString("N2");    
+                fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : _TelemetryData.FeedTelemetry.FuelLevel.ToString("N2");
                 lapsRemainingCell.Text = LapsRemaining <= 0 ? "-" : LapsRemaining.ToString("N2");
                 fuelToAddCell.Text = FuelToAdd < 0 ? "-" : $"{FuelToAdd.ToString("N2")} - {(FuelToAdd + AvgFuelUsage).ToString("N2")}";
                 avgFuelUsageCell.Text = AvgFuelUsage < 0 ? "-" : AvgFuelUsage.ToString("N2");

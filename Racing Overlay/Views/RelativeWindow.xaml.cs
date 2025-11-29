@@ -125,7 +125,7 @@ namespace RacingOverlay
 
             var rowIndex = 0;
             CellIndex = 0;
-            
+
             foreach (var car in surroundingCars)
             {
                 rowIndex = GenerateRow(car, viewedCar, rowIndex, LocalTelemetry);
@@ -157,7 +157,7 @@ namespace RacingOverlay
             ColumnIndex = 0;
             Dispatcher.Invoke(() =>
             {
-                
+
                 if (rowIndex >= RelativeGrid.RowDefinitions.Count)
                 {
                     var rowDef = new RowDefinition();
@@ -172,7 +172,7 @@ namespace RacingOverlay
                 posNumber.Tag = "PosNumber";
                 posNumber.Text = driver.ClassPosition.ToString();
                 UpdateDriverCell(posNumber, rowIndex, driver, viewedDriver, telemetryData, null, null);
-                
+
                 UIHelper.SetCellFormat(posNumber, ColumnIndex, PosNumberWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, posNumber, CellIndex);
                 ColumnIndex += PosNumberWidth;
@@ -194,7 +194,7 @@ namespace RacingOverlay
                 carNumber.Text = $"#{driver.CarNumber}";
                 carNumber.FontStyle = FontStyles.Oblique;
                 carNumber.Margin = new Thickness(0, 0, -1, 0);
-                
+
                 UIHelper.SetCellFormat(carNumber, ColumnIndex, CarNumberWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, carNumber, CellIndex);
                 ColumnIndex += CarNumberWidth;
@@ -215,7 +215,7 @@ namespace RacingOverlay
 
                 var border = UIHelper.DesignSafetyRating(rowIndex, driver, new Thickness(6, 3, 6, 3), _GlobalSettings.UISize.DataFontSize, _GlobalSettings.PrimaryColor, _GlobalSettings.SecondaryColor);
                 border.VerticalAlignment = VerticalAlignment.Stretch;
-                
+
                 UIHelper.SetCellFormat(border, ColumnIndex, SafetyRatingWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, border, CellIndex);
 
@@ -235,9 +235,9 @@ namespace RacingOverlay
 
                 var delta = UIHelper.CreateTextBlock(new Thickness(2, 4, 7, 4), textAlignment: TextAlignment.Right, fontSize: _GlobalSettings.UISize.DataFontSize);
                 delta.Tag = "Delta";
-                UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData, null, null); 
+                UpdateDriverCell(delta, rowIndex, driver, viewedDriver, telemetryData, null, null);
                 delta.Text = ((driver.PosOnTrack < 0 && driver.LapsComplete < 0) || driver == viewedDriver) ? "  -  " : driver.Delta.ToString("N1");
-                
+
                 UIHelper.SetCellFormat(delta, ColumnIndex, DeltaWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, delta, CellIndex);
                 ColumnIndex += DeltaWidth;
@@ -250,11 +250,11 @@ namespace RacingOverlay
         }
 
         private void UpdateDriverCell(
-            TextBlock textBlock, 
-            int posIndex, 
-            Driver position, 
-            Driver viewedCar, 
-            TelemetryData telemetryData, 
+            TextBlock textBlock,
+            int posIndex,
+            Driver position,
+            Driver viewedCar,
+            TelemetryData telemetryData,
             FontWeight? fontWeight,
             Brush backgroundColor)
         {
@@ -291,7 +291,7 @@ namespace RacingOverlay
                                 textBlock.Foreground = position.InPit ? fadedRedBrush : Brushes.Red;
                             else if (position.Distance < viewedCar.Distance && position.Delta > 0 || viewedCar.Distance - position.Distance > telemetryData.TrackLength)
                                 textBlock.Foreground = position.InPit ? fadedBlueBrush : blueBrush;
-                        }                
+                        }
                     }
                     else
                     {

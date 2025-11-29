@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RacingOverlay.Models
+﻿namespace RacingOverlay.Models
 {
     public class SimpleTrackSettings
     {
-        public SimpleTrackSettings(int globalSizePreset, int simpleTrackWidth) 
+        public SimpleTrackSettings(int globalSizePreset, int simpleTrackWidth)
         {
             switch (globalSizePreset)
             {

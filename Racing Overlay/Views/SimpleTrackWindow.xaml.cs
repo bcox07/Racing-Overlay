@@ -55,7 +55,7 @@ namespace RacingOverlay.Windows
 
         private void DisplayTrackMap()
         {
-            foreach(var driver in LocalTelemetry.AllPositions)
+            foreach (var driver in LocalTelemetry.AllPositions)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -75,7 +75,7 @@ namespace RacingOverlay.Windows
                     textBox.Width = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter;
                     textBox.Height = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter;
 
-                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * (Width - 4)  - (textBox.Height / 2), 0, 0, 0);
+                    textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * (Width - 4) - (textBox.Height / 2), 0, 0, 0);
                     textBox.FontWeight = FontWeights.Bold;
                     textBox.FontSize = _GlobalSettings.UISize.SimpleTrackSettings.FontSize;
                     textBox.TextAlignment = TextAlignment.Center;
@@ -88,18 +88,18 @@ namespace RacingOverlay.Windows
                     textBox.BorderThickness = new Thickness(0);
                     Canvas.SetZIndex(textBox, 99 - (driver.OverallPosition ?? 99));
 
-                    if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx) 
+                    if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx)
                     {
                         textBox.Background = Brushes.DarkGreen;
                         textBox.Foreground = Brushes.White;
                         Canvas.SetZIndex(textBox, 99);
                     }
- 
+
 
                     List<UIElement> elementsToRemove = new List<UIElement>();
                     foreach (UIElement uiElement in TrackCanvas.Children.OfType<TextBox>())
-                    { 
-                        var element = (TextBox) uiElement;
+                    {
+                        var element = (TextBox)uiElement;
                         if (element.Uid == textBox.Uid)//) && element.Margin != textBox.Margin)
                         {
                             elementsToRemove.Add(uiElement);
@@ -108,7 +108,7 @@ namespace RacingOverlay.Windows
 
                     elementsToRemove.ForEach(element => TrackCanvas.Children.Remove(element));
 
-                    if (driver.PosOnTrack > 0) 
+                    if (driver.PosOnTrack > 0)
                     {
                         TrackCanvas.Children.Add(textBox);
                     }

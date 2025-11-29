@@ -1,10 +1,10 @@
 ﻿using iRacingSDK;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using NLog;
 
 namespace RacingOverlay
 {
@@ -18,8 +18,8 @@ namespace RacingOverlay
         private Telemetry _feedTelemetry;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        public Telemetry FeedTelemetry 
-        { 
+        public Telemetry FeedTelemetry
+        {
             get
             {
                 if (_DataSample != null && _DataSample.IsConnected && _DataSample.Telemetry != null)
@@ -36,7 +36,7 @@ namespace RacingOverlay
         }
 
         private SessionData _feedSessionData;
-        public SessionData FeedSessionData 
+        public SessionData FeedSessionData
         {
             get
             {
@@ -119,7 +119,7 @@ namespace RacingOverlay
             }
         }
         private int _trackId;
-        public int TrackId 
+        public int TrackId
         {
             get
             {
@@ -153,8 +153,8 @@ namespace RacingOverlay
             }
         }
 
-        public double TrackLength 
-        { 
+        public double TrackLength
+        {
             get
             {
                 var trackLength = 0.0;
@@ -360,7 +360,7 @@ namespace RacingOverlay
                 {
                     if (FeedTelemetry.IsReplayPlaying)
                     {
-                        position.ClassPosition = IsRace? i : position.ClassPosition == 0 ? i : position.ClassPosition;
+                        position.ClassPosition = IsRace ? i : position.ClassPosition == 0 ? i : position.ClassPosition;
                     }
                     position.TimeBehindLeader = FeedTelemetry.CarIdxF2Time[position.CarId];
                     position.FastestLapDelta = GetFastestLapDelta(position, positionGroup.Value.Where(p => p.PosOnTrack > 0).FirstOrDefault());
@@ -388,7 +388,7 @@ namespace RacingOverlay
 
 
             if (LapList.Where(l => l.LapNumber == FeedTelemetry.Lap).Count() == 0)
-            {          
+            {
                 LapList.Add(new Lap()
                 {
                     TrackId = TrackId,
@@ -404,7 +404,7 @@ namespace RacingOverlay
             var positionOnTrack = Math.Floor(FeedTelemetry.LapDist);
             var timeAtPosition = (double)FeedTelemetry.LapCurrentLapTime;
             var speed = FeedTelemetry.Speed;
-            
+
             Lap currentLapData = LapList.Where(l => l.LapNumber == FeedTelemetry.Lap).First();
             var currentTrackLocation = FeedTelemetry.CarIdxTrackSurface[FeedSessionData.DriverInfo.DriverCarIdx];
             if (!currentLapData.SpeedData.Select(s => s.Meter).Contains((int)positionOnTrack))
@@ -466,7 +466,7 @@ namespace RacingOverlay
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                         delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) && s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                 }
-                
+
             }
             else
             {
@@ -484,8 +484,8 @@ namespace RacingOverlay
                     else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                         delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                 }
-            }             
-            
+            }
+
             return delta;
         }
 
@@ -539,7 +539,7 @@ namespace RacingOverlay
                 lastClassPosition++;
             }
             driversInClass.AddRange(unplacedDriversInClass);
-            
+
             return new KeyValuePair<int, List<Driver>>(driverClassGroup.Key, driversInClass);
         }
     }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RacingOverlay
+﻿namespace RacingOverlay
 {
     public struct FuelUse
     {
@@ -18,7 +12,7 @@ namespace RacingOverlay
 
         public int LapNumber { get; set; }
         public double FuelUsed { get; set; }
-        public double FuelInTank { get; set; } 
+        public double FuelInTank { get; set; }
         public bool InPit { get; set; }
 
         public double CalculateFuelToAdd(double lapsToEnd, double avgFuelUse)
