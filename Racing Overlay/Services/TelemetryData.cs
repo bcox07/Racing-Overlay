@@ -183,6 +183,9 @@ namespace RacingOverlay
         {
             get
             {
+#if SAMPLE
+                return FeedSessionData.SessionInfo.Sessions[0];
+#endif
                 var currentSession = new SessionData._SessionInfo._Sessions();
                 if (FeedSessionData.SessionInfo.Sessions.Length >= (FeedTelemetry.Session?.SessionNum ?? 99))
                 {
@@ -277,7 +280,7 @@ namespace RacingOverlay
             _DataSample = data;
         }
 
-        private void CollectPositions()
+        public void CollectPositions()
         {
             IsRace = CurrentSession.IsRace;
             CollectAllPositions();

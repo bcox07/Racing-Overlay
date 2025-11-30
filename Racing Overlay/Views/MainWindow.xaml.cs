@@ -1,4 +1,5 @@
-﻿using RacingOverlay.Models;
+﻿using iRacingSDK;
+using RacingOverlay.Models;
 using RacingOverlay.Windows;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,7 @@ namespace RacingOverlay
         private void CheckIRacingConnection()
         {
             var posIndex = 0.0;
+            Single sampleLapDistPct = 0;
             while (true)
             {
 
@@ -98,7 +100,8 @@ namespace RacingOverlay
                     ClassId = 1,
                     ClassColor = "#FFFFFF",
                     ClassPosition = 1,
-                    PosOnTrack = posIndex
+                    PosOnTrack = posIndex,
+                    LapsComplete = 13
                 };
 
                 posIndex += 2;
@@ -108,11 +111,108 @@ namespace RacingOverlay
                 sampleTelemetryData.IsConnected = true;
                 sampleTelemetryData.TrackId = 127;
                 sampleTelemetryData.TrackName = "road atlanta";
-                sampleTelemetryData.FeedTelemetry = new iRacingSDK.Telemetry();
+                //sampleTelemetryData.CurrentSession
+                sampleTelemetryData.FeedTelemetry = new Telemetry();
                 sampleTelemetryData.FeedTelemetry.Add("IsReplayPlaying", false);
                 sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", 1);
-                sampleTelemetryData.FeedSessionData = new iRacingSDK.SessionData();
+                sampleTelemetryData.FeedTelemetry.Add("PlayerCarIdx", 1);
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxTrackSurface", new TrackLocation[] { TrackLocation.InPitStall, TrackLocation.OnTrack });
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxLapDistPct", new Single[] {0, sampleLapDistPct });
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxEstTime", new float[] { 0, 75 });
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxBestLapTime", new float[] { 0, (float)73.113 });
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxLastLapTime", new float[] { 0, (float)73.744 });
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxLap", new int[] { 0, 13 });
+                sampleTelemetryData.FeedTelemetry.Add("CarIdxOnPitRoad", new bool[] { true, false });
+                
+                sampleTelemetryData.FeedTelemetry.Add("SessionTimeRemain", (double)900);
+                sampleTelemetryData.FeedTelemetry.Add("Lap", 13);
+                sampleTelemetryData.FeedTelemetry.Add("FuelLevel", (float)50.87);
+                sampleTelemetryData.FeedTelemetry.Add("OnPitRoad", false);
+                sampleTelemetryData.FeedTelemetry.Add("SessionNum", 0);
+                sampleTelemetryData.FeedTelemetry.SessionData = new SessionData
+                {
+                    SessionInfo = new SessionData._SessionInfo
+                    {
+                        Sessions = new SessionData._SessionInfo._Sessions[] {
+                            new SessionData._SessionInfo._Sessions
+                            {
+                                ResultsFastestLap = new SessionData._SessionInfo._Sessions._ResultsFastestLap[]
+                                {
+                                    new SessionData._SessionInfo._Sessions._ResultsFastestLap
+                                    {
+                                        CarIdx = 1,
+                                        FastestLap = 3,
+                                        FastestTime = 72.335
+                                    }
+                                },
+                                SessionNum = 0,
+                                SessionType = "Race"
+                            }
+                        }
+                    },
+                    DriverInfo = new SessionData._DriverInfo
+                    {
+                        DriverCarIdx = 1
+                    }
+                };
+                sampleTelemetryData.FeedTelemetry.Add("Session", new SessionData._SessionInfo._Sessions
+                {
+                    SessionNum = 0,
+                    SessionType = "Race",
+                    SessionTime = "1200"
+                });
+
+                //sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", 1);
+                //sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", 1);
+                sampleTelemetryData.FeedSessionData = new SessionData
+                {
+                    SessionInfo = new SessionData._SessionInfo
+                    {
+                        Sessions = new SessionData._SessionInfo._Sessions[] { 
+                            new SessionData._SessionInfo._Sessions
+                            {
+                                ResultsFastestLap = new SessionData._SessionInfo._Sessions._ResultsFastestLap[]
+                                {
+                                    new SessionData._SessionInfo._Sessions._ResultsFastestLap
+                                    {
+                                        CarIdx = 1,
+                                        FastestLap = 3,
+                                        FastestTime = 72.335
+                                    }
+                                },
+                                SessionNum = 0,
+                                SessionType = "Race",
+                                SessionTime = "1200",
+                                SessionLaps = "unlimited",
+                                ResultsPositions = new SessionData._SessionInfo._Sessions._ResultsPositions[]
+                                {
+                                    new SessionData._SessionInfo._Sessions._ResultsPositions
+                                    {
+                                        CarIdx = 1,
+                                        FastestLap = 3,
+                                        Position = 1,
+                                        ClassPosition = 1,
+                                        Lap = 13,
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    DriverInfo = new SessionData._DriverInfo
+                    {
+                        DriverCarIdx = 1,
+                        Drivers = new SessionData._DriverInfo._Drivers[]
+                        {
+                            new SessionData._DriverInfo._Drivers
+                            {
+                                CarIdx = 1
+                            }
+                        }
+                    }
+                };
                 sampleTelemetryData.AllPositions = new List<Driver> { sampleDriver };
+                sampleTelemetryData.CollectPositions();
 
                 telemetryData = sampleTelemetryData;
 #endif

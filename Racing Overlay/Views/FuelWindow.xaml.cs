@@ -170,12 +170,15 @@ namespace RacingOverlay
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
 
+
+#if !SAMPLE
             //Reset calculator after leaving pits
             if (_TelemetryData.CurrentSession.SessionNum != ((int?)_TelemetryData._DataSample.LastSample?.Telemetry?.Session?.SessionNum ?? _TelemetryData.CurrentSession.SessionNum)
                 || (_TelemetryData.FeedSessionData.WeekendInfo.SessionID != (_TelemetryData._DataSample.LastSample?.SessionData.WeekendInfo.SessionID ?? _TelemetryData.FeedSessionData.WeekendInfo.SessionID)))
             {
                 FuelUseList = new List<FuelUse>();
             }
+#endif
 
             //Only save laps that are not entering or exiting pits or are not representative
             if (!FuelUseList.Select(f => f.LapNumber).Contains(CurrentLapFuelUse.LapNumber)
