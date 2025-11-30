@@ -90,7 +90,13 @@ namespace RacingOverlay
             Left = double.Parse(mainWindow.WindowSettings.FuelSettings["XPos"]);
             Top = double.Parse(mainWindow.WindowSettings.FuelSettings["YPos"]);
             _TelemetryData = telemetryData;
+
+#if SAMPLE
+            LastLapFuelLevel = 100;
+#else
             LastLapFuelLevel = _TelemetryData.FeedTelemetry.FuelLevel;
+#endif
+
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

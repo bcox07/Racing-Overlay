@@ -54,7 +54,7 @@ namespace RacingOverlay.Windows
                 TrackMap.Source.Freeze();
             }
 
-            TraceTrackLine();
+            //TraceTrackLine();
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -123,10 +123,15 @@ namespace RacingOverlay.Windows
             });
 
             LocalTelemetry = telemetryData;
+#if SAMPLE
+            DisplayTrackMap();
+#else
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
                 DisplayTrackMap();
             }
+#endif
+
         }
 
         private Dictionary<string, List<double>> GetTrackJsonData()

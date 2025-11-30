@@ -22,6 +22,9 @@ namespace RacingOverlay
         {
             get
             {
+#if SAMPLE
+                return _feedTelemetry;
+#endif
                 if (_DataSample != null && _DataSample.IsConnected && _DataSample.Telemetry != null)
                 {
                     _feedTelemetry = _DataSample.Telemetry;
@@ -48,7 +51,7 @@ namespace RacingOverlay
             }
             set
             {
-                FeedSessionData = value;
+                _feedSessionData = value;
             }
         }
         public List<SessionData._SessionInfo._Sessions._ResultsPositions> AllResultsPositions
@@ -123,11 +126,18 @@ namespace RacingOverlay
         {
             get
             {
+#if SAMPLE
+                return _trackId;
+#endif
                 if (FeedSessionData != null && _DataSample.SessionData != null)
                 {
                     _trackId = (int)FeedSessionData.WeekendInfo.TrackID;
                 }
                 return _trackId;
+            }
+            set
+            {
+                _trackId = value;
             }
         }
 
@@ -136,6 +146,9 @@ namespace RacingOverlay
         {
             get
             {
+#if SAMPLE
+                return _trackName;
+#endif
                 if (_trackName != null && _trackName == FeedSessionData?.WeekendInfo?.TrackDisplayShortName)
                 {
                     return _trackName;
@@ -202,7 +215,11 @@ namespace RacingOverlay
                 _DataSample = original._DataSample;
                 AllPositions = original.AllPositions;
                 SortedPositions = original.SortedPositions;
+                TrackId = original.TrackId;
+                TrackName = original.TrackName;
                 IsRace = original.IsRace;
+                FeedTelemetry = original.FeedTelemetry;
+                FeedSessionData = original.FeedSessionData;
             }
         }
         public void StartOperation(Action action)

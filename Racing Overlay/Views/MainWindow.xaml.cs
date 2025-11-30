@@ -1,6 +1,7 @@
 ﻿using RacingOverlay.Models;
 using RacingOverlay.Windows;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
@@ -84,9 +85,38 @@ namespace RacingOverlay
 
         private void CheckIRacingConnection()
         {
+            var posIndex = 0.0;
             while (true)
             {
-                var localTelemetryData = new TelemetryData(telemetryData);
+
+#if SAMPLE
+
+                var sampleDriver = new Driver
+                {
+                    CarId = 1,
+                    CarNumber = "86",
+                    ClassId = 1,
+                    ClassColor = "#FFFFFF",
+                    ClassPosition = 1,
+                    PosOnTrack = posIndex
+                };
+
+                posIndex += 2;
+
+                 // Only used for testing features when cannot use IRacing
+                var sampleTelemetryData = new TelemetryData();
+                sampleTelemetryData.IsConnected = true;
+                sampleTelemetryData.TrackId = 127;
+                sampleTelemetryData.TrackName = "road atlanta";
+                sampleTelemetryData.FeedTelemetry = new iRacingSDK.Telemetry();
+                sampleTelemetryData.FeedTelemetry.Add("IsReplayPlaying", false);
+                sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", 1);
+                sampleTelemetryData.FeedSessionData = new iRacingSDK.SessionData();
+                sampleTelemetryData.AllPositions = new List<Driver> { sampleDriver };
+
+                telemetryData = sampleTelemetryData;
+#endif
+
                 if (telemetryData.IsConnected)
                 {
                     if (StandingsWindow == null)

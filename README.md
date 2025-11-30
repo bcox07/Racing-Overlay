@@ -54,7 +54,6 @@
 1. Portland (Full Circuit)
 1. Snetterton
 
-
 ## Badges
 
 ### Completed

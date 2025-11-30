@@ -88,11 +88,16 @@ namespace RacingOverlay
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
         {
-            _TelemetryData = telemetryData;
-            if (telemetryData.IsReady)
-            {
-                GetData(telemetryData);
-            }
+#if SAMPLE
+        GetData(telemetryData);
+#else
+        _TelemetryData = telemetryData;
+        if (telemetryData.IsReady)
+        {
+            GetData(telemetryData);
+        }
+#endif
+
         }
 
 
@@ -103,7 +108,6 @@ namespace RacingOverlay
                 Topmost = false;
                 Topmost = true;
             });
-            var sessionTimeString1 = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionTime;
             var sessionType = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionType;
             var sessionTime = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum]._SessionTime;
             var viewedCar = telemetryData.AllPositions.Where(p => p.CarId == telemetryData.FeedTelemetry.CamCarIdx).FirstOrDefault() ?? telemetryData.AllPositions.FirstOrDefault() ?? new Driver();

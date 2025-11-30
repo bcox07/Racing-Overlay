@@ -10,5 +10,5 @@
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
     </DrawingGroup>
-    <DrawingImage Drawing="{StaticResource Image}" x:Key="MazdaLogo"/>
+    <DrawingImage Drawing="{StaticResource Image}" x:Key="di_Image"/>
 </ResourceDictionary>
