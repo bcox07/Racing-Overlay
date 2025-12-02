@@ -5,7 +5,7 @@
 
         public static string GetLogoUri(string carPath)
         {
-            switch (carPath)
+            switch (carPath.ToLower())
             {
                 case string s when s.StartsWith("acura"):
                     return "acura-logo";

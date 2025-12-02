@@ -89,6 +89,7 @@ namespace RacingOverlay
         public void UpdateTelemetryData(TelemetryData telemetryData)
         {
 #if SAMPLE
+        _TelemetryData = telemetryData;
         GetData(telemetryData);
 #else
         _TelemetryData = telemetryData;

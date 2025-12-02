@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iRacingSDK;
+using System;
 
 namespace RacingOverlay
 {
@@ -22,8 +23,8 @@ namespace RacingOverlay
         public double? FastestLapDelta { get; set; }
         public double? LastLap { get; set; }
         public int? LapsComplete { get; set; }
-        //public Dictionary<int, double> LapHistory { get; set; }  
         public DateTime LapChangeTime { get; set; }
         public bool InPit { get; set; }
+        public TrackLocation Location { get; set; } 
     }
 }

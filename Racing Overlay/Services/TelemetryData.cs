@@ -1,5 +1,6 @@
 ﻿using iRacingSDK;
 using NLog;
+using RacingOverlay.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -289,6 +290,10 @@ namespace RacingOverlay
 
         private void CollectAllPositions()
         {
+
+#if SAMPLE
+            StopWatch = new Stopwatch();
+#endif
             var preCorrectedPositions = AllResultsPositions.Join(AllDrivers, p => p.CarIdx, d => d.CarIdx, (p, d) => new Driver()
             {
                 CarId = (int)d.CarIdx,
@@ -561,6 +566,201 @@ namespace RacingOverlay
             driversInClass.AddRange(unplacedDriversInClass);
 
             return new KeyValuePair<int, List<Driver>>(driverClassGroup.Key, driversInClass);
+        }
+
+        public void UpdateSampleData()
+        {
+            var random = new Random();
+            var maxSpeed = 190;
+            var prevClassPosition = 0L;
+            foreach (var position in FeedSessionData.SessionInfo.Sessions[0].ResultsPositions)
+            {
+                if (position.ClassPosition < prevClassPosition)
+                    maxSpeed = (int) (maxSpeed * 0.9);
+                
+                var randomSpeed = random.Next((int)(maxSpeed * 0.66), maxSpeed) / 40000F;
+                FeedTelemetry.CarIdxLapDistPct[position.CarIdx] += randomSpeed;
+                FeedTelemetry.CarIdxDistance[position.CarIdx] += randomSpeed;
+
+                if (FeedTelemetry.CarIdxLapDistPct[position.CarIdx] >= 0.9999)
+                {
+                    FeedTelemetry.CarIdxLapDistPct[position.CarIdx] = 0.0001F;
+                    FeedTelemetry.CarIdxLap[position.CarIdx]++;
+                    ((float[])FeedTelemetry["CarIdxLastLapTime"])[position.CarIdx] = (float)(random.Next((int)((position.FastestTime * 1000) * 1.001), (int)((position.FastestTime * 1000) * 1.03))) / 1000;
+                }
+                maxSpeed--;
+                prevClassPosition = position.ClassPosition;
+            }         
+
+            CollectPositions();
+        }
+
+        public static TelemetryData CreateSampleData()
+        {
+            // Only used for testing features when cannot use IRacing
+            var random = new Random();
+            var drivers = MockData.MockDrivers;
+            var sampleTelemetryData = new TelemetryData();
+            sampleTelemetryData.IsConnected = true;
+            sampleTelemetryData.TrackId = 127;
+            sampleTelemetryData.TrackName = "road atlanta";
+
+            sampleTelemetryData.FeedTelemetry = new Telemetry();
+            
+
+            var carIdxLapArray = new int[64];
+            var carIdxLapDistPctArray = new Single[64];
+            for (int i = 0; i <= 63; i++)
+            {
+                carIdxLapArray[i] = 0;
+                carIdxLapDistPctArray[i] = 0;
+            }
+
+
+            sampleTelemetryData.FeedTelemetry.Add("IsReplayPlaying", false);
+            sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", 3);
+            sampleTelemetryData.FeedTelemetry.Add("PlayerCarIdx", 1);
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxTrackSurface", drivers.Select(d => d.Location).ToArray());
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxEstTime", drivers.Select(d => (float)75).ToArray());
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxBestLapTime", drivers.Select(d => (Single)d.FastestLap).ToArray());
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxLastLapTime", drivers.Select(d => (Single)d.LastLap).ToArray());
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxOnPitRoad", drivers.Select(d => d.InPit).ToArray());
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxLap", carIdxLapArray);
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxLapDistPct", carIdxLapDistPctArray);
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxDistance", carIdxLapDistPctArray);
+
+            sampleTelemetryData.FeedTelemetry.Add("SessionTimeRemain", (double)900);
+            sampleTelemetryData.FeedTelemetry.Add("Lap", 13);
+            sampleTelemetryData.FeedTelemetry.Add("RaceLaps", 30);
+            sampleTelemetryData.FeedTelemetry.Add("CarIdxF2Time", drivers.Select(d => (Single)0).ToArray());
+            sampleTelemetryData.FeedTelemetry.Add("FuelLevel", (float)50.87);
+            sampleTelemetryData.FeedTelemetry.Add("OnPitRoad", false);
+            sampleTelemetryData.FeedTelemetry.Add("SessionNum", 0);
+            sampleTelemetryData.FeedTelemetry.Add("SessionState", SessionState.Racing);
+            sampleTelemetryData.FeedTelemetry.Add("RadioTransmitCarIdx", -1);
+            sampleTelemetryData.FeedTelemetry.Add("LFtempCL", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("LFtempCM", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("LFtempCR", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("RFtempCL", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("RFtempCM", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("RFtempCR", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("LRtempCL", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("LRtempCM", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("LRtempCR", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("RRtempCL", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("RRtempCM", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("RRtempCR", (float)(random.Next(650, 1150)) / 10);
+            sampleTelemetryData.FeedTelemetry.Add("LFwearL", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("LFwearM", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("LFwearR", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("RFwearL", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("RFwearM", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("RFwearR", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("LRwearL", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("LRwearM", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("LRwearR", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("RRwearL", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("RRwearM", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("RRwearR", (float)0.98);
+
+            sampleTelemetryData.FeedTelemetry.SessionData = new SessionData
+            {
+                SessionInfo = new SessionData._SessionInfo
+                {
+                    Sessions = new SessionData._SessionInfo._Sessions[] {
+                            new SessionData._SessionInfo._Sessions
+                            {
+                                ResultsFastestLap = new SessionData._SessionInfo._Sessions._ResultsFastestLap[]
+                                {
+                                    new SessionData._SessionInfo._Sessions._ResultsFastestLap
+                                    {
+                                        CarIdx = 1,
+                                        FastestLap = 3,
+                                        FastestTime = 73.113
+                                    }
+                                },
+                                SessionNum = 0,
+                                SessionType = "Race"
+                            }
+                        }
+                }
+            };
+            sampleTelemetryData.FeedTelemetry.Add("Session", new SessionData._SessionInfo._Sessions
+            {
+                SessionNum = 0,
+                SessionType = "Race",
+                SessionTime = "unlimited"
+            });
+            sampleTelemetryData.FeedSessionData = new SessionData
+            {
+                SessionInfo = new SessionData._SessionInfo
+                {
+                    Sessions = new SessionData._SessionInfo._Sessions[] {
+                            new SessionData._SessionInfo._Sessions
+                            {
+                                ResultsFastestLap = new SessionData._SessionInfo._Sessions._ResultsFastestLap[]
+                                {
+                                    new SessionData._SessionInfo._Sessions._ResultsFastestLap
+                                    {
+                                        CarIdx = 1,
+                                        FastestLap = 3,
+                                        FastestTime = 72.335
+                                    }
+                                },
+                                SessionNum = 0,
+                                SessionType = "Race",
+                                SessionTime = "unlimited",
+                                SessionLaps = "30",
+                                ResultsPositions = new SessionData._SessionInfo._Sessions._ResultsPositions[drivers.Count]
+                            }
+                        }
+                },
+                DriverInfo = new SessionData._DriverInfo
+                {
+                    DriverCarIdx = 1,
+                    Drivers = new SessionData._DriverInfo._Drivers[drivers.Count]
+                },
+                WeekendInfo = new SessionData._WeekendInfo
+                {
+                    TrackLength = "4.056 km"
+                }
+            };
+
+            for (int i = 0; i < drivers.Count; i++)
+            {
+                sampleTelemetryData.FeedSessionData.SessionInfo.Sessions[0].ResultsPositions[i] = new SessionData._SessionInfo._Sessions._ResultsPositions
+                {
+                    Lap = (long)drivers[i].LapsComplete,
+                    FastestTime = (long)Math.Ceiling((decimal)drivers[i].FastestLap),
+                    LapsComplete = (long)drivers[i].LapsComplete,
+                    CarIdx = (long)drivers[i].CarId,
+                    Position = (long)drivers[i].OverallPosition,
+                    ClassPosition = (long)drivers[i].ClassPosition,
+                    LastTime = drivers[i].LastLap ?? 0,
+                    FastestLap = 1
+                };
+            }
+
+            for (int i = 0; i < drivers.Count; i++)
+            {
+                    sampleTelemetryData.FeedSessionData.DriverInfo.Drivers[i] = new SessionData._DriverInfo._Drivers
+                    {
+                        LicString = $"{drivers[i].SafetyRating.Item1} {drivers[i].SafetyRating.Item2}",
+                        LicColor = "#FFFFFF",
+                        CarPath = drivers[i].CarPath,
+                        CarIdx = drivers[i].CarId,
+                        IRating = drivers[i].iRating,
+                        UserName = drivers[i].Name,
+                        CarNumber = drivers[i].CarNumber,
+                        CarClassColor = drivers[i].ClassColor,
+                        CarClassID = drivers[i].ClassId,
+                        CarNumberRaw = new Random().Next(1, 500)
+                    };
+            }
+
+            sampleTelemetryData.CollectPositions();
+
+            return sampleTelemetryData;
         }
     }
 }
