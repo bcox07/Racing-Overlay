@@ -1,4 +1,5 @@
 ﻿using RacingOverlay.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -40,11 +41,14 @@ namespace RacingOverlay.Windows
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
         {
-            Dispatcher.Invoke(() =>
+            if (DateTime.UtcNow.Second % 10 == 0)
             {
-                Topmost = false;
-                Topmost = true;
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    Topmost = false;
+                    Topmost = true;
+                });
+            }
 
             LocalTelemetry = telemetryData;
             if (LocalTelemetry != null && LocalTelemetry.IsReady)

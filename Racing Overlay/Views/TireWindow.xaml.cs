@@ -35,11 +35,15 @@ namespace RacingOverlay
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
         {
-            Dispatcher.Invoke(() =>
+            if (DateTime.UtcNow.Second % 10 == 0)
             {
-                Topmost = false;
-                Topmost = true;
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    Topmost = false;
+                    Topmost = true;
+                });
+            }
+
             LocalTelemetry = telemetryData;
 
             if (LocalTelemetry.FeedTelemetry.IsReplayPlaying)

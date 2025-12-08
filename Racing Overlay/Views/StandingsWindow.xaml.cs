@@ -104,11 +104,15 @@ namespace RacingOverlay
 
         private void GetData(TelemetryData telemetryData)
         {
-            Dispatcher.Invoke(() =>
+            if (DateTime.UtcNow.Second % 10 == 0)
             {
-                Topmost = false;
-                Topmost = true;
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    Topmost = false;
+                    Topmost = true;
+                });
+            }
+
             var sessionType = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionType;
             var sessionTime = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum]._SessionTime;
             var viewedCar = telemetryData.AllPositions.Where(p => p.CarId == telemetryData.FeedTelemetry.CamCarIdx).FirstOrDefault() ?? telemetryData.AllPositions.FirstOrDefault() ?? new Driver();
@@ -228,7 +232,6 @@ namespace RacingOverlay
             });
 
             PrevSessionState = _TelemetryData.FeedTelemetry.SessionState;
-            Thread.Sleep(16);
         }
 
         private int UpdateRow(KeyValuePair<int, List<Driver>> driverClassGroup, Driver viewedCar, int rowIndex)
@@ -272,8 +275,7 @@ namespace RacingOverlay
             });
 
             var classColor = driverClassGroup.Value.First().ClassColor.Replace("0x", "#");
-            var test = _TelemetryData.AllDrivers.ToList();
-            var carClassName = test.Where(d => d != null && d.CarClassID == driverClassGroup.Key).ToList().First().CarClassShortName;
+            var carClassName = _TelemetryData.AllDrivers.Where(d => d != null && d.CarClassID == driverClassGroup.Key).ToList().First().CarClassShortName;
             Dispatcher.Invoke(() =>
             {
 

@@ -107,7 +107,15 @@ namespace RacingOverlay
         private void DisplayRelative()
         {
             var allPositions = new List<Driver>(LocalTelemetry.AllPositions);
-            Dispatcher.Invoke(() => { Topmost = true; });
+
+            if (DateTime.UtcNow.Second % 10 == 0)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    Topmost = false;
+                    Topmost = true;
+                });
+            }
             var viewedCar = allPositions.Where(p => p.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx).FirstOrDefault() ?? allPositions.FirstOrDefault() ?? new Driver();
 
             var surroundingCars = new List<Driver>();
@@ -149,7 +157,6 @@ namespace RacingOverlay
                     RelativeGrid.Children.RemoveAt(CellIndex + 1);
                 }
             });
-            Thread.Sleep(16);
         }
 
         private int GenerateRow(Driver driver, Driver viewedDriver, int rowIndex, TelemetryData telemetryData)

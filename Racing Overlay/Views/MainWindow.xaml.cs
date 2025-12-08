@@ -7,7 +7,9 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -21,6 +23,7 @@ namespace RacingOverlay
     {
         Thread thread;
         Thread thread2;
+        Thread FullTrackThread;
         StandingsWindow StandingsWindow;
         FuelWindow FuelWindow;
         RelativeWindow RelativeWindow;
@@ -58,6 +61,47 @@ namespace RacingOverlay
             simpleTrackLock.Content = bool.Parse(WindowSettings.SimpleTrackSettings["Locked"]) ? "Unlock" : "Lock";
             fullTrackLock.Content = bool.Parse(WindowSettings.FullTrackSettings["Locked"]) ? "Unlock" : "Lock";
 
+            FullTrackThread = new Thread(() =>
+            {
+                while (telemetryData.FeedTelemetry == null)
+                {
+                    Thread.Sleep(10);
+                }
+                        
+
+                if (FullTrackWindow == null)
+                {
+                    if (tokenSource.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    FullTrackWindow = new FullTrackWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
+                    FullTrackWindow.Show();
+                    
+                }
+                else
+                {
+                    if (tokenSource.IsCancellationRequested)
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        if (FullTrackWindow.HasTrackMap(out DrawingImage map))
+                            FullTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex);
+                    }
+                }
+                System.Windows.Threading.Dispatcher.Run();
+            });
+
+            FullTrackThread.SetApartmentState(ApartmentState.STA);
+            FullTrackThread.Start();
+
             StartOperation(CheckIRacingConnection, thread);
             try
             {
@@ -89,182 +133,194 @@ namespace RacingOverlay
             float posIndex = 0.0F;
 #if SAMPLE
             telemetryData = TelemetryData.CreateSampleData();
+            telemetryData.LastSample = telemetryData;
+            var loops = 0;
 #endif
             while (true)
             {
+                var loopStart = DateTime.UtcNow;
 #if SAMPLE
                 telemetryData.UpdateSampleData();
 #endif
 
                 if (telemetryData.IsConnected)
                 {
-                    if (StandingsWindow == null)
+                    var standingsTask = new Task(() =>
                     {
-                        if (tokenSource.IsCancellationRequested)
+                        if (StandingsWindow == null)
                         {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            Dispatcher.Invoke(() =>
+                            {
+                                StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData), GlobalSettings);
+                                StandingsWindow.Show();
+                            });
                         }
-                        Dispatcher.Invoke(() =>
+                        else
                         {
-                            StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData), GlobalSettings);
-                            StandingsWindow.Show();
-                        });
-                    }
-                    else
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            try
+                            {
+                                StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            }
+                            catch (Exception ex)
+                            {
+                                Trace.WriteLine(ex);
+                            }
                         }
-                        try
-                        {
-                            StandingsWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine(ex);
-                        }
-                    }
+                    });
 
-                    if (FuelWindow == null)
+                    var relativeTask = new Task(() =>
                     {
-                        if (tokenSource.IsCancellationRequested)
+                        if (RelativeWindow == null)
                         {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            Dispatcher.Invoke(() =>
+                            {
+                                RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData), GlobalSettings);
+                                RelativeWindow.Show();
+                            });
                         }
-                        Dispatcher.Invoke(() =>
+                        else
                         {
-                            FuelWindow = new FuelWindow(new TelemetryData(telemetryData), GlobalSettings);
-                            FuelWindow.Show();
-                        });
-                    }
-                    else
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            try
+                            {
+                                RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            }
+                            catch (Exception ex)
+                            {
+                                Trace.WriteLine(ex);
+                                return;
+                            }
                         }
-                        try
-                        {
-                            FuelWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine(ex);
-                        }
-                    }
+                    });
 
-                    if (RelativeWindow == null)
+                    var fuelTask = new Task(() =>
                     {
-                        if (tokenSource.IsCancellationRequested)
+                        if (FuelWindow == null)
                         {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            Dispatcher.Invoke(() =>
+                            {
+                                FuelWindow = new FuelWindow(new TelemetryData(telemetryData), GlobalSettings);
+                                FuelWindow.Show();
+                            });
                         }
-                        Dispatcher.Invoke(() =>
+                        else
                         {
-                            RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData), GlobalSettings);
-                            RelativeWindow.Show();
-                        });
-                    }
-                    else
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            try
+                            {
+                                FuelWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            }
+                            catch (Exception ex)
+                            {
+                                Trace.WriteLine(ex);
+                            }
                         }
-                        try
-                        {
-                            RelativeWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine(ex);
-                        }
-                    }
+                    });
 
-                    if (TireWindow == null)
+                    var tireTask = new Task(() =>
                     {
-                        if (tokenSource.IsCancellationRequested)
+                        if (TireWindow == null)
                         {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            Dispatcher.Invoke(() =>
+                            {
+                                TireWindow = new TireWindow(new TelemetryData(telemetryData));
+                                TireWindow.Show();
+                            });
                         }
-                        Dispatcher.Invoke(() =>
+                        else
                         {
-                            TireWindow = new TireWindow(new TelemetryData(telemetryData));
-                            TireWindow.Show();
-                        });
-                    }
-                    else
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            TireWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
                         }
-                        TireWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
-                    }
+                    });
 
-                    if (SimpleTrackWindow == null)
+                    var simpleTrackTask = new Task(() => 
                     {
-                        if (tokenSource.IsCancellationRequested)
+                        if (SimpleTrackWindow == null)
                         {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            Dispatcher.Invoke(() =>
+                            {
+                                SimpleTrackWindow = new SimpleTrackWindow(new TelemetryData(telemetryData), GlobalSettings);
+                                SimpleTrackWindow.Show();
+                                return;
+                            });
+                            return;
                         }
-                        Dispatcher.Invoke(() =>
+                        else
                         {
-                            SimpleTrackWindow = new SimpleTrackWindow(new TelemetryData(telemetryData), GlobalSettings);
-                            SimpleTrackWindow.Show();
-                        });
-                    }
-                    else
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
+                            if (tokenSource.IsCancellationRequested)
+                            {
+                                return;
+                            }
+                            try
+                            {
+                                SimpleTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                Trace.WriteLine(ex);
+                                return;
+                            }
                         }
-                        try
-                        {
-                            SimpleTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine(ex);
-                        }
-                    }
 
-                    if (FullTrackWindow == null)
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        Dispatcher.Invoke(() =>
-                        {
-                            FullTrackWindow = new FullTrackWindow(new TelemetryData(telemetryData), GlobalSettings);
-                            FullTrackWindow.Show();
-                        });
-                    }
-                    else
-                    {
-                        if (tokenSource.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        try
-                        {
-                            if (FullTrackWindow.HasTrackMap(out DrawingImage map))
-                                FullTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData));
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine(ex);
-                        }
-                    }
+                    });
+
+
+                    var fullTrackThread = new Thread(() => { });
+                    
+                    
+
+                    standingsTask.Start();
+                    relativeTask.Start();
+                    fuelTask.Start();
+                    tireTask.Start();
+                    simpleTrackTask.Start();
+                    Task.WaitAll(standingsTask, relativeTask, fuelTask, tireTask, simpleTrackTask);
                 }
                 else
                 {
                     CloseAllWindows();
                 }
-                Thread.Sleep(16);
+
+                var loopTime = (DateTime.UtcNow - loopStart).TotalMilliseconds;
+                if (loopTime < 100)
+                {
+                    Thread.Sleep((int)(100 - loopTime));
+                }
             }
         }
 

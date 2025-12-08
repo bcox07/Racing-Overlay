@@ -133,10 +133,17 @@ namespace RacingOverlay
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
         {
+            if (DateTime.UtcNow.Second % 10 == 0)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    Topmost = false;
+                    Topmost = true;
+                });
+            }
+
             Dispatcher.Invoke(() =>
             {
-                Topmost = false;
-                Topmost = true;
                 Background = Brushes.Transparent;
                 SetDisplaySettings();
             });

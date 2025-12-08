@@ -302,6 +302,7 @@ namespace RacingOverlay
                 ClassId = (int)d.CarClassID,
                 ClassColor = d.CarClassColor,
                 ClassPosition = (int)p.ClassPosition + 1,
+                ClassName = d.CarClassShortName,
                 OverallPosition = (int)p.Position,
                 Name = d.UserName,
                 iRating = (int)d.IRating,
@@ -325,6 +326,7 @@ namespace RacingOverlay
                         CarPath = driver.CarPath,
                         ClassColor = driver.CarClassColor,
                         ClassId = (int)driver.CarClassID,
+                        ClassName = driver.CarClassShortName,
                         ClassPosition = FeedTelemetry.CarIdxClassPosition[driver.CarIdx] == 0 ? null : (int?)FeedTelemetry.CarIdxClassPosition[driver.CarIdx],
                         OverallPosition = FeedTelemetry.CarIdxPosition[driver.CarIdx] == 0 ? null : (int?)FeedTelemetry.CarIdxPosition[driver.CarIdx],
                         Name = driver.UserName,
@@ -571,14 +573,12 @@ namespace RacingOverlay
         public void UpdateSampleData()
         {
             var random = new Random();
-            var maxSpeed = 190;
             var prevClassPosition = 0L;
             foreach (var position in FeedSessionData.SessionInfo.Sessions[0].ResultsPositions)
             {
-                if (position.ClassPosition < prevClassPosition)
-                    maxSpeed = (int) (maxSpeed * 0.9);
+                var speed = (TrackLength / position.FastestTime / 60) / TrackLength; // Speed in Percentage of track per frame
                 
-                var randomSpeed = random.Next((int)(maxSpeed * 0.66), maxSpeed) / 40000F;
+                var randomSpeed = random.Next((int)(speed * 10_000_000 * 0.66), (int)(speed * 10_000_000)) / 1_000_000F;
                 FeedTelemetry.CarIdxLapDistPct[position.CarIdx] += randomSpeed;
                 FeedTelemetry.CarIdxDistance[position.CarIdx] += randomSpeed;
 
@@ -588,10 +588,8 @@ namespace RacingOverlay
                     FeedTelemetry.CarIdxLap[position.CarIdx]++;
                     ((float[])FeedTelemetry["CarIdxLastLapTime"])[position.CarIdx] = (float)(random.Next((int)((position.FastestTime * 1000) * 1.001), (int)((position.FastestTime * 1000) * 1.03))) / 1000;
                 }
-                maxSpeed--;
                 prevClassPosition = position.ClassPosition;
             }         
-
             CollectPositions();
         }
 
@@ -618,7 +616,7 @@ namespace RacingOverlay
 
 
             sampleTelemetryData.FeedTelemetry.Add("IsReplayPlaying", false);
-            sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", 3);
+            sampleTelemetryData.FeedTelemetry.Add("CamCarIdx", random.Next(drivers.Count));
             sampleTelemetryData.FeedTelemetry.Add("PlayerCarIdx", 1);
             sampleTelemetryData.FeedTelemetry.Add("CarIdxTrackSurface", drivers.Select(d => d.Location).ToArray());
             sampleTelemetryData.FeedTelemetry.Add("CarIdxEstTime", drivers.Select(d => (float)75).ToArray());
@@ -746,7 +744,7 @@ namespace RacingOverlay
                     sampleTelemetryData.FeedSessionData.DriverInfo.Drivers[i] = new SessionData._DriverInfo._Drivers
                     {
                         LicString = $"{drivers[i].SafetyRating.Item1} {drivers[i].SafetyRating.Item2}",
-                        LicColor = "#FFFFFF",
+                        LicColor = drivers[i].SafetyRatingColor,
                         CarPath = drivers[i].CarPath,
                         CarIdx = drivers[i].CarId,
                         IRating = drivers[i].iRating,
@@ -754,6 +752,7 @@ namespace RacingOverlay
                         CarNumber = drivers[i].CarNumber,
                         CarClassColor = drivers[i].ClassColor,
                         CarClassID = drivers[i].ClassId,
+                        CarClassShortName = drivers[i].ClassName,
                         CarNumberRaw = new Random().Next(1, 500)
                     };
             }

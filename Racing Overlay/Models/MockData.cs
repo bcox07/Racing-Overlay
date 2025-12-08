@@ -10,160 +10,74 @@ namespace RacingOverlay.Models
     public class MockData
     {
         private static Random random = new Random();
-        public static List<Driver> MockDrivers => new List<Driver>
+
+        private static List<string> FirstNames => new List<string>{ "Brian", "Max", "Esteban", "Carlos", "Lando", "Fernando", "Oliver", "Charles", "Jarno", "James", "Oscar", "Lewis", "George", "Kimi", "Valtteri" };
+
+        private static List<string> LastNames => new List<string> { "Cox", "Verstappen", "Ocon", "Norris", "Sainz", "Albon", "Broadbent", "Opmeer", "Leclerc", "Piastri", "Bearman" , "Hamilton", "Russell", "Antonelli", "Alonso", "Bottas" };
+
+        private static Dictionary<string, Tuple<string, List<string>>> CarClasses => new Dictionary<string, Tuple<string, List<string>>>
+        {
+            { "GTP", new Tuple<string, List<string>>("#e0aa01", new List<string> { "Cadillac", "Ferrari", "BMW", "Porsche", "Acura" }) },
+            { "LMP2", new Tuple<string, List<string>>("#6f94c7", new List<string> { "Dallara" }) },
+            { "GT3", new Tuple<string, List<string>>("#C32148", new List<string> { "Ferrari", "BMW", "Porsche", "McLaren", "Mercedes", "Audi", "Acura", "Ford", "Lamborghini", "Aston Martin" }) },
+            { "Porsche Cup", new Tuple<string, List<string>>("#3dc068", new List<string> { "Porsche" }) },
+            { "GT4", new Tuple<string, List<string>>("#999999", new List<string> { "BMW", "Porsche", "McLaren", "Mercedes", "Ford", "Aston Martin" }) },
+        };
+
+        private static Dictionary<string, string> Licenses => new Dictionary<string, string>
+        {
+            { "A", "#284d93" },
+            { "B", "#269d00" },
+            { "C", "#e3b600" },
+            { "D", "#d05501" },
+            { "R", "#b52526" },
+        };
+
+        public static List<Driver> MockDrivers
+        {
+            get
+            {
+                var drivers = new List<Driver>();
+                var totalClasses = random.Next(2, 6);
+                var carId = 0;
+
+                for (int i = 0; i < totalClasses; i++)
                 {
-                    new Driver
+                    var randomClassSize = random.Next(1, 11);
+                    for (int j = 0; j < randomClassSize; j++)
                     {
-                        CarId = 0,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = ((float)random.Next(74000, 77000)) / 1000F,
-                        LastLap = random.Next(74500, 77000) / 1000F,
-                        OverallPosition = 0,
-                        ClassPosition = 0,
-                        ClassId = 1,
-                        ClassColor = "#555555",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle",
-                        SafetyRating = new Tuple<string, string>("A", "3.55"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Cadillac",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 1,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = ((float)random.Next(74000, 77000)) / 1000F,
-                        LastLap = random.Next(74500, 77000) / 1000F,
-                        OverallPosition = 1,
-                        ClassPosition = 1,
-                        ClassColor = "#555555",
-                        ClassId = 1,
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle2",
-                        SafetyRating = new Tuple<string, string>("B", "2.78"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Acura",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 2,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = ((float)random.Next(74000, 77000)) / 1000F,
-                        LastLap = random.Next(74500, 77000) / 1000F,
-                        OverallPosition = 2,
-                        ClassPosition = 2,
-                        ClassId = 1,
-                        ClassColor = "#555555",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle3",
-                        SafetyRating = new Tuple<string, string>("B", "3.99"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Porsche",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 3,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = ((float)random.Next(74000, 77000)) / 1000F,
-                        LastLap = random.Next(74500, 77000) / 1000F,
-                        OverallPosition = 3,
-                        ClassPosition = 3,
-                        ClassId = 1,
-                        ClassColor = "#555555",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle4",
-                        SafetyRating = new Tuple<string, string>("B", "3.99"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Porsche",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 4,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = ((float)random.Next(74000, 77000)) / 1000F,
-                        LastLap = random.Next(74500, 77000) / 1000F,
-                        OverallPosition = 4,
-                        ClassPosition = 4,
-                        ClassId = 1,
-                        ClassColor = "#555555",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle5",
-                        SafetyRating = new Tuple<string, string>("B", "3.99"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Porsche",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 5,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = ((float)random.Next(74000, 77000)) / 1000F,
-                        LastLap = random.Next(74500, 77000) / 1000F,
-                        OverallPosition = 5,
-                        ClassPosition = 5,
-                        ClassId = 1,
-                        ClassColor = "#555555",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle6",
-                        SafetyRating = new Tuple<string, string>("B", "3.99"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Porsche",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 6,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = random.Next(81000, 84000) / 1000F,
-                        LastLap = random.Next(81500, 84000) / 1000F,
-                        OverallPosition = 6,
-                        ClassPosition = 0,
-                        ClassId = 2,
-                        ClassColor = "#FFFFFF",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle7",
-                        SafetyRating = new Tuple<string, string>("C", "2.78"),
-                        iRating = new Random().Next(500, 5000),
-                        CarPath = "BMW",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                    new Driver
-                    {
-                        CarId = 7,
-                        CarNumber = random.Next(1, 500).ToString(),
-                        FastestLap = random.Next(81000, 84000) / 1000F,
-                        LastLap = random.Next(81500, 84000) / 1000F,
-                        OverallPosition = 6,
-                        ClassPosition = 1,
-                        ClassId = 2,
-                        ClassColor = "#FFFFFF",
-                        LapsComplete = 13,
-                        Name = "Brinkle McCrinkle8",
-                        SafetyRating = new Tuple<string, string>("B", "1.95"),
-                        iRating = random.Next(500, 5000),
-                        CarPath = "Ferrari",
-                        InPit = false,
-                        Location = TrackLocation.OnTrack,
-                        LapChangeTime = DateTime.UtcNow
-                    },
-                };
+                        var chosenName = $"{FirstNames[random.Next(FirstNames.Count)]} {LastNames[random.Next(LastNames.Count)]}";
+                        var chosenSafetyRating = Licenses.ElementAt(random.Next(Licenses.Count));
+                        var classDiff = 0.1;
+
+                        drivers.Add(new Driver()
+                        {
+                            CarId = carId,
+                            CarNumber = random.Next(1, 500).ToString(),
+                            FastestLap = ((float)random.Next((int)(74000 * (1 + classDiff * i)), (int)(77000 * (1 + classDiff * i)))) / 1000F,
+                            LastLap = random.Next(74500, 77000) / 1000F,
+                            OverallPosition = carId,
+                            ClassPosition = j,
+                            ClassId = i,
+                            ClassName = CarClasses.ElementAt(i).Key,
+                            ClassColor = CarClasses.ElementAt(i).Value.Item1,
+                            LapsComplete = 13,
+                            Name = chosenName,
+                            SafetyRating = new Tuple<string, string>(chosenSafetyRating.Key, string.Format("{0:#.#0}", Math.Round((float)random.Next(100, 400) / 100, 2))),
+                            SafetyRatingColor = chosenSafetyRating.Value,
+                            iRating = random.Next(500, 5000),
+                            CarPath = CarClasses.ElementAt(i).Value.Item2[random.Next(CarClasses.ElementAt(i).Value.Item2.Count - 1)],
+                            InPit = false,
+                            Location = TrackLocation.OnTrack,
+                            LapChangeTime = DateTime.UtcNow
+                        });
+
+                        carId++;
+                    }
+                }
+                return drivers;
+            }
+        }
+        
     }
 }

@@ -9,12 +9,14 @@ namespace RacingOverlay
         public string CarPath { get; set; }
         public string CarNumber { get; set; }
         public int ClassId { get; set; }
+        public string ClassName { get; set; }
         public string ClassColor { get; set; }
         public int? ClassPosition { get; set; }
         public int? OverallPosition { get; set; }
         public string Name { get; set; }
         public int iRating { get; set; }
         public Tuple<string, string> SafetyRating { get; set; }
+        public string SafetyRatingColor { get; set; }
         public double PosOnTrack { get; set; }
         public double Distance { get; set; }
         public double Delta { get; set; }

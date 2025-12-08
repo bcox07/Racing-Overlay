@@ -25,15 +25,15 @@ namespace RacingOverlay.Windows
         private GlobalSettings _GlobalSettings;
         private int DefaultWidth = 400;
         private double UpdatedWidth;
-        public FullTrackWindow(TelemetryData telemetryData, GlobalSettings globalSettings)
+        private Dictionary<string, List<double>> _TrackJsonData;
+        public FullTrackWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
             LocalTelemetry = telemetryData;
 
             InitializeComponent();
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            Locked = bool.Parse(mainWindow.WindowSettings.FullTrackSettings["Locked"] ?? "false");
-            Left = double.Parse(mainWindow.WindowSettings.FullTrackSettings["XPos"] ?? "0");
-            Top = double.Parse(mainWindow.WindowSettings.FullTrackSettings["YPos"] ?? "0");
+            Locked = bool.Parse(settings.FullTrackSettings["Locked"] ?? "false");
+            Left = double.Parse(settings.FullTrackSettings["XPos"] ?? "0");
+            Top = double.Parse(settings.FullTrackSettings["YPos"] ?? "0");
             _GlobalSettings = globalSettings;
 
             if (HasTrackMap(out DrawingImage map))
@@ -54,7 +54,11 @@ namespace RacingOverlay.Windows
                 TrackMap.Source.Freeze();
             }
 
-            //TraceTrackLine();
+            TraceTrackLine();
+
+#if SAMPLE 
+            GetTrackJsonData();
+#endif
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -116,11 +120,14 @@ namespace RacingOverlay.Windows
 
         public void UpdateTelemetryData(TelemetryData telemetryData)
         {
-            Dispatcher.Invoke(() =>
+            if (DateTime.UtcNow.Second % 10 == 0)
             {
-                Topmost = false;
-                Topmost = true;
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    Topmost = false;
+                    Topmost = true;
+                });
+            }
 
             LocalTelemetry = telemetryData;
 #if SAMPLE
@@ -134,18 +141,20 @@ namespace RacingOverlay.Windows
 
         }
 
-        private Dictionary<string, List<double>> GetTrackJsonData()
+        private void GetTrackJsonData()
         {
             if (!HasTrackCoordinates())
-                return null;
+                return;
 
-            var items = new Dictionary<string, List<double>>();
+            // Use cached json object
+            if (LocalTelemetry.LastSample?.TrackName == LocalTelemetry.TrackName)
+                return;
+                
             using (var reader = new StreamReader($"./assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName}/coordinates.json"))
             {
                 string json = reader.ReadToEnd();
-                items = JsonConvert.DeserializeObject<Dictionary<string, List<double>>>(json);
+                _TrackJsonData = JsonConvert.DeserializeObject<Dictionary<string, List<double>>>(json);
             }
-            return items;
         }
 
         private void DisplayTrackMap()
@@ -154,83 +163,92 @@ namespace RacingOverlay.Windows
             {
                 UpdatedWidth = DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0);
                 var updatedHeight = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
+                var transformData = GetTrackMapTransformData();
+
+                if (UpdatedWidth > DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        Width = UpdatedWidth;
+                        Height = updatedHeight;
+                        TrackMapViewbox.Width = UpdatedWidth * transformData.Item2;
+                        TrackMapViewbox.Height = updatedHeight * transformData.Item2;
+                        TrackMapViewbox.Margin = new Thickness(transformData.Item3, transformData.Item4, 0, 0);
+                    });
+                }
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        TrackMapViewbox.Width = UpdatedWidth * transformData.Item2;
+                        TrackMapViewbox.Height = updatedHeight * transformData.Item2;
+                        TrackMapViewbox.Margin = new Thickness(transformData.Item3, transformData.Item4, 0, 0);
+                        Width = UpdatedWidth;
+                        Height = updatedHeight;
+                    });
+                        
+                }
                 Dispatcher.Invoke(() =>
                 {
-                    var transformData = GetTrackMapTransformData();
-                    if (UpdatedWidth > DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
-                    {
-                        Width = UpdatedWidth;
-                        Height = updatedHeight;
-                        TrackMapViewbox.Width = UpdatedWidth * transformData.Item2;
-                        TrackMapViewbox.Height = updatedHeight * transformData.Item2;
-                        TrackMapViewbox.Margin = new Thickness(transformData.Item3, transformData.Item4, 0, 0);
-                    }
-                    else
-                    {
-                        TrackMapViewbox.Width = UpdatedWidth * transformData.Item2;
-                        TrackMapViewbox.Height = updatedHeight * transformData.Item2;
-                        TrackMapViewbox.Margin = new Thickness(transformData.Item3, transformData.Item4, 0, 0);
-                        Width = UpdatedWidth;
-                        Height = updatedHeight;
-                    }
                     TrackMap.Visibility = Visibility.Visible;
-                });
+                }); 
             }
 
-            var loc = GetTrackJsonData();
+            GetTrackJsonData();
             //var generatedCoordinates = GenerateCoordinates();
             //GetPointsBetween(3, 11824, 12125, generatedCoordinates);
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
+                //if (driver.Name.StartsWith("Brian D"))
+                //{
+                //    Console.WriteLine((int)driver.PosOnTrack);
+                //}
+
+                if (_TrackJsonData == null)
+                {
+                    return;
+                }
+
+                var coordinates = new List<double> { 0, 0 };
+                var prevCoordinates = new List<double> { 0, 0 };
+                var nextCoordinates = new List<double> { 0, 0 };
+                _TrackJsonData.TryGetValue(((int)driver.PosOnTrack).ToString(), out coordinates);
+
+                if (coordinates == null)
+                {
+                    _TrackJsonData.TryGetValue((((int)driver.PosOnTrack) - 1).ToString(), out prevCoordinates);
+                    _TrackJsonData.TryGetValue((((int)driver.PosOnTrack) + 1).ToString(), out nextCoordinates);
+                }
+
+                //GetSamplePoints(loc);
+
+                if (prevCoordinates == null || nextCoordinates == null)
+                {
+                    prevCoordinates = new List<double> { -30, -30 };
+                    nextCoordinates = new List<double> { -30, -30 };
+
+                }
+
+                if (coordinates == null)
+                {
+                    coordinates = new List<double>
+                    {
+                        (prevCoordinates[0] + nextCoordinates[0]) / 2,
+                        (prevCoordinates[1] + nextCoordinates[1]) / 2
+                    };
+                }
+
+
                 Dispatcher.Invoke(() =>
                 {
-                    //if (driver.Name.StartsWith("Brian D"))
-                    //{
-                    //    Console.WriteLine((int)driver.PosOnTrack);
-                    //}
-
-                    if (loc == null)
-                    {
-                        return;
-                    }
-
-                    var coordinates = new List<double> { 0, 0 };
-                    var prevCoordinates = new List<double> { 0, 0 };
-                    var nextCoordinates = new List<double> { 0, 0 };
-                    loc.TryGetValue(((int)driver.PosOnTrack).ToString(), out coordinates);
-
-                    if (coordinates == null)
-                    {
-                        loc.TryGetValue((((int)driver.PosOnTrack) - 1).ToString(), out prevCoordinates);
-                        loc.TryGetValue((((int)driver.PosOnTrack) + 1).ToString(), out nextCoordinates);
-                    }
-
-                    //GetSamplePoints(loc);
-
-                    if (prevCoordinates == null || nextCoordinates == null)
-                    {
-                        prevCoordinates = new List<double> { -30, -30 };
-                        nextCoordinates = new List<double> { -30, -30 };
-
-                    }
-
-                    if (coordinates == null)
-                    {
-                        coordinates = new List<double>
-                        {
-                            (prevCoordinates[0] + nextCoordinates[0]) / 2,
-                            (prevCoordinates[1] + nextCoordinates[1]) / 2
-                        };
-                    }
-
                     var position = CreatePositionPixel(coordinates,
-                        $"{driver.ClassId}-{driver.CarId}",
-                        22 * (_GlobalSettings.UISize.Percentage / 100.0),
-                        22 * (_GlobalSettings.UISize.Percentage / 100.0),
-                        driver.ClassPosition.ToString(),
-                        (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#")),
-                        _GlobalSettings.UISize.SimpleTrackSettings.FontSize + 2);
+                    $"{driver.ClassId}-{driver.CarId}",
+                    22 * (_GlobalSettings.UISize.Percentage / 100.0),
+                    22 * (_GlobalSettings.UISize.Percentage / 100.0),
+                    driver.ClassPosition.ToString(),
+                    (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#")),
+                    _GlobalSettings.UISize.SimpleTrackSettings.FontSize + 2);
 
                     Canvas.SetLeft(position, coordinates[0] * (_GlobalSettings.UISize.Percentage / 100.0));
                     Canvas.SetTop(position, coordinates[1] * (_GlobalSettings.UISize.Percentage / 100.0));
@@ -296,23 +314,22 @@ namespace RacingOverlay.Windows
             Canvas.SetLeft(position, coordinate[0] * (_GlobalSettings.UISize.Percentage / 100.0));
             Canvas.SetTop(position, coordinate[1] * (_GlobalSettings.UISize.Percentage / 100.0));
 
-
             return position;
         }
 
         private void TraceTrackLine()
         {
-            var loc = GetTrackJsonData();
-            if (loc != null)
+            GetTrackJsonData();
+            if (_TrackJsonData != null)
             {
-                foreach (var coordinate in loc)
+                foreach (var coordinate in _TrackJsonData)
                 {
-                    if (int.Parse(coordinate.Key) % 4 == 0)
+                    if (int.Parse(coordinate.Key) % 34 == 0)
                     {
                         var pixel = CreatePositionPixel(coordinate.Value, 
                             null, 
-                            2, 
-                            2, 
+                            4, 
+                            4, 
                             $"{Math.Round(double.Parse(coordinate.Key) / 1000, 1)}", Brushes.Green);
                         Canvas.SetZIndex(pixel, 99);
 
