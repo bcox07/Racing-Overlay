@@ -36,17 +36,16 @@ namespace RacingOverlay
         private GlobalSettings _GlobalSettings;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        public RelativeWindow(TelemetryData telemetryData, GlobalSettings globalSettings)
+        public RelativeWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
             InitializeComponent();
             try
             {
                 _GlobalSettings = globalSettings;
                 LocalTelemetry = telemetryData;
-                var mainWindow = (MainWindow)Application.Current.MainWindow;
-                Locked = bool.Parse(mainWindow.WindowSettings.RelativeSettings["Locked"]);
-                Left = double.Parse(mainWindow.WindowSettings.RelativeSettings["XPos"]);
-                Top = double.Parse(mainWindow.WindowSettings.RelativeSettings["YPos"]);
+                Locked = bool.Parse(settings.RelativeSettings["Locked"]);
+                Left = double.Parse(settings.RelativeSettings["XPos"]);
+                Top = double.Parse(settings.RelativeSettings["YPos"]);
                 ColumnsWidth = PosNumberWidth + ClassColorWidth + CarNumberWidth + SafetyRatingWidth + DriverNameWidth + DeltaWidth + IRatingWidth;
                 Width = _GlobalSettings.UISize.RelativeWindowWidth;
                 InitializeGrid();
@@ -146,7 +145,6 @@ namespace RacingOverlay
             });
             Dispatcher.Invoke(() =>
             {
-
                 while (RelativeGrid.RowDefinitions.Count > rowIndex + 1)
                 {
                     RelativeGrid.RowDefinitions.RemoveAt(rowIndex + 1);

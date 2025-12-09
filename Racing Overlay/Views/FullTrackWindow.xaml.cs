@@ -54,7 +54,7 @@ namespace RacingOverlay.Windows
                 TrackMap.Source.Freeze();
             }
 
-            TraceTrackLine();
+            //TraceTrackLine();
 
 #if SAMPLE 
             GetTrackJsonData();
@@ -279,6 +279,7 @@ namespace RacingOverlay.Windows
                     {
                         TrackCanvas.Children.Remove(element);
                     }
+                    elementsToRemove = null;
 
                     if (driver.PosOnTrack > 0)
                     {

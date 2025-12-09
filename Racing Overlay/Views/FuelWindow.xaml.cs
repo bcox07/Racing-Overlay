@@ -81,14 +81,13 @@ namespace RacingOverlay
         private double LapsToEnd => _TelemetryData.FeedTelemetry.SessionTimeRemain / (_TelemetryData.CurrentSession.ResultsFastestLap[0].FastestTime * 1.01);
 
         public bool Locked = false;
-        public FuelWindow(TelemetryData telemetryData, GlobalSettings globalSettings)
+        public FuelWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
             InitializeComponent();
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
             _GlobalSettings = globalSettings;
-            Locked = bool.Parse(mainWindow.WindowSettings.FuelSettings["Locked"]);
-            Left = double.Parse(mainWindow.WindowSettings.FuelSettings["XPos"]);
-            Top = double.Parse(mainWindow.WindowSettings.FuelSettings["YPos"]);
+            Locked = bool.Parse(settings.FuelSettings["Locked"]);
+            Left = double.Parse(settings.FuelSettings["XPos"]);
+            Top = double.Parse(settings.FuelSettings["YPos"]);
             _TelemetryData = telemetryData;
 
 #if SAMPLE
@@ -155,10 +154,6 @@ namespace RacingOverlay
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-                    {
-                        return;
-                    }
                     Hide();
                 });
             }
@@ -166,10 +161,6 @@ namespace RacingOverlay
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-                    {
-                        return;
-                    }
                     Show();
                 });
             }

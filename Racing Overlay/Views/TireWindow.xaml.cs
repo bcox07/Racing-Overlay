@@ -14,14 +14,13 @@ namespace RacingOverlay
     {
         TelemetryData LocalTelemetry;
         public bool Locked = false;
-        public TireWindow(TelemetryData telemetryData)
+        public TireWindow(TelemetryData telemetryData, WindowSettings settings)
         {
             LocalTelemetry = telemetryData;
             InitializeComponent();
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            Locked = bool.Parse(mainWindow.WindowSettings.TireSettings["Locked"] ?? "false");
-            Left = double.Parse(mainWindow.WindowSettings.TireSettings["XPos"] ?? "0");
-            Top = double.Parse(mainWindow.WindowSettings.TireSettings["YPos"] ?? "0");
+            Locked = bool.Parse(settings.TireSettings["Locked"] ?? "false");
+            Left = double.Parse(settings.TireSettings["XPos"] ?? "0");
+            Top = double.Parse(settings.TireSettings["YPos"] ?? "0");
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -50,10 +49,6 @@ namespace RacingOverlay
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-                    {
-                        return;
-                    }
                     Hide();
                 });
             }
@@ -61,10 +56,6 @@ namespace RacingOverlay
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (!Application.Current.Windows.OfType<FuelWindow>().Any())
-                    {
-                        return;
-                    }
                     Show();
                 });
             }

@@ -41,12 +41,12 @@ namespace RacingOverlay
         private double? RaceStartOffset = null;
         private SessionState? PrevSessionState = null;
 
-        public StandingsWindow(TelemetryData telemetryData, GlobalSettings globalSettings)
+        public StandingsWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
             InitializeComponent();
             try
             {
-                InitializeOverlay(globalSettings);
+                InitializeOverlay(globalSettings, settings);
                 UpdateTelemetryData(telemetryData);
             }
             catch (Exception ex)
@@ -64,13 +64,12 @@ namespace RacingOverlay
             }
         }
 
-        private void InitializeOverlay(GlobalSettings globalSettings)
+        private void InitializeOverlay(GlobalSettings globalSettings, WindowSettings settings)
         {
             _GlobalSettings = globalSettings;
-            var mainWindow = (MainWindow)(Application.Current.MainWindow);
-            Locked = bool.Parse(mainWindow.WindowSettings.StandingsSettings["Locked"]);
-            Left = double.Parse(mainWindow.WindowSettings.StandingsSettings["XPos"]);
-            Top = double.Parse(mainWindow.WindowSettings.StandingsSettings["YPos"]);
+            Locked = bool.Parse(settings.StandingsSettings["Locked"]);
+            Left = double.Parse(settings.StandingsSettings["XPos"]);
+            Top = double.Parse(settings.StandingsSettings["YPos"]);
             Height = 0;
             Background = Brushes.Transparent;
             ColumnsWidth = PosNumberWidth + CarNumberWidth + CarLogoWidth + DriverNameWidth + IRatingWidth + SafetyRatingWidth + DeltaWidth + FastestLapWidth + LastLapWidth;
