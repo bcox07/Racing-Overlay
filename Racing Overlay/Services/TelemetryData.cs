@@ -578,7 +578,7 @@ namespace RacingOverlay
             {
                 var speed = (TrackLength / position.FastestTime / 60) / TrackLength; // Speed in Percentage of track per frame
                 
-                var randomSpeed = random.Next((int)(speed * 10_000_000 * 0.66), (int)(speed * 10_000_000)) / 1_000_000F;
+                var randomSpeed = random.Next((int)(speed * 10_000_000 * 0.66), (int)(speed * 10_000_000)) / 4_300_000F;
                 FeedTelemetry.CarIdxLapDistPct[position.CarIdx] += randomSpeed;
                 FeedTelemetry.CarIdxDistance[position.CarIdx] += randomSpeed;
 

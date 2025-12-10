@@ -137,12 +137,22 @@ namespace RacingOverlay
                         {
                             return;
                         }
+
+                        if (FullTrackWindow == null)
+                            continue;
                     
-                        if (FullTrackWindow != null && FullTrackWindow.HasTrackMap(out DrawingImage map))
+                        if (FullTrackWindow.HasTrackMap(out DrawingImage map))
                         {
                             FullTrackWindow?.Dispatcher.Invoke(() =>
                             {
                                 FullTrackWindow?.UpdateTelemetryData(new TelemetryData(telemetryData));
+                            });
+                        }
+                        else
+                        {
+                            FullTrackWindow?.Dispatcher.Invoke(() =>
+                            {
+                                FullTrackWindow?.Hide();
                             });
                         }
                     }
@@ -322,7 +332,7 @@ namespace RacingOverlay
 
             }
         }
-
+        
         private void UpdateLapData()
         {
             while (true)

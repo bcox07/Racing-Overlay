@@ -27,32 +27,39 @@
 
 ### Next
 
-1. Spa (Grand Prix Pits)
-1. Charlotte (Roval 2025)
-1. Sebring (International)
-1. Laguna Seca (Full Course)
-1. Fuji (Grand Prix)
+1. Nurburgring Grand-Prix-Strecke (BES/WEC)
+1. Oulton Park (International)
+1. Circuit Gilles Villeneuve
+1. Long Beach Street Circuit
+1. Miami International Autodrome (Grand Prix)
+1. Autodromo Nazionale Monza (Combined)
+1. Portland International Raceway (Full Circuit)
+1. Algarve International Circuit (Grand Prix)
+1. Circuit de Barcelona Catalunya (Historic)
+1. Adelaide Street Circuit
+1. Sachsenring
+1. Misano World Circuit Marco Simoncelli (Grand Prix)
 1. Autodromo Hermanos Rodriguez (Grand Prix)
-1. Nurburgring Nordschleife (Industriefahrten)
+1. Sebring (International)
+1. Motorland Aragon (Motorcycle Grand Prix)
+1. Circuito de Jerez (Moto)
 
 ### Future
 
-1. Algarve
-1. Aragon
 1. Barber (Full Course)
-1. Barcelona
+1. Charlotte (Roval 2025)
 1. COTA
 1. Detroit Grand Prix
 1. Donington Park
+1. Fuji (Grand Prix)
+1. Laguna Seca (Full Course)
 1. Lime Rock (Grand Prix)
-1. Long Beach
+1. Nurburgring Nordschleife (Industriefahrten)
 1. Oulton Park (Intl w/o Brittens)
-1. Misano
-1. Monza
 1. Motegi
 1. Mugello
-1. Portland (Full Circuit)
 1. Snetterton
+1. Spa (Grand Prix Pits)
 
 ## Badges
 

@@ -73,7 +73,7 @@ namespace RacingOverlay.Windows
         public bool HasTrackMap(out DrawingImage map)
         {
             var mapResourceDictionary = (ResourceDictionary)Application.Current.Resources[$"{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}"];
-            map = (DrawingImage)mapResourceDictionary["di_map_xaml"];
+            map = (DrawingImage)mapResourceDictionary?["di_map_xaml"];
 
             return map != null;
         }

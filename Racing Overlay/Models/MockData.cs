@@ -17,20 +17,20 @@ namespace RacingOverlay.Models
 
         private static Dictionary<string, Tuple<string, List<string>>> CarClasses => new Dictionary<string, Tuple<string, List<string>>>
         {
-            { "GTP", new Tuple<string, List<string>>("#e0aa01", new List<string> { "Cadillac", "Ferrari", "BMW", "Porsche", "Acura" }) },
-            { "LMP2", new Tuple<string, List<string>>("#6f94c7", new List<string> { "Dallara" }) },
-            { "GT3", new Tuple<string, List<string>>("#C32148", new List<string> { "Ferrari", "BMW", "Porsche", "McLaren", "Mercedes", "Audi", "Acura", "Ford", "Lamborghini", "Aston Martin" }) },
+            { "GTP", new Tuple<string, List<string>>("#ffda59", new List<string> { "Cadillac", "Ferrari", "BMW", "Porsche", "Acura" }) },
+            { "LMP2", new Tuple<string, List<string>>("#33ceff", new List<string> { "Dallara" }) },
+            { "GT3", new Tuple<string, List<string>>("#ff5888", new List<string> { "Ferrari", "BMW", "Porsche", "McLaren", "Mercedes", "Audi", "Acura", "Ford", "Lamborghini", "Aston Martin" }) },
             { "Porsche Cup", new Tuple<string, List<string>>("#3dc068", new List<string> { "Porsche" }) },
             { "GT4", new Tuple<string, List<string>>("#999999", new List<string> { "BMW", "Porsche", "McLaren", "Mercedes", "Ford", "Aston Martin" }) },
         };
 
         private static Dictionary<string, string> Licenses => new Dictionary<string, string>
         {
-            { "A", "#284d93" },
-            { "B", "#269d00" },
-            { "C", "#e3b600" },
-            { "D", "#d05501" },
-            { "R", "#b52526" },
+            { "A", "#0153db" },
+            { "B", "#00c702" },
+            { "C", "#feec04" },
+            { "D", "#fc8a27" },
+            { "R", "#fc0706" },
         };
 
         public static List<Driver> MockDrivers
