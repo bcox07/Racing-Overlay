@@ -42,7 +42,7 @@
                                 <Setter TargetName="Bd" Property="Background" Value="#471b33"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Foreground" Value="#C6C6C6"/>
                                 <Setter TargetName="Bd" Property="Background" Value="#B62c7F"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -51,6 +51,11 @@
             </Setter>
         </Style>
         <Style x:Key="ButtonStyle" TargetType="Button">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="7"></Setter>
+                </Style>
+            </Style.Resources>
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
             <Setter Property="BorderBrush" Value="#141126"></Setter>
@@ -74,7 +79,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Foreground" Value="#C6C6C6"/>
                                 <Setter TargetName="ButtonBorder" Property="Background" Value="#B62c7F"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
@@ -118,12 +123,11 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
-                        <Ellipse Height="15" Width="15" Fill="#471b33" Stroke="#141126" StrokeThickness="1.5" ></Ellipse>
+                        <Ellipse Height="18" Width="18" Fill="#471b33" Stroke="#C6C6C6" StrokeThickness="1.5" ></Ellipse>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
         <ControlTemplate x:Key="Slider"  TargetType="Slider">
             <Grid>
                 <Grid.RowDefinitions>
@@ -142,6 +146,7 @@
                         <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
                     </Track.IncreaseRepeatButton>
                 </Track>
+                <TickBar Grid.Row="2" Placement="{TemplateBinding TickPlacement}" Fill="#C6C6C6" Height="10" />
             </Grid>
         </ControlTemplate>
 
@@ -151,7 +156,7 @@
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Style.Triggers>
                 <Trigger Property="Orientation" Value="Horizontal">
-                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinHeight" Value="10" />
                     <Setter Property="MinWidth" Value="104" />
                     <Setter Property="Template" Value="{StaticResource Slider}" />
                 </Trigger>
@@ -232,7 +237,7 @@
                 <Button x:Name="simpleTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="simpleTrackLock_Click" />
                 <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="simpleTrackSave_Click" Grid.Row="1" Grid.Column="1" />
                 <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Margin="0,11,0,0">Width</Label>
-                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackWidth" Width="120" Maximum="2000" Minimum="600" ValueChanged="SimpleTrackWidth_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="1" FontSize="16"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackWidth" Width="120" Maximum="2000" Minimum="600" ValueChanged="SimpleTrackWidth_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="200" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="1" FontSize="16"/>
                 <Button x:Name="simpleTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="simpleTrackReset_Click" Grid.Column="1" />
             </Grid>
         </TabItem>
@@ -263,7 +268,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label Foreground="#C6C6C6" FontSize="16"  VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0">UI Zoom</Label>
-                <Slider Style="{StaticResource Horizontal_Slider}"  x:Name="uiZoom" Width="120" Maximum="2" Foreground="#8f2865" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Column="1" />
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="uiZoom" Width="120" Maximum="2" Foreground="#8f2865" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" Ticks="0, 1, 2, 3" VerticalAlignment="Center" Grid.Column="1" />
                 <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1">Driver Display Count</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="driverDisplayCount" Width="120" Maximum="5" Minimum="3" ValueChanged="driverDisplayCount_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="16"/>
                 <Button  Style="{DynamicResource ButtonStyle}" Width="200" Grid.ColumnSpan="2" Grid.Row="2" Click="globalSettingsSaveBtn_Click">Save</Button>
