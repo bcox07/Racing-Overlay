@@ -7,7 +7,14 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Closed="Window_Closed"
-        Title="MainWindow" Height="257" Width="408" HorizontalAlignment="Center" Background="#2a2e8e" WindowStyle="None" Opacity="0.85" AllowsTransparency="True">
+        Title="MainWindow" 
+        Height="257" 
+        Width="408" 
+        HorizontalAlignment="Center" 
+        Background="#2a2e8e" 
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Opacity="0.85" AllowsTransparency="True">
     <Window.Resources>
         <Style x:Key="TabItemStyle" TargetType="TabItem">
             <Setter Property="Background" Value="#8f2865"></Setter>

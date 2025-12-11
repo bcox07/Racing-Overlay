@@ -18,6 +18,7 @@
 1. Road America
 1. Road Atlanta
 1. Silverstone
+1. Spa (Grand Prix Pits)
 1. Suzuka (Grand Prix)
 1. The Bend (International Circuit)
 1. VIR
@@ -59,7 +60,6 @@
 1. Motegi
 1. Mugello
 1. Snetterton
-1. Spa (Grand Prix Pits)
 
 ## Badges
 
