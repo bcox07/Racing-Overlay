@@ -598,10 +598,11 @@ namespace RacingOverlay
             // Only used for testing features when cannot use IRacing
             var random = new Random();
             var drivers = MockData.MockDrivers;
+            var track = MockData.MockTracks[random.Next(MockData.MockTracks.Count)];
             var sampleTelemetryData = new TelemetryData();
             sampleTelemetryData.IsConnected = true;
-            sampleTelemetryData.TrackId = 127;
-            sampleTelemetryData.TrackName = "road atlanta";
+            sampleTelemetryData.TrackId = track.Id;
+            sampleTelemetryData.TrackName = track.Name;
 
             sampleTelemetryData.FeedTelemetry = new Telemetry();
             
@@ -720,7 +721,7 @@ namespace RacingOverlay
                 },
                 WeekendInfo = new SessionData._WeekendInfo
                 {
-                    TrackLength = "4.056 km"
+                    TrackLength = $"{track.Length / 1000.0} km"
                 }
             };
 

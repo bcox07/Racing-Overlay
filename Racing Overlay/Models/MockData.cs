@@ -33,6 +33,26 @@ namespace RacingOverlay.Models
             { "R", "#fc0706" },
         };
 
+        public static List<Track> MockTracks
+        {
+            get
+            {
+                return new List<Track>
+                {
+                    new Track(18),
+                    new Track(127),
+                    new Track(144),
+                    new Track(145),
+                    new Track(163),
+                    new Track(168),
+                    new Track(192),
+                    new Track(200),
+                    new Track(212),
+                    new Track(219),
+                };
+            }
+        }
+
         public static List<Driver> MockDrivers
         {
             get
