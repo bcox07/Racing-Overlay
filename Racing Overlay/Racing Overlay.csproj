@@ -326,6 +326,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="assets\tracks\554-charlotte\map.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\FullTrackWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -413,10 +417,19 @@
     <None Include="assets\tracks\163-spa\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="assets\tracks\165-spa\coordinates.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="assets\tracks\219-bathurst\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\268-24 heures\coordinates.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="assets\tracks\403-spielberg\ligierjsp320.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="assets\tracks\413-hungaroring\ligierjsp320.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\434-watkins\coordinates.json">
@@ -719,6 +732,9 @@
     <None Include="assets\tracks\498-noname\ligierjsp320.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="assets\tracks\523-spa\coordinates.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="assets\tracks\541-the bend\map.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -749,6 +765,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="assets\tracks\541-the bend\mclaren720sgt3.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="assets\tracks\554-charlotte\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\554-charlotte\ligierjsp320.csv">

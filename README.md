@@ -5,6 +5,7 @@
 ### Completed 
 
 1. Brands Hatch (Grand Prix)
+1. Charlotte (Roval 2025)
 1. CTMP/Mosport
 1. Daytona (Road Course)
 1. Hungaroring
@@ -48,7 +49,6 @@
 ### Future
 
 1. Barber (Full Course)
-1. Charlotte (Roval 2025)
 1. COTA
 1. Detroit Grand Prix
 1. Donington Park
