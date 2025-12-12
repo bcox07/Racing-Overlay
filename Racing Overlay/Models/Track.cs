@@ -41,6 +41,22 @@ namespace RacingOverlay.Models
                         return "bathurst";
                     case 266:
                         return "imola full";
+                    case 268:
+                        return "24 heures";
+                    case 341:
+                        return "silverstone";
+                    case 403:
+                        return "spielberg";
+                    case 413:
+                        return "hungaroring";
+                    case 434:
+                        return "watkins";
+                    case 448:
+                        return "indianapolis";
+                    case 463:
+                        return "magny-cours";
+                    case 554:
+                        return "charlotte";
                     default:
                         return "";
                         
@@ -75,6 +91,22 @@ namespace RacingOverlay.Models
                         return 6144;
                     case 266:
                         return 4862;
+                    case 268:
+                        return 13552;
+                    case 341:
+                        return 5796;
+                    case 403:
+                        return 4282;
+                    case 413:
+                        return 4328;
+                    case 434:
+                        return 5406;
+                    case 448:
+                        return 3844;
+                    case 463:
+                        return 4408;
+                    case 554:
+                        return 3614;
                     default:
                         return -1;
 
