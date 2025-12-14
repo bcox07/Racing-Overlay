@@ -49,6 +49,20 @@ namespace RacingOverlay.Models
                     new Track(200),
                     new Track(212),
                     new Track(219),
+                    new Track(266),
+                    new Track(268),
+                    new Track(341),
+                    new Track(403),
+                    new Track(413),
+                    new Track(434),
+                    new Track(448),
+                    new Track(463),
+                    new Track(465),
+                    new Track(485),
+                    new Track(523),
+                    new Track(525),
+                    new Track(541),
+                    new Track(554)
                 };
             }
         }

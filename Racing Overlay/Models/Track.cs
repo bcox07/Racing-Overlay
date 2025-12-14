@@ -24,7 +24,7 @@ namespace RacingOverlay.Models
                     case 127:
                         return "road atlanta";
                     case 144:
-                        return "road mosport";
+                        return "mosport";
                     case 145:
                         return "brands hatch";
                     case 163:
@@ -55,6 +55,16 @@ namespace RacingOverlay.Models
                         return "indianapolis";
                     case 463:
                         return "magny-cours";
+                    case 465:
+                        return "vir";
+                    case 485:
+                        return "zandvoort";
+                    case 523:
+                        return "spa";
+                    case 525:
+                        return "spa";
+                    case 541:
+                        return "the bend";
                     case 554:
                         return "charlotte";
                     default:
@@ -105,6 +115,16 @@ namespace RacingOverlay.Models
                         return 3844;
                     case 463:
                         return 4408;
+                    case 465:
+                        return 5216;
+                    case 485:
+                        return 4204;
+                    case 523:
+                        return 6930;
+                    case 525:
+                        return 6930;
+                    case 541:
+                        return 4883;
                     case 554:
                         return 3614;
                     default:
