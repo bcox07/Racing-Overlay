@@ -15,6 +15,7 @@
 1. Le Mans (24 Heures du Mans)
 1. Magny-Cours
 1. Mount Panorama
+1. Oulton Park (International)
 1. Red Bull Ring (Grand Prix)
 1. Road America
 1. Road Atlanta
@@ -30,7 +31,6 @@
 ### Next
 
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
-1. Oulton Park (International)
 1. Circuit Gilles Villeneuve
 1. Long Beach Street Circuit
 1. Miami International Autodrome (Grand Prix)
