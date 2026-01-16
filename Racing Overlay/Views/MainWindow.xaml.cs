@@ -409,9 +409,12 @@ namespace RacingOverlay
         {
             if (StandingsWindow != null)
             {
-                _configuration.AppSettings.Settings["StandingsWindowLocked"].Value = StandingsWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["StandingsWindowXPos"].Value = StandingsWindow.Left.ToString();
-                _configuration.AppSettings.Settings["StandingsWindowYPos"].Value = StandingsWindow.Top.ToString();
+                StandingsWindow?.Dispatcher.Invoke(() =>
+                {
+                    _configuration.AppSettings.Settings["StandingsWindowLocked"].Value = StandingsWindow.Locked.ToString();
+                    _configuration.AppSettings.Settings["StandingsWindowXPos"].Value = StandingsWindow.Left.ToString();
+                    _configuration.AppSettings.Settings["StandingsWindowYPos"].Value = StandingsWindow.Top.ToString();
+                }); 
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
@@ -441,10 +444,14 @@ namespace RacingOverlay
         {
             if (RelativeWindow != null)
             {
-                _configuration.AppSettings.Settings["RelativeWindowLocked"].Value = RelativeWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["RelativeWindowXPos"].Value = RelativeWindow.Left.ToString();
-                _configuration.AppSettings.Settings["RelativeWindowYPos"].Value = RelativeWindow.Top.ToString();
 
+                RelativeWindow?.Dispatcher.Invoke(() =>
+                {
+                    _configuration.AppSettings.Settings["RelativeWindowLocked"].Value = RelativeWindow.Locked.ToString();
+                    _configuration.AppSettings.Settings["RelativeWindowXPos"].Value = RelativeWindow.Left.ToString();
+                    _configuration.AppSettings.Settings["RelativeWindowYPos"].Value = RelativeWindow.Top.ToString();
+                });
+                    
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
             }
@@ -473,9 +480,12 @@ namespace RacingOverlay
         {
             if (FuelWindow != null)
             {
-                _configuration.AppSettings.Settings["FuelWindowLocked"].Value = FuelWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["FuelWindowXPos"].Value = FuelWindow.Left.ToString();
-                _configuration.AppSettings.Settings["FuelWindowYPos"].Value = FuelWindow.Top.ToString();
+                FuelWindow?.Dispatcher.Invoke(() =>
+                {
+                    _configuration.AppSettings.Settings["FuelWindowLocked"].Value = FuelWindow.Locked.ToString();
+                    _configuration.AppSettings.Settings["FuelWindowXPos"].Value = FuelWindow.Left.ToString();
+                    _configuration.AppSettings.Settings["FuelWindowYPos"].Value = FuelWindow.Top.ToString();
+                });
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
@@ -505,9 +515,14 @@ namespace RacingOverlay
         {
             if (TireWindow != null)
             {
-                _configuration.AppSettings.Settings["TireWindowLocked"].Value = TireWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["TireWindowXPos"].Value = TireWindow.Left.ToString();
-                _configuration.AppSettings.Settings["TireWindowYPos"].Value = TireWindow.Top.ToString();
+
+                TireWindow?.Dispatcher.Invoke(() =>
+                {
+                    _configuration.AppSettings.Settings["TireWindowLocked"].Value = TireWindow.Locked.ToString();
+                    _configuration.AppSettings.Settings["TireWindowXPos"].Value = TireWindow.Left.ToString();
+                    _configuration.AppSettings.Settings["TireWindowYPos"].Value = TireWindow.Top.ToString();
+                });
+                    
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
@@ -537,9 +552,12 @@ namespace RacingOverlay
         {
             if (SimpleTrackWindow != null)
             {
-                _configuration.AppSettings.Settings["SimpleTrackWindowLocked"].Value = SimpleTrackWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["SimpleTrackWindowXPos"].Value = SimpleTrackWindow.Left.ToString();
-                _configuration.AppSettings.Settings["SimpleTrackWindowYPos"].Value = SimpleTrackWindow.Top.ToString();
+                SimpleTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    _configuration.AppSettings.Settings["SimpleTrackWindowLocked"].Value = SimpleTrackWindow.Locked.ToString();
+                    _configuration.AppSettings.Settings["SimpleTrackWindowXPos"].Value = SimpleTrackWindow.Left.ToString();
+                    _configuration.AppSettings.Settings["SimpleTrackWindowYPos"].Value = SimpleTrackWindow.Top.ToString();      
+                });
                 _configuration.AppSettings.Settings["SimpleTrackWindowWidth"].Value = SimpleTrackWidth.Value.ToString();
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
@@ -570,9 +588,12 @@ namespace RacingOverlay
         {
             if (FullTrackWindow != null)
             {
-                _configuration.AppSettings.Settings["FullTrackWindowLocked"].Value = FullTrackWindow.Locked.ToString();
-                _configuration.AppSettings.Settings["FullTrackWindowXPos"].Value = FullTrackWindow.Left.ToString();
-                _configuration.AppSettings.Settings["FullTrackWindowYPos"].Value = FullTrackWindow.Top.ToString();
+                FullTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    _configuration.AppSettings.Settings["FullTrackWindowLocked"].Value = FullTrackWindow.Locked.ToString();
+                    _configuration.AppSettings.Settings["FullTrackWindowXPos"].Value = FullTrackWindow.Left.ToString();
+                    _configuration.AppSettings.Settings["FullTrackWindowYPos"].Value = FullTrackWindow.Top.ToString();
+                });
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
