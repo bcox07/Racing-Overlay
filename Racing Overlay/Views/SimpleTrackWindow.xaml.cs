@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
+using static iRacingSDK.SessionData._DriverInfo;
 
 namespace RacingOverlay.Windows
 {
@@ -71,41 +73,33 @@ namespace RacingOverlay.Windows
                     CanvasBorder.CornerRadius = new CornerRadius(_GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter / 2 + 3);
                     RelativeGeometry.Rect = new Rect(0, 0, Width - 4, 26);
                 });
-                
 
-                var textBox = new TextBox();
-                textBox.Visibility = Visibility.Visible;
-                textBox.Text = driver.ClassPosition.ToString();
-                textBox.Uid = $"{driver.ClassId}-{driver.CarId}";
-                textBox.Width = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter;
-                textBox.Height = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter;
+                var position = CreatePositionPixel(driver.PosOnTrack,
+                    $"{driver.ClassId}-{driver.CarId}",
+                    _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter,
+                    _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter,
+                    driver.ClassPosition.ToString(),
+                    (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#")),
+                    _GlobalSettings.UISize.SimpleTrackSettings.FontSize);
 
-                textBox.Margin = new Thickness(driver.PosOnTrack / LocalTelemetry.TrackLength * (Width - 4) - (textBox.Height / 2), 0, 0, 0);
-                textBox.FontWeight = FontWeights.Bold;
-                textBox.FontSize = _GlobalSettings.UISize.SimpleTrackSettings.FontSize;
-                textBox.TextAlignment = TextAlignment.Center;
-                textBox.HorizontalAlignment = HorizontalAlignment.Center;
-                textBox.VerticalAlignment = VerticalAlignment.Center;
-                textBox.Padding = new Thickness(0, _GlobalSettings.UISize.SimpleTrackSettings.PaddingTop, 0, 0);
-                textBox.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#"));
-                textBox.Foreground = Brushes.Black;
-                textBox.Resources = Player.Resources;
-                textBox.BorderThickness = new Thickness(0);
-                Canvas.SetZIndex(textBox, 99 - (driver.OverallPosition ?? 99));
+                Canvas.SetZIndex(position, 99 - (driver.OverallPosition ?? 99));
 
                 if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx)
                 {
-                    textBox.Background = Brushes.DarkGreen;
-                    textBox.Foreground = Brushes.White;
-                    Canvas.SetZIndex(textBox, 99);
+                    var positionEllipse = (Ellipse)position.Children[0];
+                    var positionText = (TextBlock)position.Children[1];
+
+                    positionEllipse.Fill = Brushes.DarkGreen;
+                    positionText.Foreground = Brushes.White;
+                    Canvas.SetZIndex(position, 99);
                 }
 
 
                 List<UIElement> elementsToRemove = new List<UIElement>();
-                foreach (UIElement uiElement in TrackCanvas.Children.OfType<TextBox>())
+                foreach (UIElement uiElement in TrackCanvas.Children.OfType<Grid>())
                 {
-                    var element = (TextBox)uiElement;
-                    if (element.Uid == textBox.Uid)
+                    var element = (Grid)uiElement;
+                    if (element.Uid == position.Uid)
                     {
                         elementsToRemove.Add(uiElement);
                     }
@@ -117,6 +111,7 @@ namespace RacingOverlay.Windows
                     {
                         TrackCanvas.Children.Remove(element);
                     });
+
                     elementsToRemove = null;
                 });
                     
@@ -125,11 +120,38 @@ namespace RacingOverlay.Windows
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        TrackCanvas.Children.Add(textBox);
+                        TrackCanvas.Children.Add(position);
                     });
                         
                 }
             }
+        }
+
+        private Grid CreatePositionPixel(double posOnTrack, string id, double width, double height, string text, SolidColorBrush color, double fontSize = 0.01)
+        {
+            var position = new Grid();
+            position.Visibility = Visibility.Visible;
+            position.Uid = id;
+            position.Width = width;
+            position.Height = height;
+            position.Margin = new Thickness(posOnTrack / LocalTelemetry.TrackLength * (Width - 4) - (position.Height / 2), 0, 0, 0);
+
+            var positionEllipse = new Ellipse();
+            positionEllipse.Fill = color;
+            positionEllipse.Width = width;
+            positionEllipse.Height = height;
+
+            var positionText = new TextBlock();
+            positionText.FontSize = fontSize;
+            positionText.FontWeight = FontWeights.Bold;
+            positionText.HorizontalAlignment = HorizontalAlignment.Center;
+            positionText.VerticalAlignment = VerticalAlignment.Center;
+            positionText.Text = text;
+
+            position.Children.Add(positionEllipse);
+            position.Children.Add(positionText);
+
+            return position;
         }
     }
 }
