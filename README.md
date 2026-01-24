@@ -13,6 +13,7 @@
 1. Indianapolis (Road Course)
 1. Interlagos (Grand Prix)
 1. Le Mans (24 Heures du Mans)
+1. Long Beach Street Circuit
 1. Magny-Cours
 1. Mount Panorama
 1. Oulton Park (International)
@@ -32,7 +33,6 @@
 
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
 1. Circuit Gilles Villeneuve
-1. Long Beach Street Circuit
 1. Miami International Autodrome (Grand Prix)
 1. Autodromo Nazionale Monza (Combined)
 1. Portland International Raceway (Full Circuit)
