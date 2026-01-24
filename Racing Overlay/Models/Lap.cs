@@ -79,6 +79,49 @@ namespace RacingOverlay
             }
         }
 
+        public static Dictionary<string, List<Speed>> GetAllSpeedDataForTrack(int trackId, string trackName)
+        {
+            var speedDataDict = new Dictionary<string, List<Speed>>();
+            var trackDirectory = Directory.GetDirectories($"assets/tracks/", $"{trackId}-{trackName.ToLower()}").FirstOrDefault();
+
+            if (trackDirectory != null)
+            {
+                var speedFiles = Directory.GetFiles(trackDirectory, "*.csv", SearchOption.TopDirectoryOnly);
+
+                foreach (var speedFile in speedFiles)
+                {
+                    if (File.Exists(speedFile))
+                    {
+                        try
+                        {
+                            var speedData = new List<Speed>();
+                            using (var reader = new StreamReader(speedFile))
+                            {
+                                string line;
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    var data = line.Split(',');
+                                    speedData.Add(new Speed
+                                    {
+                                        Meter = int.Parse(data[0]),
+                                        SpeedMS = double.Parse(data[1]),
+                                        TimeInSeconds = double.Parse(data[2]),
+                                    });
+                                }
+                            }
+                            speedDataDict.Add(Path.GetFileNameWithoutExtension(speedFile),  speedData);
+                        }
+                        catch (IOException ex)
+                        {
+                            Logger.Error(ex);
+                            Trace.WriteLine(ex);
+                        }
+                    }
+                }
+            }
+            return speedDataDict;
+        }
+
         public static List<Speed> GetSpeedData(int trackId, string trackName, string carPath)
         {
             List<Speed> speedData = null;

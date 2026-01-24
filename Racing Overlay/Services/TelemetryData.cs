@@ -122,6 +122,21 @@ namespace RacingOverlay
                 _savedSpeedData = value;
             }
         }
+
+        public Dictionary<string, List<Speed>> TrackSpeedData
+        {
+            get
+            {
+                if (FeedTelemetry != null && FeedSessionData != null && TrackId > 0)
+                {
+                    var availableSpeedFiles = Lap.GetAllSpeedDataForTrack(TrackId, TrackName);
+                    return availableSpeedFiles;
+                }
+
+                return null;
+            }
+        }
+
         private int _trackId;
         public int TrackId
         {
@@ -475,6 +490,7 @@ namespace RacingOverlay
             }
 
             // Set default delta if no speed data is present
+            var trackSpeedData = TrackSpeedData?.First().Value;
             delta = distanceBetweenDrivers / averageSpeed;
 
             if (distanceBetweenDrivers >= 0)
@@ -485,6 +501,8 @@ namespace RacingOverlay
                         delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                         delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
+                    else if (trackSpeedData?.Count > 0)
+                        delta = trackSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) || s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                 }
                 else
                 {
@@ -492,6 +510,8 @@ namespace RacingOverlay
                         delta = listedCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) && s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                     else if (targetCarSpeedData != null && targetCarSpeedData.Count > 0)
                         delta = targetCarSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) && s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
+                    else if (trackSpeedData?.Count > 0)
+                        delta = trackSpeedData.Where(s => s.Meter <= Math.Floor(targetDriver.PosOnTrack) && s.Meter >= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum();
                 }
 
             }
@@ -503,6 +523,8 @@ namespace RacingOverlay
                         delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) || s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                     else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                         delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) || s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                    else if (trackSpeedData?.Count > 0)
+                        delta = trackSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) || s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                 }
                 else
                 {
@@ -510,6 +532,8 @@ namespace RacingOverlay
                         delta = targetCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                     else if (listedCarSpeedData != null && listedCarSpeedData.Count > 0)
                         delta = listedCarSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
+                    else if (trackSpeedData?.Count > 0)
+                        delta = trackSpeedData.Where(s => s.Meter >= Math.Floor(targetDriver.PosOnTrack) && s.Meter <= Math.Floor(viewedDriver.PosOnTrack)).Select(s => 1 / s.SpeedMS).Sum() * -1;
                 }
             }
 
