@@ -462,7 +462,7 @@ namespace RacingOverlay
             }
         }
 
-        public double GetRelativeDelta(Driver viewedDriver, Driver targetDriver, double trackLength)
+        public double GetRelativeDelta(Driver viewedDriver, Driver targetDriver, double trackLength, List<Speed> trackSpeedData)
         {
             var distanceBetweenDrivers = targetDriver.PosOnTrack - viewedDriver.PosOnTrack;
             var targetDriverAngle = targetDriver.PosOnTrack / trackLength * 360;
@@ -490,7 +490,7 @@ namespace RacingOverlay
             }
 
             // Set default delta if no speed data is present
-            var trackSpeedData = TrackSpeedData?.First().Value;
+            
             delta = distanceBetweenDrivers / averageSpeed;
 
             if (distanceBetweenDrivers >= 0)
