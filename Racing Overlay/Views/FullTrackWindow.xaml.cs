@@ -31,6 +31,7 @@ namespace RacingOverlay.Windows
             LocalTelemetry = telemetryData;
 
             InitializeComponent();
+            Opacity = double.Parse(settings.FullTrackSettings["Opacity"]);
             Locked = bool.Parse(settings.FullTrackSettings["Locked"] ?? "false");
             Left = double.Parse(settings.FullTrackSettings["XPos"] ?? "0");
             Top = double.Parse(settings.FullTrackSettings["YPos"] ?? "0");
@@ -118,8 +119,9 @@ namespace RacingOverlay.Windows
             return File.Exists($"assets/tracks/{LocalTelemetry.TrackId}-{LocalTelemetry.TrackName.ToLower()}/coordinates.json");
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData)
+        public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
         {
+            Opacity = double.Parse(settings.FullTrackSettings["Opacity"]);
             if (DateTime.UtcNow.Second % 10 == 0)
             {
                 Dispatcher.Invoke(() =>

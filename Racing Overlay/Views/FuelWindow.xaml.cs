@@ -85,6 +85,8 @@ namespace RacingOverlay
         {
             InitializeComponent();
             _GlobalSettings = globalSettings;
+
+            Opacity = double.Parse(settings.FuelSettings["Opacity"]);
             Locked = bool.Parse(settings.FuelSettings["Locked"]);
             Left = double.Parse(settings.FuelSettings["XPos"]);
             Top = double.Parse(settings.FuelSettings["YPos"]);
@@ -130,8 +132,9 @@ namespace RacingOverlay
 
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData)
+        public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
         {
+            Opacity = double.Parse(settings.FuelSettings["Opacity"]);
             if (DateTime.UtcNow.Second % 10 == 0)
             {
                 Dispatcher.Invoke(() =>

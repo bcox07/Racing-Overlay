@@ -18,6 +18,8 @@ namespace RacingOverlay
         {
             LocalTelemetry = telemetryData;
             InitializeComponent();
+
+            Opacity = double.Parse(settings.TireSettings["Opacity"]);
             Locked = bool.Parse(settings.TireSettings["Locked"] ?? "false");
             Left = double.Parse(settings.TireSettings["XPos"] ?? "0");
             Top = double.Parse(settings.TireSettings["YPos"] ?? "0");
@@ -32,8 +34,9 @@ namespace RacingOverlay
             }
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData)
+        public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
         {
+            Opacity = double.Parse(settings.TireSettings["Opacity"]);
             if (DateTime.UtcNow.Second % 10 == 0)
             {
                 Dispatcher.Invoke(() =>

@@ -47,7 +47,7 @@ namespace RacingOverlay
             try
             {
                 InitializeOverlay(globalSettings, settings);
-                UpdateTelemetryData(telemetryData);
+                UpdateTelemetryData(telemetryData, settings);
             }
             catch (Exception ex)
             {
@@ -67,6 +67,7 @@ namespace RacingOverlay
         private void InitializeOverlay(GlobalSettings globalSettings, WindowSettings settings)
         {
             _GlobalSettings = globalSettings;
+            Opacity = double.Parse(settings.StandingsSettings["Opacity"]);
             Locked = bool.Parse(settings.StandingsSettings["Locked"]);
             Left = double.Parse(settings.StandingsSettings["XPos"]);
             Top = double.Parse(settings.StandingsSettings["YPos"]);
@@ -85,17 +86,18 @@ namespace RacingOverlay
             });
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData)
+        public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
         {
+            Opacity = double.Parse(settings.StandingsSettings["Opacity"]);
 #if SAMPLE
-        _TelemetryData = telemetryData;
-        GetData(telemetryData);
-#else
-        _TelemetryData = telemetryData;
-        if (telemetryData.IsReady)
-        {
+            _TelemetryData = telemetryData;
             GetData(telemetryData);
-        }
+#else
+            _TelemetryData = telemetryData;
+            if (telemetryData.IsReady)
+            {
+                GetData(telemetryData);
+            }
 #endif
 
         }

@@ -181,7 +181,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="standingsLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="standingsLock_Click" Grid.ColumnSpan="2" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Margin="0,11,0,0">Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="StandingsOpacity_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="5" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="0" FontSize="16"/>
+                <Button x:Name="standingsLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="standingsLock_Click" Grid.Column="1" />
                 <Button x:Name="standingsSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="standingsSave_Click" Grid.Row="1" Grid.Column="1" />
                 <Button x:Name="standingsReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="standingsReset_Click" Grid.Row="1" />
             </Grid>
@@ -196,7 +198,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="relativeLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="relativeLock_Click" Grid.ColumnSpan="2" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Margin="0,11,0,0">Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="RelativeOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="RelativeOpacity_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="5" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="0" FontSize="16"/>
+                <Button x:Name="relativeLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="relativeLock_Click" Grid.Column="1" />
                 <Button x:Name="relativeSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="relativeSave_Click" Grid.Column="1" Grid.Row="1"/>
                 <Button x:Name="relativeReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="relativeReset_Click" Grid.Row="1" />
             </Grid>
@@ -211,7 +215,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="fuelLock_Click" Grid.ColumnSpan="2" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Margin="0,11,0,0">Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="FuelOpacity_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="5" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="0" FontSize="16" />
+                <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="fuelLock_Click" Grid.Column="1" />
                 <Button x:Name="fuelSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="fuelSave_Click" Grid.Row="1" Grid.Column="1" />
                 <Button x:Name="fuelReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="fuelReset_Click" Grid.Row="1" />
             </Grid>
@@ -226,7 +232,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="tiresLock_Click" Grid.ColumnSpan="2" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Margin="0,11,0,0">Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="TireOpacity_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="5" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="0" FontSize="16" />
+                <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="tiresLock_Click" Grid.Column="1" />
                 <Button x:Name="tiresSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="tiresSave_Click" Grid.Row="1" Grid.Column="1" />
                 <Button x:Name="tiresReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="tiresReset_Click" Grid.Row="1" />
             </Grid>
@@ -240,10 +248,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
+                <Label Foreground="#C6C6C6" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1">Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="SimpleTrackOpacity_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="5" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" FontSize="16" />
                 <Button x:Name="simpleTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="simpleTrackLock_Click" />
-                <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="simpleTrackSave_Click" Grid.Row="1" Grid.Column="1" />
-                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Margin="0,11,0,0">Width</Label>
+                <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="simpleTrackSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
+                <Label Foreground="#C6C6C6" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1">Width</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackWidth" Width="120" Maximum="2000" Minimum="600" ValueChanged="SimpleTrackWidth_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="200" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="1" FontSize="16"/>
                 <Button x:Name="simpleTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="simpleTrackReset_Click" Grid.Column="1" />
             </Grid>
@@ -258,7 +269,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="fullTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="fullTrackLock_Click" Grid.ColumnSpan="2" />
+                <Label Foreground="#C6C6C6" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Margin="0,11,0,0">Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FullTrackOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="FullTrackOpacity_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="5" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Row="0" FontSize="16" />
+                <Button x:Name="fullTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Click="fullTrackLock_Click" Grid.Column="2" />
                 <Button x:Name="fullTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Click="fullTrackSave_Click" Grid.Row="1" Grid.Column="1" />
                 <Button x:Name="fullTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="fullTrackReset_Click" Grid.Row="1" />
             </Grid>

@@ -47,30 +47,35 @@ namespace RacingOverlay
                 };
                 StandingsSettings = new Dictionary<string, string>()
                 {
+                    { "Opacity", appSettings.Settings["StandingsWindowOpacity"].Value },
                     { "Locked", appSettings.Settings["StandingsWindowLocked"].Value },
                     { "XPos", appSettings.Settings["StandingsWindowXPos"].Value },
                     { "YPos", appSettings.Settings["StandingsWindowYPos"].Value }
                 };
                 RelativeSettings = new Dictionary<string, string>()
                 {
+                    { "Opacity", appSettings.Settings["RelativeWindowOpacity"].Value },
                     { "Locked", appSettings.Settings["RelativeWindowLocked"].Value },
                     { "XPos", appSettings.Settings["RelativeWindowXPos"].Value },
                     { "YPos", appSettings.Settings["RelativeWindowYPos"].Value }
                 };
                 FuelSettings = new Dictionary<string, string>()
                 {
+                    { "Opacity", appSettings.Settings["FuelWindowOpacity"].Value },
                     { "Locked", appSettings.Settings["FuelWindowLocked"].Value },
                     { "XPos", appSettings.Settings["FuelWindowXPos"].Value },
                     { "YPos", appSettings.Settings["FuelWindowYPos"].Value }
                 };
                 TireSettings = new Dictionary<string, string>()
                 {
+                    { "Opacity", appSettings.Settings["TireWindowOpacity"].Value },
                     { "Locked", appSettings.Settings["TireWindowLocked"].Value },
                     { "XPos", appSettings.Settings["TireWindowXPos"].Value },
                     { "YPos", appSettings.Settings["TireWindowYPos"].Value }
                 };
                 SimpleTrackSettings = new Dictionary<string, string>()
                 {
+                    { "Opacity", appSettings.Settings["SimpleTrackWindowOpacity"].Value },
                     { "Locked", appSettings.Settings["SimpleTrackWindowLocked"].Value },
                     { "XPos", appSettings.Settings["SimpleTrackWindowXPos"].Value },
                     { "YPos", appSettings.Settings["SimpleTrackWindowYPos"].Value },
@@ -78,6 +83,7 @@ namespace RacingOverlay
                 };
                 FullTrackSettings = new Dictionary<string, string>()
                 {
+                    { "Opacity", appSettings.Settings["FullTrackWindowOpacity"].Value },
                     { "Locked", appSettings.Settings["FullTrackWindowLocked"].Value },
                     { "XPos", appSettings.Settings["FullTrackWindowXPos"].Value },
                     { "YPos", appSettings.Settings["FullTrackWindowYPos"].Value }

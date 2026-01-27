@@ -43,6 +43,7 @@ namespace RacingOverlay
             {
                 _GlobalSettings = globalSettings;
                 LocalTelemetry = telemetryData;
+                Opacity = double.Parse(settings.RelativeSettings["Opacity"]);
                 Locked = bool.Parse(settings.RelativeSettings["Locked"]);
                 Left = double.Parse(settings.RelativeSettings["XPos"]);
                 Top = double.Parse(settings.RelativeSettings["YPos"]);
@@ -94,8 +95,9 @@ namespace RacingOverlay
                 }
             }
         }
-        public void UpdateTelemetryData(TelemetryData telemetryData)
+        public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
         {
+            Opacity = double.Parse(settings.RelativeSettings["Opacity"]);
             LocalTelemetry = new TelemetryData(telemetryData);
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
