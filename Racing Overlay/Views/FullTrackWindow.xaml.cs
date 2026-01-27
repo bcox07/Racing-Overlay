@@ -194,42 +194,43 @@ namespace RacingOverlay.Windows
                 }); 
             }
 
+            //GetSamplePoints(_TrackJsonData);
             GetTrackJsonData();
             //var generatedCoordinates = GenerateCoordinates();
-            //GetPointsBetween(3, 11824, 12125, generatedCoordinates);
+            //GetPointsBetween(5, 1721, 1823, generatedCoordinates);
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
                 //if (driver.Name.StartsWith("Brian D"))
                 //{
-                //    Console.WriteLine((int)driver.PosOnTrack);
+                //    Trace.WriteLine((int)driver.PosOnTrack);
                 //}
 
                 if (_TrackJsonData == null)
                 {
                     return;
                 }
-
+                
                 var coordinates = new List<double> { 0, 0 };
                 var prevCoordinates = new List<double> { 0, 0 };
                 var nextCoordinates = new List<double> { 0, 0 };
                 _TrackJsonData.TryGetValue(((int)driver.PosOnTrack).ToString(), out coordinates);
-
+                
                 if (coordinates == null)
                 {
                     _TrackJsonData.TryGetValue((((int)driver.PosOnTrack) - 1).ToString(), out prevCoordinates);
                     _TrackJsonData.TryGetValue((((int)driver.PosOnTrack) + 1).ToString(), out nextCoordinates);
                 }
-
-                //GetSamplePoints(loc);
-
+                
+                
+                
                 if (prevCoordinates == null || nextCoordinates == null)
                 {
                     prevCoordinates = new List<double> { -30, -30 };
                     nextCoordinates = new List<double> { -30, -30 };
-
+                
                 }
-
+                
                 if (coordinates == null)
                 {
                     coordinates = new List<double>
@@ -238,8 +239,8 @@ namespace RacingOverlay.Windows
                         (prevCoordinates[1] + nextCoordinates[1]) / 2
                     };
                 }
-
-
+                
+                
                 Dispatcher.Invoke(() =>
                 {
                     var position = CreatePositionPixel(coordinates,
@@ -249,22 +250,22 @@ namespace RacingOverlay.Windows
                     driver.ClassPosition.ToString(),
                     (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#")),
                     _GlobalSettings.UISize.SimpleTrackSettings.FontSize + 2);
-
+                
                     Canvas.SetLeft(position, coordinates[0] * (_GlobalSettings.UISize.Percentage / 100.0));
                     Canvas.SetTop(position, coordinates[1] * (_GlobalSettings.UISize.Percentage / 100.0));
                     Canvas.SetZIndex(position, 99 - (driver.OverallPosition ?? 99));
-
+                
                     if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx)
                     {
                         var positionEllipse = (Ellipse)position.Children[0];
                         var positionText = (TextBlock)position.Children[1];
-
+                
                         positionEllipse.Fill = Brushes.DarkGreen;
                         positionText.Foreground = Brushes.White;
                         Canvas.SetZIndex(position, 99);
                     }
-
-
+                
+                
                     List<UIElement> elementsToRemove = new List<UIElement>();
                     foreach (UIElement uiElement in TrackCanvas.Children.OfType<Grid>())
                     {
@@ -274,13 +275,13 @@ namespace RacingOverlay.Windows
                             elementsToRemove.Add(uiElement);
                         }
                     }
-
+                
                     foreach (var element in elementsToRemove)
                     {
                         TrackCanvas.Children.Remove(element);
                     }
                     elementsToRemove = null;
-
+                
                     if (driver.PosOnTrack > 0)
                     {
                         TrackCanvas.Children.Add(position);
@@ -325,7 +326,7 @@ namespace RacingOverlay.Windows
             {
                 foreach (var coordinate in _TrackJsonData)
                 {
-                    if (int.Parse(coordinate.Key) % 34 == 0)
+                    if (int.Parse(coordinate.Key) % 20 == 0)
                     {
                         var pixel = CreatePositionPixel(coordinate.Value, 
                             null, 
@@ -334,7 +335,7 @@ namespace RacingOverlay.Windows
                             $"{Math.Round(double.Parse(coordinate.Key) / 1000, 1)}", Brushes.Green);
                         Canvas.SetZIndex(pixel, 99);
 
-                        if (int.Parse(coordinate.Key) % 200 == 0)
+                        if (int.Parse(coordinate.Key) % 100 == 0)
                         {
                             var text = (TextBlock)pixel.Children[1];
                             text.Foreground = Brushes.White;
@@ -352,7 +353,7 @@ namespace RacingOverlay.Windows
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
 
-            points.Add(0, new List<double> { 91.5, 216.3 });
+            points.Add(0, new List<double> { 112.03, 18 });
 
             var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;
@@ -398,9 +399,9 @@ namespace RacingOverlay.Windows
         {
             var step = (double)(b - a) / (double)(pointCount + 1);
 
-            for (int i = a; i <= b; i += (int)step)
+            for (double i = a; i <= b; i += step)
             {
-                Console.WriteLine($"{i}: Canvas.Left=\"{coordinates[i].Item1}\"\t\tCanvas.Top=\"{coordinates[i].Item2}\"");
+                Console.WriteLine($"{(int)i}: Canvas.Left=\"{coordinates[(int)i].Item1}\"\t\tCanvas.Top=\"{coordinates[(int)i].Item2}\"");
             }
             Console.WriteLine();
         }
@@ -409,7 +410,7 @@ namespace RacingOverlay.Windows
         {
             foreach (var point in coordinates.ToDictionary(c => int.Parse(c.Key), c => c.Value))
             {
-                if (point.Key % 20 == 0)
+                if (point.Key % 50 == 0)
                     Console.WriteLine($"points.Add({point.Key}, new List<double> {{{point.Value[0]},{point.Value[1]}}});");
             }
         }
