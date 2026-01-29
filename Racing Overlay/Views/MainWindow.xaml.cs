@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace RacingOverlay
 {
@@ -43,6 +44,9 @@ namespace RacingOverlay
         Configuration _configuration;
         GlobalSettings GlobalSettings = new GlobalSettings();
         private bool _Initialized = false;
+        DrawingImage UnlockedIcon;
+        DrawingImage LockedIcon;
+
         public MainWindow(Configuration config)
         {
             InitializeComponent();
@@ -57,27 +61,30 @@ namespace RacingOverlay
             GlobalSettings.DriverDisplay = new DriverDisplay(int.Parse(WindowSettings.GlobalSettings["DriverCount"]));
             GlobalSettings.SimpleTrackSettings = new SimpleTrackSettings(int.Parse(WindowSettings.GlobalSettings["UIZoom"]), int.Parse(WindowSettings.SimpleTrackSettings["Width"]));
 
+            UnlockedIcon = (DrawingImage)this.FindResource("di_unlocked_xaml");
+            LockedIcon = (DrawingImage)this.FindResource("di_locked_xaml");
+
             uiZoom.Value = GlobalSettings.UISize.SizePreset;
             driverDisplayCount.Value = GlobalSettings.DriverDisplay.DisplayCount;
             SimpleTrackWidth.Value = GlobalSettings.SimpleTrackSettings.ContainerWidth;
 
-            standingsLock.Content = bool.Parse(WindowSettings.StandingsSettings["Locked"]) ? "Unlock" : "Lock";
+            standingsLock.Content = bool.Parse(WindowSettings.StandingsSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
             StandingsOpacity.Value = double.Parse(WindowSettings.StandingsSettings["Opacity"]) * 100;
 
             RelativeOpacity.Value = double.Parse(WindowSettings.RelativeSettings["Opacity"]) * 100;
-            relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? "Unlock" : "Lock";
+            relativeLock.Content = bool.Parse(WindowSettings.RelativeSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
 
             TireOpacity.Value = double.Parse(WindowSettings.TireSettings["Opacity"]) * 100;
-            tiresLock.Content = WindowSettings.TireSettings.ContainsKey("Locked") ? bool.Parse(WindowSettings.TireSettings["Locked"]) ? "Unlock" : "Lock" : "Lock";
+            tiresLock.Content = WindowSettings.TireSettings.ContainsKey("Locked") ? bool.Parse(WindowSettings.TireSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon } : new Image { Source = UnlockedIcon };
 
             FuelOpacity.Value = double.Parse(WindowSettings.FuelSettings["Opacity"]) * 100;
-            fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? "Unlock" : "Lock";
+            fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
 
             SimpleTrackOpacity.Value = double.Parse(WindowSettings.SimpleTrackSettings["Opacity"]) * 100;
-            simpleTrackLock.Content = bool.Parse(WindowSettings.SimpleTrackSettings["Locked"]) ? "Unlock" : "Lock";
+            simpleTrackLock.Content = bool.Parse(WindowSettings.SimpleTrackSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
 
             FullTrackOpacity.Value = double.Parse(WindowSettings.FullTrackSettings["Opacity"]) * 100;
-            fullTrackLock.Content = bool.Parse(WindowSettings.FullTrackSettings["Locked"]) ? "Unlock" : "Lock";
+            fullTrackLock.Content = bool.Parse(WindowSettings.FullTrackSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
 
             ThreadPool.SetMaxThreads(10, 10);
 
@@ -419,7 +426,7 @@ namespace RacingOverlay
         {
             if (StandingsWindow != null)
             {
-                standingsLock.Content = StandingsWindow.Locked ? "Lock" : "Unlock";
+                standingsLock.Content = StandingsWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
                 StandingsWindow.Locked = !StandingsWindow.Locked;
                 WindowSettings.StandingsSettings["Locked"] = (StandingsWindow.Locked).ToString();
             }
@@ -446,8 +453,12 @@ namespace RacingOverlay
         {
             if (StandingsWindow != null)
             {
-                StandingsWindow.Left = 0;
-                StandingsWindow.Top = 0;
+                StandingsWindow?.Dispatcher.Invoke(() =>
+                {
+                    StandingsWindow.Left = 0;
+                    StandingsWindow.Top = 0;
+                });
+                    
             }
         }
 
@@ -466,7 +477,7 @@ namespace RacingOverlay
         {
             if (RelativeWindow != null)
             {
-                relativeLock.Content = RelativeWindow.Locked ? "Lock" : "Unlock";
+                relativeLock.Content = RelativeWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
                 RelativeWindow.Locked = !RelativeWindow.Locked;
                 WindowSettings.RelativeSettings["Locked"] = (RelativeWindow.Locked).ToString();
             }
@@ -493,8 +504,11 @@ namespace RacingOverlay
         {
             if (RelativeWindow != null)
             {
-                RelativeWindow.Left = 0;
-                RelativeWindow.Top = 0;
+                RelativeWindow?.Dispatcher.Invoke(() =>
+                {
+                    RelativeWindow.Left = 0;
+                    RelativeWindow.Top = 0;
+                });   
             }
         }
 
@@ -514,7 +528,7 @@ namespace RacingOverlay
         {
             if (FuelWindow != null)
             {
-                fuelLock.Content = FuelWindow.Locked ? "Lock" : "Unlock";
+                fuelLock.Content = FuelWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
                 FuelWindow.Locked = !FuelWindow.Locked;
                 WindowSettings.FuelSettings["Locked"] = (FuelWindow.Locked).ToString();
             }
@@ -541,8 +555,11 @@ namespace RacingOverlay
         {
             if (FuelWindow != null)
             {
-                FuelWindow.Left = 0;
-                FuelWindow.Top = 0;
+                FuelWindow?.Dispatcher.Invoke(() =>
+                {
+                    FuelWindow.Left = 0;
+                    FuelWindow.Top = 0;
+                });
             }
         }
 
@@ -559,7 +576,7 @@ namespace RacingOverlay
         {
             if (TireWindow != null)
             {
-                tiresLock.Content = TireWindow.Locked ? "Lock" : "Unlock";
+                tiresLock.Content = TireWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
                 TireWindow.Locked = !TireWindow.Locked;
                 WindowSettings.TireSettings["Locked"] = (TireWindow.Locked).ToString();
             }
@@ -588,8 +605,11 @@ namespace RacingOverlay
         {
             if (TireWindow != null)
             {
-                TireWindow.Left = 0;
-                TireWindow.Top = 0;
+                TireWindow?.Dispatcher.Invoke(() =>
+                {
+                    TireWindow.Left = 0;
+                    TireWindow.Top = 0;
+                }); 
             }
         }
 
@@ -605,7 +625,7 @@ namespace RacingOverlay
         {
             if (SimpleTrackWindow != null)
             {
-                simpleTrackLock.Content = SimpleTrackWindow.Locked ? "Lock" : "Unlock";
+                simpleTrackLock.Content = SimpleTrackWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
                 SimpleTrackWindow.Locked = !SimpleTrackWindow.Locked;
                 WindowSettings.SimpleTrackSettings["Locked"] = (SimpleTrackWindow.Locked).ToString();
             }
@@ -633,8 +653,11 @@ namespace RacingOverlay
         {
             if (SimpleTrackWindow != null)
             {
-                SimpleTrackWindow.Left = 0;
-                SimpleTrackWindow.Top = 0;
+                SimpleTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    SimpleTrackWindow.Left = 0;
+                    SimpleTrackWindow.Top = 0;
+                });   
             }
         }
 
@@ -650,7 +673,7 @@ namespace RacingOverlay
         {
             if (FullTrackWindow != null)
             {
-                fullTrackLock.Content = FullTrackWindow.Locked ? "Lock" : "Unlock";
+                fullTrackLock.Content = FullTrackWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
                 FullTrackWindow.Locked = !FullTrackWindow.Locked;
                 WindowSettings.FullTrackSettings["Locked"] = (FullTrackWindow.Locked).ToString();
             }
@@ -677,8 +700,11 @@ namespace RacingOverlay
         {
             if (FullTrackWindow != null)
             {
-                FullTrackWindow.Left = 0;
-                FullTrackWindow.Top = 0;
+                FullTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    FullTrackWindow.Left = 0;
+                    FullTrackWindow.Top = 0;
+                });   
             }
         }
 

@@ -5,14 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="SimpleTrackWindow" Height="30.1" Width="1100"  Background="Transparent"  WindowStyle="None"
-        Opacity="0.9" AllowsTransparency="True">
+        AllowsTransparency="True" Cursor="Hand">
     <StackPanel>
         <Border Name="MainBorder" CornerRadius="15" Background="#280f1d" BorderThickness="0.8" Margin="1.6, 2, 0, 0" Height="26">
             <Border.Clip>
                 <RectangleGeometry x:Name="RelativeGeometry" RadiusX="15" RadiusY="15" Rect="0,0,1096,26"></RectangleGeometry>
             </Border.Clip>
-
-            <Canvas Name="TrackCanvas" Height="28" Opacity="0.9" Cursor="Arrow" ClipToBounds="True" >
+            <Canvas Name="TrackCanvas" Height="28" ClipToBounds="True" >
                 <TextBox x:Name="Player" Visibility="Hidden" TextWrapping="Wrap" Text="1" Width="25" Height="25" HorizontalAlignment="Left" TextAlignment="Center" >
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -23,7 +22,7 @@
             </Canvas>
         </Border>
         <Border Name="CanvasBorder" CornerRadius="15" Background="#280f1d" Margin="0, -28, 0, 0" Panel.ZIndex="-1">
-            <Canvas Name="BackgroundCanvas" Height="30" Opacity="0.9" Cursor="Arrow" ClipToBounds="True" Margin="0,0,0,0">
+            <Canvas Name="BackgroundCanvas" Height="30" ClipToBounds="True" Margin="0,0,0,0">
             </Canvas>
         </Border>
 
