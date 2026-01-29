@@ -252,36 +252,44 @@ namespace RacingOverlay
 
         public void RetrieveData()
         {
-            LapList = new List<Lap>();
-            StopWatch = Stopwatch.StartNew();
-            var iracing = new iRacingConnection();
-            while (true)
+            try
             {
-                foreach (var data in iRacing.GetDataFeed().WithLastSample())
+                LapList = new List<Lap>();
+                StopWatch = Stopwatch.StartNew();
+                var iracing = new iRacingConnection();
+                while (true)
                 {
-                    if (data != null)
+                    foreach (var data in iRacing.GetDataFeed().WithLastSample())
                     {
-                        IsConnected = data.IsConnected;
-                        if (IsConnected)
+                        if (data != null)
                         {
-                            LastValidConnection = DateTime.UtcNow;
-                            CollectData(data);
-                            CollectPositions();
-                            RecordSpeedData();
-                        }
-                        else
-                        {
-                            if (LastValidConnection < DateTime.UtcNow.AddSeconds(-30))
+                            IsConnected = data.IsConnected;
+                            if (IsConnected)
                             {
-                                ClearData();
+                                LastValidConnection = DateTime.UtcNow;
+                                CollectData(data);
+                                CollectPositions();
+                                RecordSpeedData();
                             }
+                            else
+                            {
+                                if (LastValidConnection < DateTime.UtcNow.AddSeconds(-30))
+                                {
+                                    ClearData();
+                                }
 
-                            Logger.Info("No connection to IRacing. Retrying in 5 seconds...");
-                            Thread.Sleep(5000);
+                                Logger.Info("No connection to IRacing. Retrying in 5 seconds...");
+                                Thread.Sleep(5000);
+                            }
                         }
                     }
                 }
             }
+            catch (Exception e) 
+            {
+                Logger.Error(e, "Error in TelemetryData");
+            }
+            
         }
 
         private void ClearData()
@@ -489,8 +497,7 @@ namespace RacingOverlay
                 targetCarSpeedData = SavedSpeedData.Where(s => s.Key == targetDriver.ClassId).First().Value.FirstOrDefault(s => s.Value != null).Value;
             }
 
-            // Set default delta if no speed data is present
-            
+            // Set default delta if no speed data is present           
             delta = distanceBetweenDrivers / averageSpeed;
 
             if (distanceBetweenDrivers >= 0)

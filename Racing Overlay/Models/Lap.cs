@@ -221,7 +221,7 @@ namespace RacingOverlay
                 }
 
 
-                Logger.Info($"New Fastest Lap Recorded for {CarPath} at {TrackName} : {SpeedData.Last().TimeInSeconds}");
+                Logger.Info($"New Fastest Lap Recorded for {CarPath} at {TrackId}-{TrackName} : {SpeedData.Last().TimeInSeconds}");
             }
         }
 
