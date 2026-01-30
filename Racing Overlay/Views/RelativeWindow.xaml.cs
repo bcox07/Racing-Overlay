@@ -120,7 +120,11 @@ namespace RacingOverlay
             var viewedCar = allPositions.Where(p => p.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx).FirstOrDefault() ?? allPositions.FirstOrDefault() ?? new Driver();
 
             var surroundingCars = new List<Driver>();
-            var trackSpeedData = LocalTelemetry.TrackSpeedData?.First().Value;
+            List<Speed> trackSpeedData = null;
+            
+            if (LocalTelemetry.TrackSpeedData.Count > 0)
+                trackSpeedData = LocalTelemetry.TrackSpeedData?.First().Value;
+
             foreach (var localPosition in allPositions)
             {
                 if (localPosition.PosOnTrack > 0 && viewedCar.PosOnTrack > 0)

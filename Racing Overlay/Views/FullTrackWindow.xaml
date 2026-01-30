@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="LiveTrackWindow" Height="300" Width="400" Background="Transparent"  WindowStyle="None"
-        Opacity="0.9" AllowsTransparency="True" >
+        Title="LiveTrackWindow" Height="300" Width="400" Background="Transparent"  WindowStyle="None" AllowsTransparency="True" Cursor="Hand" >
     <Window.Resources>
         <Style x:Key="PixelGrid" TargetType="{x:Type Grid}">
             <Setter Property="Width" Value="30" />
@@ -28,7 +27,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Canvas Name="TrackCanvas" Opacity="0.9" Cursor="Arrow" ClipToBounds="True" Margin="0,0,0,0">
+    <Canvas Name="TrackCanvas" Opacity="0.9" ClipToBounds="True" Margin="0,0,0,0" >
         <TextBox x:Name="Player" Visibility="Hidden" TextWrapping="Wrap" Text="1" Width="30" Height="30" HorizontalAlignment="Left" TextAlignment="Center" >
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
@@ -36,15 +35,19 @@
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="37.5" Canvas.Top="74.5" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Red"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="175.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="OrangeRed"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="173.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Orange"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="171.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Yellow"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="169.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="GreenYellow"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="167.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Green"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="165.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Blue"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="163.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Indigo"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
-        <Grid Style="{StaticResource PixelGrid}" Canvas.Left="161.86" Canvas.Top="212.57" Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Violet"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="79.25 "	Canvas.Top="87.11"   Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Red"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="88.09 "	Canvas.Top="85.35"   Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="OrangeRed"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="96.95 "	Canvas.Top="81.65"   Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Orange"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="105.81"	Canvas.Top="77.94"   Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Yellow"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="114.88"	Canvas.Top="74.73"    Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="GreenYellow"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>        
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="123.74"	Canvas.Top="74.12"    Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Green"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="132.6 "	Canvas.Top="75.72"     Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Blue"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="141.46"	Canvas.Top="79.81"     Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Indigo"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="150.53"	Canvas.Top="84.7 "    Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Violet"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="111.99"	Canvas.Top="156.45"     Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="White"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        <Grid Style="{StaticResource PixelGrid}"    Canvas.Left="97.83 "	Canvas.Top="151.83"     Panel.ZIndex="100"><Ellipse  Style="{StaticResource Pixel}" Fill="Gray"></Ellipse><TextBlock Style="{StaticResource PixelText}" Text="99" /></Grid>
+        
+
         
         <Viewbox x:Name="TrackMapViewbox" Stretch="Uniform" Width="360" Height="270" Margin="20,15,0,0">
             <Image x:Name="TrackMap" Width="Auto" Height="Auto">
