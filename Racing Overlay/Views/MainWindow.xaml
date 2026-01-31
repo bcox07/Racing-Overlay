@@ -40,8 +40,19 @@
                 </GeometryDrawing>
             </DrawingGroup>
         </DrawingGroup>
+        <DrawingGroup x:Key="reset_xaml">
+            <DrawingGroup.ClipGeometry>
+                <RectangleGeometry Rect="0.0,0.0,506.0,504.0"/>
+            </DrawingGroup.ClipGeometry>
+            <GeometryDrawing Brush="#C6C6C6">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="M 226.153 492.539 C 169.751 485.529 118.809 460.284 80.3592 420.288 C 42.2598 380.656 19.5915 331.25 14.0363 275.735 c -4.96851 -49.6515 7.94202 -104.483 34.7643 -147.644 c 7.02116 -11.2982 8.74267 -13.6777 18.8103 -26 C 98.7821 63.9393 140.206 36.7578 187.9 23.1599 C 238.261 8.80168 292.33 11.6291 342 31.218 c 11.5516 4.55578 33.2248 15.7838 42.4448 21.989 c 2.71966 1.83036 5.06566 3.2071 5.21333 3.05943 c 0.14767 -0.14767 -0.39 -2.45652 -1.19483 -5.13077 C 387.659 48.4614 387 43.2833 387 39.6287 c 0 -27.2715 35.8655 -36.5729 50.2713 -13.0374 c 0.84162 1.375 7.96547 21.85 15.8308 45.5 c 16.0854 48.3667 16.3826 49.9012 11.5716 59.7345 c -1.48801 3.04137 -4.41585 6.83081 -6.6893 8.65781 c -7.72222 6.20574 -7.79778 6.21322 -59.5696 5.89556 c -46.2491 -0.28377 -46.9736 -0.31929 -51.0573 -2.50336 c -5.52276 -2.95366 -10.9136 -9.43195 -12.9496 -15.5619 c -3.87973 -11.6808 1.77943 -25.2063 12.9257 -30.8927 l 4.02291 -2.05234 l -2.42823 -1.88847 C 345.089 90.4942 325.328 81.0239 316 77.6998 C 269.716 61.2051 217.518 63.8004 173 84.8097 C 122.344 108.716 84.4069 155.546 71.5299 210.066 c -3.63891 15.4068 -4.77348 25.5856 -4.7958 43.0256 c -0.0411 32.0785 5.19411 54.1971 19.8816 84 c 18.1428 36.8143 46.0701 64.7415 82.8843 82.8843 c 29.1036 14.3429 50.9531 19.5907 82 19.6951 c 33.0569 0.11108 56.6509 -5.40466 86 -20.1048 c 19.199 -9.61627 30.3777 -17.8038 47.0345 -34.4495 c 15.3634 -15.353 23.6582 -26.3368 32.6651 -43.2538 c 14.0287 -26.3494 20.2784 -49.4669 22.3767 -82.7712 c 0.38117 -6.05 1.30183 -12.7281 2.04591 -14.8403 c 3.61735 -10.2684 13.0573 -16.6597 24.6063 -16.6597 c 8.17664 0 12.8995 1.77342 18.1063 6.79883 c 7.44749 7.18809 8.18279 9.67857 8.03102 27.2012 c -0.39827 45.9814 -17.1615 95.0423 -45.7853 134 c -32.7076 44.5158 -80.0939 76.7077 -133.239 90.5159 c -20.5879 5.34921 -31.3629 6.6935 -56.3417 7.02923 c -12.925 0.17372 -26.8063 -0.0951 -30.8473 -0.59733 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
         <DrawingImage Drawing="{StaticResource locked_xaml}" x:Key="di_locked_xaml"/>
         <DrawingImage Drawing="{StaticResource unlocked_xaml}" x:Key="di_unlocked_xaml"/>
+        <DrawingImage Drawing="{StaticResource reset_xaml}" x:Key="di_reset_xaml"/>
         <Style x:Key="TabItemStyle" TargetType="TabItem">
             <Setter Property="Background" Value="#8f2865"></Setter>
             <Setter Property="Foreground" Value="#C6C6C6"></Setter>
@@ -224,7 +235,11 @@
                         <Image Source="{StaticResource di_locked_xaml}"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="standingsReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="standingsReset_Click" />
+                <Button x:Name="standingsReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="standingsReset_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource di_reset_xaml}"/>
+                    </StackPanel>
+                </Button>
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="StandingsOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
                 <Button x:Name="standingsSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="standingsSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
@@ -241,7 +256,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="relativeReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="relativeReset_Click" />
+                <Button x:Name="relativeReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="relativeReset_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource di_reset_xaml}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="relativeLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="relativeLock_Click" Grid.Column="1" />
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.ColumnSpan="2" Grid.Row="1" >Opacity</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="RelativeOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="RelativeOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
@@ -260,7 +279,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>             
-                <Button x:Name="fuelReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="fuelReset_Click" Grid.Row="0" />
+                <Button x:Name="fuelReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="fuelReset_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource di_reset_xaml}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="fuelLock_Click" Grid.Column="1" />
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="FuelOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
@@ -278,7 +301,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button x:Name="tiresReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="tiresReset_Click" Grid.Row="0"  />
+                <Button x:Name="tiresReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="tiresReset_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource di_reset_xaml}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="tiresLock_Click" Grid.Column="1" />
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="TireOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
@@ -303,7 +330,11 @@
                         <Image Source="{StaticResource di_unlocked_xaml}"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="simpleTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="simpleTrackReset_Click" />
+                <Button x:Name="simpleTrackReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="simpleTrackReset_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource di_reset_xaml}"/>
+                    </StackPanel>
+                </Button>
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="1" Grid.Column="1">Opacity</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackOpacity" Width="160" Minimum="0" Maximum="100" ValueChanged="SimpleTrackOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.Column="1" />
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="1">Width</Label>
@@ -325,7 +356,11 @@
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
                 <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FullTrackOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="FullTrackOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
                 <Button x:Name="fullTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="fullTrackLock_Click" Grid.Column="2" />
-                <Button x:Name="fullTrackReset" Content="Reset" Style="{DynamicResource ButtonStyle}" Click="fullTrackReset_Click" Grid.Row="0" />
+                <Button x:Name="fullTrackReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="fullTrackReset_Click" >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource di_reset_xaml}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="fullTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="fullTrackSave_Click" Grid.Row="3" Grid.ColumnSpan="2" />
             </Grid>
         </TabItem>
