@@ -11,10 +11,9 @@
         Height="257" 
         Width="408" 
         HorizontalAlignment="Center" 
-        Background="#2a2e8e" 
+        Background="Transparent"
         WindowStyle="None"
-        WindowStartupLocation="CenterScreen"
-        Opacity="0.85" AllowsTransparency="True">
+        WindowStartupLocation="CenterScreen" AllowsTransparency="True" >
     <Window.Resources>
         <DrawingGroup x:Key="locked_xaml">
             <DrawingGroup.ClipGeometry>
@@ -54,9 +53,9 @@
         <DrawingImage Drawing="{StaticResource unlocked_xaml}" x:Key="di_unlocked_xaml"/>
         <DrawingImage Drawing="{StaticResource reset_xaml}" x:Key="di_reset_xaml"/>
         <Style x:Key="TabItemStyle" TargetType="TabItem">
-            <Setter Property="Background" Value="#8f2865"></Setter>
+            <Setter Property="Background" Value="#641C47"></Setter>
             <Setter Property="Foreground" Value="#C6C6C6"></Setter>
-            <Setter Property="BorderBrush" Value="#141126"></Setter>
+            <Setter Property="BorderBrush" Value="#141106"></Setter>
             <Setter Property="BorderThickness" Value="1"></Setter>
             <Setter Property="FontWeight" Value="Black"></Setter>
             <Setter Property="MinWidth" Value="80"></Setter>
@@ -69,7 +68,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="{TemplateBinding Background}" 
                                 Padding="{TemplateBinding Padding}"
-                                CornerRadius="5 5 0 0">
+                                CornerRadius="10 10 0 0">
                                 <ContentPresenter x:Name="Content" 
                                               ContentSource="Header" 
                                               HorizontalAlignment="Center" 
@@ -79,7 +78,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="False">
                                 <Setter Property="Foreground" Value="#C6C6C6"/>
-                                <Setter TargetName="Bd" Property="Background" Value="#8f2865"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#641C47"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Foreground" Value="#C6C6C6"/>
@@ -104,7 +103,7 @@
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
             <Setter Property="BorderBrush" Value="#141126"></Setter>
             <Setter Property="BorderThickness" Value="2"></Setter>
-            <Setter Property="Background" Value="#8f2865"></Setter>
+            <Setter Property="Background" Value="#641C47"></Setter>
             <Setter Property="Foreground" Value="#C6C6C6"></Setter>
             <Setter Property="Width" Value="115"></Setter>
             <Setter Property="Height" Value="50"></Setter>
@@ -130,7 +129,6 @@
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="ButtonBorder" Property="Background" Value="#471b33"/>
                             </Trigger>
-                            <!-- Add other triggers for IsPressed, IsEnabled, etc. if needed -->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -144,7 +142,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RepeatButton">
-                        <Border  BorderThickness="1" BorderBrush="#141126" Background="#6a224b" Height="5"/>
+                        <Border  BorderThickness="1" BorderBrush="#141126" Background="#641C47" Height="5"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -218,7 +216,8 @@
             <Setter Property="Padding" Value="0" />
         </Style>
     </Window.Resources>
-    <TabControl x:Name="tabControl" Background="Transparent" BorderBrush="#8f2865" BorderThickness="3"  FontSize="20" FontWeight="Bold">
+    <Border CornerRadius="10" BorderThickness="2" BorderBrush="#641C47" Background="#111239" >   
+    <TabControl x:Name="tabControl" Background="Transparent" BorderBrush="#641C47" BorderThickness="0"  FontSize="20" FontWeight="Bold">
         <TabItem Header="Standings" Style="{DynamicResource TabItemStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -383,4 +382,5 @@
             </Grid>
         </TabItem>
     </TabControl>
+    </Border>
 </Window>
