@@ -62,6 +62,7 @@ namespace RacingOverlay
                 FuelSettings = new Dictionary<string, string>()
                 {
                     { "Opacity", appSettings.Settings["FuelWindowOpacity"].Value },
+                    { "Measurement", appSettings.Settings["FuelWindowMeasurement"].Value },
                     { "Locked", appSettings.Settings["FuelWindowLocked"].Value },
                     { "XPos", appSettings.Settings["FuelWindowXPos"].Value },
                     { "YPos", appSettings.Settings["FuelWindowYPos"].Value }

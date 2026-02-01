@@ -166,7 +166,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
-                        <Ellipse Height="18" Width="18" Fill="#471b33" Stroke="#C6C6C6" StrokeThickness="1.5" ></Ellipse>
+                        <StackPanel>
+                            <Ellipse Height="18" Width="18" Fill="#471b33" Stroke="#C6C6C6" StrokeThickness="1.5" ></Ellipse>
+                        </StackPanel>               
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -284,8 +286,12 @@
                     </StackPanel>
                 </Button>
                 <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="fuelLock_Click" Grid.Column="1" />
-                <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
-                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="FuelOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
+                <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" >Opacity</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelOpacity" Width="160" Minimum="0" Maximum="100" ValueChanged="FuelOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" />
+                <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="1" >Measurement</Label>
+                <Label Style="{StaticResource SliderLabel}" HorizontalAlignment="Left" FontSize="10" Margin="12,42,0,0" Grid.Row="1" Grid.Column="1" >Metric</Label>
+                <Label Style="{StaticResource SliderLabel}" HorizontalAlignment="Right" FontSize="10" Margin="0,42,9,0" Grid.Row="1" Grid.Column="1" >Imperial</Label>
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelMeasurement" Width="160" Minimum="0" Maximum="1" ValueChanged="FuelMeasurement_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.Column="1" />
                 <Button x:Name="fuelSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="fuelSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
             </Grid>
         </TabItem>
@@ -307,10 +313,8 @@
                 </Button>
                 <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="tiresLock_Click" Grid.Column="1" />
                 <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
-                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="TireOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
-                
+                <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="TireOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />      
                 <Button x:Name="tiresSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200"  Click="tiresSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
-                
             </Grid>
         </TabItem>
         <TabItem Header="Simple Track" Style="{DynamicResource TabItemStyle}">

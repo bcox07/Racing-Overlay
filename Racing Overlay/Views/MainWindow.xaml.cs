@@ -529,6 +529,14 @@ namespace RacingOverlay
             }
         }
 
+        private void FuelMeasurement_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (FuelWindow != null)
+            {
+                WindowSettings.FuelSettings["Measurement"] = FuelMeasurement.Value.ToString();
+            }
+        }
+
         private void fuelLock_Click(object sender, RoutedEventArgs e)
         {
             if (FuelWindow != null)
@@ -751,5 +759,7 @@ namespace RacingOverlay
         }
 
         #endregion
+
+        
     }
 }

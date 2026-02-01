@@ -1,4 +1,5 @@
 ﻿using iRacingSDK;
+using NLog;
 using RacingOverlay.Models;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,20 @@ namespace RacingOverlay
     {
         public TelemetryData _TelemetryData;
         private GlobalSettings _GlobalSettings;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         FuelUse CurrentLapFuelUse
         {
             get
             {
-                return new FuelUse(_TelemetryData.FeedTelemetry.Lap, LastLapFuelLevel - _TelemetryData.FeedTelemetry.FuelLevel, _TelemetryData.FeedTelemetry.FuelLevel, _TelemetryData.FeedTelemetry.OnPitRoad);
+                var fuelUse = new FuelUse(_TelemetryData.FeedTelemetry.Lap, LastLapFuelLevel - _TelemetryData.FeedTelemetry.FuelLevel, _TelemetryData.FeedTelemetry.FuelLevel, _TelemetryData.FeedTelemetry.OnPitRoad);
+
+                if (Measurement == 1)
+                {
+                    fuelUse.FuelUsed = fuelUse.FuelUsed * 0.264172;
+                    fuelUse.FuelInTank = fuelUse.FuelInTank * 0.264172;
+                }
+
+                return fuelUse;
             }
         }
         List<FuelUse> FuelUseList = new List<FuelUse>();
@@ -52,8 +62,8 @@ namespace RacingOverlay
                 if (FuelUseList.Count >= 5)
                 {
                     var avg = FuelUseList.Select(f => f.FuelUsed).Average();
-                    var stdDev = Math.Sqrt(FuelUseList.Select(f => Math.Pow(f.FuelUsed - avg, 2)).Sum() / FuelUseList.Count());
-                    var validLaps = FuelUseList.Where(f => Math.Abs(avg - f.FuelUsed) < stdDev).ToList();
+                    var stdDev = Math.Sqrt(FuelUseList.Select(f => Math.Pow(f.FuelUsed - AvgFuelUsage, 2)).Sum() / FuelUseList.Count());
+                    var validLaps = FuelUseList.Where(f => Math.Abs(AvgFuelUsage - f.FuelUsed) < stdDev).ToList();
                     if (validLaps.Count >= 5)
                     {
                         return validLaps.OrderByDescending(l => l.LapNumber).Take(5).Select(l => l.FuelUsed).Average();
@@ -80,6 +90,9 @@ namespace RacingOverlay
         private double LapsRemaining => _TelemetryData.FeedTelemetry.FuelLevel / AvgFuelUsage;
         private double LapsToEnd => _TelemetryData.FeedTelemetry.SessionTimeRemain / (_TelemetryData.CurrentSession.ResultsFastestLap[0].FastestTime * 1.01);
 
+        private int Measurement = 0;
+        private string MeasurementSymbol => Measurement == 0 ? "L" : "gal";
+
         public bool Locked = false;
         public FuelWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
@@ -87,6 +100,7 @@ namespace RacingOverlay
             _GlobalSettings = globalSettings;
 
             Opacity = double.Parse(settings.FuelSettings["Opacity"]);
+            Measurement = int.Parse(settings.FuelSettings["Measurement"]);
             Locked = bool.Parse(settings.FuelSettings["Locked"]);
             Left = double.Parse(settings.FuelSettings["XPos"]);
             Top = double.Parse(settings.FuelSettings["YPos"]);
@@ -188,7 +202,11 @@ namespace RacingOverlay
                 && _TelemetryData.TrackLength - (_TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] * _TelemetryData.TrackLength) <= 20)
             {
                 if (CurrentLapFuelUse.FuelUsed > 0)
+                {
                     FuelUseList.Add(CurrentLapFuelUse);
+                    Logger.Info($"Fuel Use Added -- Lap: {CurrentLapFuelUse.LapNumber} - Fuel Used: {CurrentLapFuelUse.FuelUsed} - Fuel In Tank: {CurrentLapFuelUse.FuelInTank} - In Pit {CurrentLapFuelUse.InPit}");
+                    Logger.Info($"Fuel Use List Size: {FuelUseList.Count}");
+                }
 
                 LastLapFuelLevel = _TelemetryData.FeedTelemetry.FuelLevel;
             }
@@ -211,10 +229,10 @@ namespace RacingOverlay
 
                 fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : _TelemetryData.FeedTelemetry.FuelLevel.ToString("N2");
                 lapsRemainingCell.Text = LapsRemaining <= 0 ? "-" : LapsRemaining.ToString("N2");
-                fuelToAddCell.Text = FuelToAdd < 0 ? "-" : $"{FuelToAdd.ToString("N2")} - {(FuelToAdd + AvgFuelUsage).ToString("N2")}";
-                avgFuelUsageCell.Text = AvgFuelUsage < 0 ? "-" : AvgFuelUsage.ToString("N2");
-                last5FuelUsageCell.Text = Last5FuelUsage < 0 ? "-" : Last5FuelUsage.ToString("N2");
-                lastFuelUsageCell.Text = LastFuelUsage < 0 ? "-" : LastFuelUsage.ToString("N2");
+                fuelToAddCell.Text = FuelToAdd < 0 ? "-" : $"{FuelToAdd.ToString("N2")} - {(FuelToAdd + AvgFuelUsage).ToString("N2")} {MeasurementSymbol}";
+                avgFuelUsageCell.Text = AvgFuelUsage < 0 ? "-" : $"{AvgFuelUsage.ToString("N2")} {MeasurementSymbol}";
+                last5FuelUsageCell.Text = Last5FuelUsage < 0 ? "-" : $"{Last5FuelUsage.ToString("N2")} {MeasurementSymbol}";
+                lastFuelUsageCell.Text = LastFuelUsage < 0 ? "-" : $"{LastFuelUsage.ToString("N2")} {MeasurementSymbol}";
             });
         }
     }
