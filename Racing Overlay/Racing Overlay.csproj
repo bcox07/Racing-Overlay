@@ -745,10 +745,10 @@
     <None Include="assets\tracks\523-spa\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="assets\tracks\539-miami gp\coordinates.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="assets\tracks\539-miami gp\ligierjsp320.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None> 
+    <None Include="assets\tracks\539-miami gp\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="NLog.config">
