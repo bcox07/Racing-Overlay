@@ -5,7 +5,6 @@
              Startup="App_Startup"
              Exit="App_Exit">
     <Application.Resources>
-        <system:Double x:Key="RowHeight1">14</system:Double>
         <system:Double x:Key="TitleFontSize">14</system:Double>
         <system:Double x:Key="DataFontSize">14</system:Double>
         <ResourceDictionary x:Key="18-road america" Source="pack://application:,,,/assets/tracks/18-road america/map.xaml"></ResourceDictionary>

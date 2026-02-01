@@ -139,11 +139,11 @@ namespace RacingOverlay
             appResources["TitleFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["TitleFontSize"];
             appResources["DataFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["DataFontSize"];
 
+            var rowCount = fuelGrid.RowDefinitions.Count;
             foreach (var rowDefinition in fuelGrid.RowDefinitions)
             {
-                rowDefinition.Height = new GridLength((Height - (Height * 0.025)) / 6.0);
+                rowDefinition.Height = new GridLength((Height * 0.975) / (double)rowCount);
             }
-
         }
 
         public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
