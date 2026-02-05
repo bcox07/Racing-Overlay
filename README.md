@@ -5,6 +5,7 @@
 ### Completed 
 
 1. Algarve International Circuit (Grand Prix)
+1. Autodromo Nazionale Monza (Combined)
 1. Brands Hatch (Grand Prix)
 1. Charlotte (Roval 2025)
 1. CTMP/Mosport
@@ -35,7 +36,6 @@
 
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
 1. Circuit Gilles Villeneuve
-1. Autodromo Nazionale Monza (Combined)
 1. Portland International Raceway (Full Circuit)
 1. Circuit de Barcelona Catalunya (Historic)
 1. Adelaide Street Circuit
