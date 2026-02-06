@@ -544,7 +544,7 @@ namespace RacingOverlay
                 }
             }
 
-            return delta;
+            return delta * -1;
         }
 
         private double GetFastestLapDelta(Driver listedDriver, Driver targetDriver)
