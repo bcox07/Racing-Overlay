@@ -133,9 +133,9 @@ namespace RacingOverlay
                     surroundingCars.Add(localPosition);
                 }
             }
-            var closestCarsAhead = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
-            var closestCarsBehind = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount).ToList();
-            surroundingCars = closestCarsAhead.Concat(closestCarsBehind).OrderByDescending(s => s.Delta).ToList();
+            var closestCarsAhead = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount).ToList();
+            var closestCarsBehind = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
+            surroundingCars = closestCarsAhead.Concat(closestCarsBehind).OrderBy(s => s.Delta).ToList();
 
             var rowIndex = 0;
             CellIndex = 0;
