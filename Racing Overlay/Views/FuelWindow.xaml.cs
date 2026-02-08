@@ -191,6 +191,8 @@ namespace RacingOverlay
             if (_TelemetryData.CurrentSession.SessionNum != ((int?)_TelemetryData._DataSample.LastSample?.Telemetry?.Session?.SessionNum ?? _TelemetryData.CurrentSession.SessionNum)
                 || (_TelemetryData.FeedSessionData.WeekendInfo.SessionID != (_TelemetryData._DataSample.LastSample?.SessionData.WeekendInfo.SessionID ?? _TelemetryData.FeedSessionData.WeekendInfo.SessionID)))
             {
+                Logger.Info($"Resetting Fuel Use List - Current Session Num: {_TelemetryData.CurrentSession.SessionNum} - Last Sample Session Num: {_TelemetryData?._DataSample?.LastSample?.Telemetry?.Session?.SessionNum}");
+                Logger.Info($"Current Weekend Session Id: {_TelemetryData?.FeedSessionData?.WeekendInfo?.SessionID} - Last Sample Weekend Session Id: {_TelemetryData?._DataSample?.LastSample?.SessionData?.WeekendInfo?.SessionID}");
                 FuelUseList = new List<FuelUse>();
             }
 #endif
@@ -227,7 +229,7 @@ namespace RacingOverlay
                     fuelRemainingCell.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#C6C6C6");
                 }
 
-                fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : _TelemetryData.FeedTelemetry.FuelLevel.ToString("N2");
+                fuelRemainingCell.Text = _TelemetryData.FeedTelemetry.FuelLevel <= 0 ? "-" : $"{_TelemetryData.FeedTelemetry.FuelLevel.ToString("N2")} {MeasurementSymbol}";
                 lapsRemainingCell.Text = LapsRemaining <= 0 ? "-" : LapsRemaining.ToString("N2");
                 fuelToAddCell.Text = FuelToAdd < 0 ? "-" : $"{FuelToAdd.ToString("N2")} - {(FuelToAdd + AvgFuelUsage).ToString("N2")} {MeasurementSymbol}";
                 avgFuelUsageCell.Text = AvgFuelUsage < 0 ? "-" : $"{AvgFuelUsage.ToString("N2")} {MeasurementSymbol}";

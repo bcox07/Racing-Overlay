@@ -1,4 +1,5 @@
 ﻿using iRacingSDK;
+using NLog;
 using RacingOverlay.Helpers;
 using RacingOverlay.Models;
 using System;
@@ -20,6 +21,7 @@ namespace RacingOverlay
     /// </summary>
     public partial class StandingsWindow : Window
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public Thread thread;
         private int CellIndex = 0;
         public TelemetryData _TelemetryData;
@@ -237,11 +239,20 @@ namespace RacingOverlay
 
         private int UpdateRow(KeyValuePair<int, List<Driver>> driverClassGroup, Driver viewedCar, int rowIndex)
         {
+
             var viewedClassGroup = driverClassGroup.Key == viewedCar.ClassId;
-            var surroundingPositions = driverClassGroup.Value.Where(
-                p => p.ClassPosition != null
-                && (Math.Abs(p.ClassPosition.Value - viewedCar.ClassPosition.Value) < _GlobalSettings.DriverDisplay.DisplayCount + 1
-                && viewedClassGroup) || p.ClassPosition < _GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
+            var surroundingPositions = new List<Driver>();
+            try
+            {
+                surroundingPositions = driverClassGroup.Value.Where(
+                    p => p.ClassPosition != null
+                    && (Math.Abs(p.ClassPosition.Value - viewedCar.ClassPosition.Value) < _GlobalSettings.DriverDisplay.DisplayCount + 1
+                    && viewedClassGroup) || p.ClassPosition < _GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
 
             if (viewedCar.ClassPosition + _GlobalSettings.DriverDisplay.DisplayCount < 10 && viewedClassGroup)
             {
