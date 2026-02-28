@@ -92,6 +92,7 @@ namespace RacingOverlay
 
         private int Measurement = 0;
         private string MeasurementSymbol => Measurement == 0 ? "L" : "gal";
+        private long LastSessionNumber = -1;
 
         public bool Locked = false;
         public FuelWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
@@ -187,9 +188,8 @@ namespace RacingOverlay
 
 
 #if !SAMPLE
-            //Reset calculator after leaving pits
-            if (_TelemetryData.CurrentSession.SessionNum != ((int?)_TelemetryData._DataSample.LastSample?.Telemetry?.Session?.SessionNum ?? _TelemetryData.CurrentSession.SessionNum)
-                || (_TelemetryData.FeedSessionData.WeekendInfo.SessionID != (_TelemetryData._DataSample.LastSample?.SessionData.WeekendInfo.SessionID ?? _TelemetryData.FeedSessionData.WeekendInfo.SessionID)))
+            //Reset calculator between sessions
+            if (_TelemetryData.CurrentSession.SessionNum != LastSessionNumber)
             {
                 Logger.Info($"Resetting Fuel Use List - Current Session Num: {_TelemetryData.CurrentSession.SessionNum} - Last Sample Session Num: {_TelemetryData?._DataSample?.LastSample?.Telemetry?.Session?.SessionNum}");
                 Logger.Info($"Current Weekend Session Id: {_TelemetryData?.FeedSessionData?.WeekendInfo?.SessionID} - Last Sample Weekend Session Id: {_TelemetryData?._DataSample?.LastSample?.SessionData?.WeekendInfo?.SessionID}");
@@ -236,6 +236,8 @@ namespace RacingOverlay
                 last5FuelUsageCell.Text = Last5FuelUsage < 0 ? "-" : $"{Last5FuelUsage.ToString("N2")} {MeasurementSymbol}";
                 lastFuelUsageCell.Text = LastFuelUsage < 0 ? "-" : $"{LastFuelUsage.ToString("N2")} {MeasurementSymbol}";
             });
+
+            LastSessionNumber = _TelemetryData.CurrentSession.SessionNum;
         }
     }
 }
