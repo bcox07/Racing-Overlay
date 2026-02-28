@@ -134,8 +134,11 @@ namespace RacingOverlay
                 }
             }
             var closestCarsAhead = surroundingCars.Where(s => s.Delta < 0 && s.CarId != viewedCar.CarId).OrderByDescending(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount).ToList();
-            var closestCarsBehind = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount + 1).ToList();
-            surroundingCars = closestCarsAhead.Concat(closestCarsBehind).OrderBy(s => s.Delta).ToList();
+            var closestCarsBehind = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount).ToList();
+            
+            surroundingCars = closestCarsAhead.Concat(closestCarsBehind).ToList();
+            surroundingCars.Add(viewedCar);
+            surroundingCars = surroundingCars.OrderBy(s => s.Delta).ToList();
 
             var rowIndex = 0;
             CellIndex = 0;
@@ -299,9 +302,9 @@ namespace RacingOverlay
                         {
                             if (position.CarId == viewedCar.CarId)
                                 textBlock.Foreground = position.InPit ? fadedGoldBrush : Brushes.Gold;
-                            else if (position.Distance > viewedCar.Distance && position.Delta < 0 || position.Distance - viewedCar.Distance > telemetryData.TrackLength)
+                            else if (position.Distance > viewedCar.Distance && position.Delta > 0 || position.Distance - viewedCar.Distance > telemetryData.TrackLength)
                                 textBlock.Foreground = position.InPit ? fadedRedBrush : Brushes.Red;
-                            else if (position.Distance < viewedCar.Distance && position.Delta > 0 || viewedCar.Distance - position.Distance > telemetryData.TrackLength)
+                            else if (position.Distance < viewedCar.Distance && position.Delta < 0 || viewedCar.Distance - position.Distance > telemetryData.TrackLength)
                                 textBlock.Foreground = position.InPit ? fadedBlueBrush : blueBrush;
                         }
                     }
