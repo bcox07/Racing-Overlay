@@ -24,7 +24,10 @@
                 case string s when s.StartsWith("ferrari"):
                     return "ferrari-logo";
                 case string s when s.StartsWith("ford"):
+                case "fr500s":
                     return "ford-logo";
+                case string s when s.Contains("honda"):
+                    return "honda-logo";
                 case string s when s.StartsWith("lamborghini"):
                     return "lamborghini-logo";
                 case string s when s.StartsWith("mclaren"):
@@ -37,6 +40,8 @@
                     return "mercedes-logo";
                 case string s when s.StartsWith("porsche"):
                     return "porsche-logo";
+                case string s when s.Contains("toyota"):
+                    return "toyota-logo";
                 default:
                     return "default-logo";
             }

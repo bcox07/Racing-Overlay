@@ -360,13 +360,12 @@ namespace RacingOverlay
                     columnIndex += PosNumberWidth;
                     CellIndex++;
 
-                    DrawingGroup test3 = (DrawingGroup)App.Current.Resources[CarLogo.GetLogoUri(position.CarPath)];
-                    DrawingImage drawingImage = new DrawingImage(test3);
+                    HasBadge(position.CarPath, out DrawingImage badge);
                     Image carLogo = new Image();
 
                     carLogo.Tag = "CarLogo";
                     carLogo.Stretch = Stretch.Uniform;
-                    carLogo.Source = drawingImage;
+                    carLogo.Source = badge;
                     carLogo.Source.Freeze();
 
                     var carLogoBorder = new Border();
@@ -437,6 +436,14 @@ namespace RacingOverlay
                 rowIndex++;
             }
             return rowIndex;
+        }
+
+        public bool HasBadge(string carPath, out DrawingImage badge)
+        {
+            var badgeResourceDictionary = (ResourceDictionary)Application.Current.Resources[$"{CarLogo.GetLogoUri(carPath)}"];
+            badge = (DrawingImage)badgeResourceDictionary?["di_Image"];
+
+            return badge != null;
         }
 
         private void UpdateCell(TextBlock textBlock, string tag, string text, int rowIndex, Driver position, Driver viewedCar, FontWeight? fontWeight)
