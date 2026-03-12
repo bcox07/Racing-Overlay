@@ -73,6 +73,7 @@
         <ResourceDictionary x:Key="ford-logo" Source="pack://application:,,,/assets/images/ford-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="ferrari-logo" Source="pack://application:,,,/assets/images/ferrari-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="honda-logo" Source="pack://application:,,,/assets/images/honda-logo.xaml"></ResourceDictionary>
+        <ResourceDictionary x:Key="hyundai-logo" Source="pack://application:,,,/assets/images/hyundai-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="ligier-logo" Source="pack://application:,,,/assets/images/ligier-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="lamborghini-logo" Source="pack://application:,,,/assets/images/lamborghini-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="mazda-logo" Source="pack://application:,,,/assets/images/mazda-logo.xaml"></ResourceDictionary>
