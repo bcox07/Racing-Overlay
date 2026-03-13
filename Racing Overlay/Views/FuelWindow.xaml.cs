@@ -93,6 +93,7 @@ namespace RacingOverlay
         private int Measurement = 0;
         private string MeasurementSymbol => Measurement == 0 ? "L" : "gal";
         private long LastSessionNumber = -1;
+        private long LastSessionId = -1;
 
         public bool Locked = false;
         public FuelWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
@@ -186,10 +187,9 @@ namespace RacingOverlay
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
 
-
 #if !SAMPLE
             //Reset calculator between sessions
-            if (_TelemetryData.CurrentSession.SessionNum != LastSessionNumber)
+            if (_TelemetryData.CurrentSession.SessionNum != LastSessionNumber || _TelemetryData.FeedSessionData.WeekendInfo.SessionID != LastSessionId)
             {
                 Logger.Info($"Resetting Fuel Use List - Current Session Num: {_TelemetryData.CurrentSession.SessionNum} - Last Sample Session Num: {_TelemetryData?._DataSample?.LastSample?.Telemetry?.Session?.SessionNum}");
                 Logger.Info($"Current Weekend Session Id: {_TelemetryData?.FeedSessionData?.WeekendInfo?.SessionID} - Last Sample Weekend Session Id: {_TelemetryData?._DataSample?.LastSample?.SessionData?.WeekendInfo?.SessionID}");
@@ -200,7 +200,8 @@ namespace RacingOverlay
             //Only save laps that are not entering or exiting pits or are not representative
             if (!FuelUseList.Select(f => f.LapNumber).Contains(CurrentLapFuelUse.LapNumber)
                 && !CurrentLapFuelUse.InPit
-                && _TelemetryData.FeedTelemetry.CarIdxEstTime[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] <= _TelemetryData.FeedSessionData.DriverInfo.DriverCarEstLapTime + 15
+                && _TelemetryData.FeedTelemetry.CarIdxEstTime[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] <= _TelemetryData.FeedSessionData.DriverInfo.DriverCarEstLapTime + 15 // Lap time less than estimated plus 15 seconds
+                && _TelemetryData.FeedTelemetry.CarIdxEstTime[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] >= _TelemetryData.FeedSessionData.DriverInfo.DriverCarEstLapTime - 5 // Lap time greater than estimated minus 5 seconds
                 && _TelemetryData.TrackLength - (_TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx] * _TelemetryData.TrackLength) <= 20)
             {
                 if (CurrentLapFuelUse.FuelUsed > 0)
