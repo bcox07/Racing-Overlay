@@ -42,7 +42,7 @@ namespace RacingOverlay.Windows
                 try
                 {
                     var mapColor = (GeometryDrawing)((DrawingGroup)map.Drawing).Children[0];
-                    mapColor.Brush = (SolidColorBrush)new BrushConverter().ConvertFrom(_GlobalSettings.SecondaryColor);
+                    mapColor.Brush = _GlobalSettings.SecondaryColorBrush;
                 }
                 catch (Exception)
                 {

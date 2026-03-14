@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace RacingOverlay.Models
 {
@@ -11,6 +12,11 @@ namespace RacingOverlay.Models
 
         public string PrimaryColor = "#280f1d";
         public string SecondaryColor = "#521439";
+        private string PrimaryTextColor = "#C6C6C6";
+
+        public Brush PrimaryColorBrush => (SolidColorBrush)new BrushConverter().ConvertFrom(PrimaryColor);
+        public Brush SecondaryColorBrush => (SolidColorBrush)new BrushConverter().ConvertFrom(SecondaryColor);
+        public Brush PrimaryTextColorBrush => (SolidColorBrush)new BrushConverter().ConvertFrom(PrimaryTextColor);
     }
 
     public class DriverDisplay
