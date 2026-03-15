@@ -226,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="assets\images\hyundai-logo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="assets\images\lamborghini-logo.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

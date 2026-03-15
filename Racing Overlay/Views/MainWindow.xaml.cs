@@ -89,6 +89,8 @@ namespace RacingOverlay
             uiZoom.Value = GlobalSettings.UISize.SizePreset;
             driverDisplayCount.Value = GlobalSettings.DriverDisplay.DisplayCount;
             SimpleTrackWidth.Value = GlobalSettings.SimpleTrackSettings.ContainerWidth;
+            double.TryParse(WindowSettings.FuelSettings["Measurement"], out double measurement);
+            FuelMeasurement.Value = measurement;
 
             InitializeOpacitySettings();
             InitializeLockedSettings();
