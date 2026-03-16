@@ -197,8 +197,8 @@ namespace RacingOverlay
             //Reset calculator between sessions
             if (_TelemetryData.CurrentSession.SessionNum != LastSessionNumber || _TelemetryData.FeedSessionData.WeekendInfo.SessionID != LastSessionId)
             {
-                Logger.Info($"Resetting Fuel Use List - Current Session Num: {_TelemetryData.CurrentSession.SessionNum} - Last Sample Session Num: {_TelemetryData?._DataSample?.LastSample?.Telemetry?.Session?.SessionNum}");
-                Logger.Info($"Current Weekend Session Id: {_TelemetryData?.FeedSessionData?.WeekendInfo?.SessionID} - Last Sample Weekend Session Id: {_TelemetryData?._DataSample?.LastSample?.SessionData?.WeekendInfo?.SessionID}");
+                Logger.Info($"Resetting Fuel Use List - Current Session Num: {_TelemetryData.CurrentSession.SessionNum} - Last Sample Session Num: {LastSessionNumber}");
+                Logger.Info($"Current Weekend Session Id: {_TelemetryData?.FeedSessionData?.WeekendInfo?.SessionID} - Last Sample Weekend Session Id: {LastSessionId}");
                 FuelUseList = new List<FuelUse>();
             }
 #endif
@@ -245,6 +245,7 @@ namespace RacingOverlay
             });
 
             LastSessionNumber = _TelemetryData.CurrentSession.SessionNum;
+            LastSessionId = _TelemetryData.FeedSessionData.WeekendInfo.SessionID;
         }
 
         private float ConvertMeasurement(float value)
