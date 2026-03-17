@@ -34,6 +34,7 @@
 
 ### Next
 
+1. Adelaide Street Circuit
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
 1. Circuit Gilles Villeneuve
 1. Portland International Raceway (Full Circuit)
