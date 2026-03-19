@@ -4,6 +4,7 @@
 
 ### Completed 
 
+1. Adelaide Street Circuit
 1. Algarve International Circuit (Grand Prix)
 1. Autodromo Nazionale Monza (Combined)
 1. Brands Hatch (Grand Prix)
@@ -34,7 +35,6 @@
 
 ### Next
 
-1. Adelaide Street Circuit
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
 1. Circuit Gilles Villeneuve
 1. Portland International Raceway (Full Circuit)
