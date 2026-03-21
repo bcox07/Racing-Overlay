@@ -24,6 +24,7 @@
 1. Red Bull Ring (Grand Prix)
 1. Road America
 1. Road Atlanta
+1. Sebring (International)
 1. Silverstone
 1. Spa (Grand Prix Pits)
 1. Suzuka (Grand Prix)
@@ -43,7 +44,6 @@
 1. Sachsenring
 1. Misano World Circuit Marco Simoncelli (Grand Prix)
 1. Autodromo Hermanos Rodriguez (Grand Prix)
-1. Sebring (International)
 1. Motorland Aragon (Motorcycle Grand Prix)
 1. Circuito de Jerez (Moto)
 
