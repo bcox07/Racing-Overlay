@@ -392,7 +392,7 @@ namespace RacingOverlay
 
                     var driverName = UIHelper.CreateTextBlock(new Thickness(7, 3.5, 0, 3.5), TextAlignment.Left, fontSize: _GlobalSettings.UISize.DataFontSize);
                     driverName.TextTrimming = TextTrimming.CharacterEllipsis;
-                    UpdateCell(driverName, "DriverName", Regex.Replace(position.Name, @"( .+ )", " "), rowIndex, position, viewedCar, null);
+                    UpdateCell(driverName, "DriverName", position.TeamName ?? Regex.Replace(position.Name, @"( .+ )", " "), rowIndex, position, viewedCar, null);
                     UIHelper.AddOrInsertChild(StandingsGrid, driverName, CellIndex);
                     UIHelper.SetCellFormat(driverName, columnIndex, DriverNameWidth, rowIndex);
                     columnIndex += DriverNameWidth;

@@ -14,6 +14,7 @@ namespace RacingOverlay
         public int? ClassPosition { get; set; }
         public int? OverallPosition { get; set; }
         public string Name { get; set; }
+        public string TeamName { get; set; }
         public int iRating { get; set; }
         public Tuple<string, string> SafetyRating { get; set; }
         public string SafetyRatingColor { get; set; }
