@@ -12,7 +12,7 @@
 1. CTMP/Mosport
 1. Daytona (Road Course)
 1. Hungaroring
-1. Imola
+1. Imola (Grand Prix)
 1. Indianapolis (Road Course)
 1. Interlagos (Grand Prix)
 1. Le Mans (24 Heures du Mans)
@@ -22,45 +22,51 @@
 1. Mount Panorama
 1. Oulton Park (International)
 1. Red Bull Ring (Grand Prix)
-1. Road America
-1. Road Atlanta
+1. Road America (Full Course)
+1. Road Atlanta (Full Course)
 1. Sebring (International)
 1. Silverstone
 1. Spa (Grand Prix Pits)
 1. Suzuka (Grand Prix)
 1. The Bend (International Circuit)
 1. VIR
-1. Watkins Glen
-1. Zandvoort
+1. Watkins Glen (Boot)
+1. Zandvoort (Grand Prix)
 1. Zolder (Alternate)
 
 ### Next
 
-1. Nurburgring Grand-Prix-Strecke (BES/WEC)
-1. Circuit Gilles Villeneuve
-1. Portland International Raceway (Full Circuit)
-1. Circuit de Barcelona Catalunya (Historic)
-1. Adelaide Street Circuit
-1. Sachsenring
-1. Misano World Circuit Marco Simoncelli (Grand Prix)
 1. Autodromo Hermanos Rodriguez (Grand Prix)
-1. Motorland Aragon (Motorcycle Grand Prix)
+1. Barber Motorsports Park
+1. Circuit de Barcelona Catalunya (Historic)
+1. Circuit Gilles Villeneuve
 1. Circuito de Jerez (Moto)
-
-### Future
-
-1. Barber (Full Course)
-1. COTA
+1. COTA (Grand Prix)
 1. Detroit Grand Prix
-1. Donington Park
+1. Donington Park (National)
 1. Fuji (Grand Prix)
+1. Fuji (No Chicane)
+1. Hockenheimring Baden-Wurttemberg (Grand Prix)
+1. Nurburgring Grand-Prix-Strecke (BES/WEC)
+1. Nurburgring Combined (Gesamtstrecke 24h)
+1. Nurburgring Combined (Gesamtstrecke Long)
+1. Nurburgring Nordschleife (Industriefahrten)
 1. Laguna Seca (Full Course)
 1. Lime Rock (Grand Prix)
-1. Nurburgring Nordschleife (Industriefahrten)
-1. Oulton Park (Intl w/o Brittens)
+1. Mid Ohio (Full Course)
+1. Misano World Circuit Marco Simoncelli (Grand Prix)
 1. Motegi
+1. Motorland Aragon (Motorcycle Grand Prix)
+1. Motorsport Arena Oschersleben (Grand Prix)
 1. Mugello
-1. Snetterton
+1. Oulton Park (Intl w/o Brittens)
+1. Portland International Raceway (Full Circuit)
+1. Rudskogen Motorsenter
+1. Sachsenring
+1. Snetterton (300)
+1. Sonoma (Sportscar Alt)
+1. St. Petersburg (Grand Prix)
+1. Thruxton Circuit
 
 ## Badges
 
