@@ -195,7 +195,7 @@ namespace RacingOverlay
 
 #if !SAMPLE
             //Reset calculator between sessions
-            if (_TelemetryData.CurrentSession.SessionNum != LastSessionNumber || _TelemetryData.FeedSessionData.WeekendInfo.SessionID != LastSessionId)
+            if (_TelemetryData.FeedSessionData.WeekendInfo.SessionID != LastSessionId)
             {
                 Logger.Info($"Resetting Fuel Use List - Current Session Num: {_TelemetryData.CurrentSession.SessionNum} - Last Sample Session Num: {LastSessionNumber}");
                 Logger.Info($"Current Weekend Session Id: {_TelemetryData?.FeedSessionData?.WeekendInfo?.SessionID} - Last Sample Weekend Session Id: {LastSessionId}");
