@@ -137,7 +137,10 @@ namespace RacingOverlay
             var closestCarsBehind = surroundingCars.Where(s => s.Delta >= 0).OrderBy(s => s.Delta).Take(_GlobalSettings.DriverDisplay.DisplayCount).ToList();
             
             surroundingCars = closestCarsAhead.Concat(closestCarsBehind).ToList();
-            surroundingCars.Add(viewedCar);
+
+            if (viewedCar.ClassId != 0)
+                surroundingCars.Add(viewedCar);
+
             surroundingCars = surroundingCars.OrderBy(s => s.Delta).ToList();
 
             var rowIndex = 0;
