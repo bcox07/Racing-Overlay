@@ -760,8 +760,13 @@ namespace RacingOverlay
             ConfigurationManager.RefreshSection("appSettings");
         }
 
+
         #endregion
 
-        
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            CloseAllWindows();
+            Application.Current.Shutdown();
+        }
     }
 }
