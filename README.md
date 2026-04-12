@@ -11,6 +11,7 @@
 1. Charlotte (Roval 2025)
 1. CTMP/Mosport
 1. Daytona (Road Course)
+1. Donington Park (National)
 1. Hungaroring
 1. Imola (Grand Prix)
 1. Indianapolis (Road Course)
@@ -43,7 +44,6 @@
 1. Circuito de Jerez (Moto)
 1. COTA (Grand Prix)
 1. Detroit Grand Prix
-1. Donington Park (National)
 1. Fuji (Grand Prix)
 1. Fuji (No Chicane)
 1. Hockenheimring Baden-Wurttemberg (Grand Prix)
