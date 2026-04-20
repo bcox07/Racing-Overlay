@@ -167,10 +167,8 @@ namespace RacingOverlay
                             return;
                         }
 
-                        if (FullTrackWindow == null)
-                            continue;
                     
-                        if (FullTrackWindow.HasTrackMap(out DrawingImage map))
+                        if (FullTrackWindow != null && FullTrackWindow.HasTrackMap(out DrawingImage map))
                         {
                             FullTrackWindow?.Dispatcher.Invoke(() =>
                             {
