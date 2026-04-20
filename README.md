@@ -7,6 +7,7 @@
 1. Adelaide Street Circuit
 1. Algarve International Circuit (Grand Prix)
 1. Autodromo Nazionale Monza (Combined)
+1. Barber Motorsports Park
 1. Brands Hatch (Grand Prix)
 1. Charlotte (Roval 2025)
 1. CTMP/Mosport
@@ -38,7 +39,6 @@
 ### Next
 
 1. Autodromo Hermanos Rodriguez (Grand Prix)
-1. Barber Motorsports Park
 1. Circuit de Barcelona Catalunya (Historic)
 1. Circuit Gilles Villeneuve
 1. Circuito de Jerez (Moto)
