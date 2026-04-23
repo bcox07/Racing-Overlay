@@ -147,6 +147,7 @@
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Models\GlobalSettings.cs" />
     <Compile Include="Models\MockData.cs" />
+    <Compile Include="Models\FullTrackSettings.cs" />
     <Compile Include="Models\SimpleTrackSettings.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -287,6 +288,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="assets\tracks\247-combined\map.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="assets\tracks\252-24h\map.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -496,6 +501,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\247-combined\ligierjsp320.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="assets\tracks\252-24h\coordinates.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="assets\tracks\268-24 heures\coordinates.json">

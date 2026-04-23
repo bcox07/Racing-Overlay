@@ -130,12 +130,17 @@ namespace RacingOverlay.Models
                     case 0: return 80;
                     case 1: return 100;
                     case 2: return 120;
-                    default: return 120;
+                    case 3: return 140;
+                    case 4: return 160;
+                    case 5: return 180;
+                    case 6: return 200;
+                    default: return 100;
                 }
             }
         }
 
         public SimpleTrackSettings SimpleTrackSettings => new SimpleTrackSettings(SizePreset, 0);
+        public FullTrackSettings FullTrackSettings => new FullTrackSettings(SizePreset);
 
         public Dictionary<string, int> FuelWindowSettings
         {
