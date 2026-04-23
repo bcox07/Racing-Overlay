@@ -22,6 +22,7 @@
 1. Magny-Cours
 1. Miami International Autodrome (Grand Prix)
 1. Mount Panorama
+1. Nurburgring Combined (Gesamtstrecke 24h)
 1. Oulton Park (International)
 1. Red Bull Ring (Grand Prix)
 1. Road America (Full Course)
@@ -48,7 +49,6 @@
 1. Fuji (No Chicane)
 1. Hockenheimring Baden-Wurttemberg (Grand Prix)
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
-1. Nurburgring Combined (Gesamtstrecke 24h)
 1. Nurburgring Combined (Gesamtstrecke Long)
 1. Nurburgring Nordschleife (Industriefahrten)
 1. Laguna Seca (Full Course)
