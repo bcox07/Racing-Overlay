@@ -21,6 +21,7 @@
 1. Long Beach Street Circuit
 1. Magny-Cours
 1. Miami International Autodrome (Grand Prix)
+1. Motorsport Arena Oschersleben (Grand Prix)
 1. Mount Panorama
 1. Nurburgring Combined (Gesamtstrecke 24h)
 1. Oulton Park (International)
@@ -57,7 +58,6 @@
 1. Misano World Circuit Marco Simoncelli (Grand Prix)
 1. Motegi
 1. Motorland Aragon (Motorcycle Grand Prix)
-1. Motorsport Arena Oschersleben (Grand Prix)
 1. Mugello
 1. Oulton Park (Intl w/o Brittens)
 1. Portland International Raceway (Full Circuit)
