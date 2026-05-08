@@ -43,7 +43,7 @@ namespace RacingOverlay.Helpers
         {
             var outerBorder = new Border();
             Color myShadowColor = Color.FromArgb(0, 0, 0, 0);
-            if (rowIndex % 2 == 1)
+            if (rowIndex % 2 == 0)
                 outerBorder.Background = primaryColor;
             else
                 outerBorder.Background = secondaryColor;

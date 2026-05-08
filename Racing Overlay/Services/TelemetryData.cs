@@ -259,7 +259,7 @@ namespace RacingOverlay
                 var iracing = new iRacingConnection();
                 while (true)
                 {
-                    foreach (var data in iRacing.GetDataFeed().WithLastSample())
+                    foreach (var data in iRacing.GetDataFeed())
                     {
                         if (data != null)
                         {
@@ -336,7 +336,8 @@ namespace RacingOverlay
                 LapsComplete = (int)FeedTelemetry.CarIdxLap[d.CarIdx],
                 PosOnTrack = FeedTelemetry.CarIdxLapDistPct[d.CarIdx] * TrackLength,
                 Distance = FeedTelemetry.CarIdxDistance[d.CarIdx] * TrackLength,
-                InPit = FeedTelemetry.CarIdxOnPitRoad[d.CarIdx]
+                InPit = FeedTelemetry.CarIdxOnPitRoad[d.CarIdx],
+                IncidentCount = (int)p.Incidents
             }).ToList();
 
             foreach (var driver in AllDrivers.OrderByDescending(d => d.IRating).Where(d => !d.IsPaceCar && d.CarIsPaceCar <= 0))
@@ -362,7 +363,8 @@ namespace RacingOverlay
                         LapsComplete = null,
                         PosOnTrack = FeedTelemetry.CarIdxLapDistPct[driver.CarIdx] * TrackLength,
                         Distance = FeedTelemetry.CarIdxDistance[driver.CarIdx] * TrackLength,
-                        InPit = FeedTelemetry.CarIdxOnPitRoad[driver.CarIdx]
+                        InPit = FeedTelemetry.CarIdxOnPitRoad[driver.CarIdx],
+                        IncidentCount = 0
                     });
                 }
             }

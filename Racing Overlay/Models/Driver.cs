@@ -28,6 +28,7 @@ namespace RacingOverlay
         public int? LapsComplete { get; set; }
         public DateTime LapChangeTime { get; set; }
         public bool InPit { get; set; }
+        public int IncidentCount { get; set; }
         public TrackLocation Location { get; set; } 
     }
 }
