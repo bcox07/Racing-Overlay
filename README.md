@@ -17,6 +17,7 @@
 1. Imola (Grand Prix)
 1. Indianapolis (Road Course)
 1. Interlagos (Grand Prix)
+1. Laguna Seca (Full Course)
 1. Le Mans (24 Heures du Mans)
 1. Long Beach Street Circuit
 1. Magny-Cours
@@ -52,7 +53,6 @@
 1. Nurburgring Grand-Prix-Strecke (BES/WEC)
 1. Nurburgring Combined (Gesamtstrecke Long)
 1. Nurburgring Nordschleife (Industriefahrten)
-1. Laguna Seca (Full Course)
 1. Lime Rock (Grand Prix)
 1. Mid Ohio (Full Course)
 1. Misano World Circuit Marco Simoncelli (Grand Prix)
