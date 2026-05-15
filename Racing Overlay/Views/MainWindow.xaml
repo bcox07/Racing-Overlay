@@ -8,8 +8,8 @@
         Closing="Window_Closing"
         Closed="Window_Closed"
         Title="MainWindow" 
-        Height="257" 
-        Width="408" 
+        Height="300" 
+        Width="500" 
         HorizontalAlignment="Center" 
         Background="Transparent"
         WindowStyle="None"
@@ -49,9 +49,35 @@
                 </GeometryDrawing.Geometry>
             </GeometryDrawing>
         </DrawingGroup>
+        <DrawingGroup x:Key="view_xaml">
+            <DrawingGroup.ClipGeometry>
+                <RectangleGeometry Rect="0.0,0.0,300.0,300.0"/>
+            </DrawingGroup.ClipGeometry>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#ffffffff">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry RadiusX="126.50403" RadiusY="62.510704" Center="150.00003,150.0007"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry RadiusX="30.948215" RadiusY="30.948215" Center="150.00322,150.00322"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#ff000000" LineJoin="Round" Thickness="14.235" EndLineCap="Square" StartLineCap="Square"/>
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry RadiusX="126.50403" RadiusY="62.510704" Center="149.99953,150.0002"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
         <DrawingImage Drawing="{StaticResource locked_xaml}" x:Key="di_locked_xaml"/>
         <DrawingImage Drawing="{StaticResource unlocked_xaml}" x:Key="di_unlocked_xaml"/>
         <DrawingImage Drawing="{StaticResource reset_xaml}" x:Key="di_reset_xaml"/>
+        <DrawingImage Drawing="{StaticResource view_xaml}" x:Key="di_view_xaml"/>
         <Style x:Key="TabItemStyle" TargetType="TabItem">
             <Setter Property="Background" Value="#641C47"></Setter>
             <Setter Property="Foreground" Value="#C6C6C6"></Setter>
@@ -110,6 +136,45 @@
             <Setter Property="Padding" Value="3"></Setter>
             <Setter Property="FontSize" Value="30"></Setter>
             <Setter Property="FontWeight" Value="Black"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#C6C6C6"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#B62c7F"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#471b33"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ImageButtonStyle" TargetType="Button">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="7"></Setter>
+                </Style>
+            </Style.Resources>
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="BorderBrush" Value="#141126"></Setter>
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <Setter Property="Background" Value="#641C47"></Setter>
+            <Setter Property="Foreground" Value="#C6C6C6"></Setter>
+            <Setter Property="Width" Value="115"></Setter>
+            <Setter Property="Height" Value="50"></Setter>
+            <Setter Property="Padding" Value="6"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -208,7 +273,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Thumb">
                         <StackPanel>
-                            <Ellipse Height="18" Width="18" Fill="#471b33" Stroke="#C6C6C6" StrokeThickness="1.5" ></Ellipse>
+                            <Ellipse Height="14" Width="14" Fill="#471b33" Stroke="#C6C6C6" StrokeThickness="1.5" ></Ellipse>
                         </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
@@ -246,7 +311,7 @@
             <Style.Triggers>
                 <Trigger Property="Orientation" Value="Horizontal">
                     <Setter Property="MinHeight" Value="10" />
-                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="MinWidth" Value="60" />
                     <Setter Property="Template" Value="{StaticResource Slider}" />
                 </Trigger>
             </Style.Triggers>
@@ -276,25 +341,33 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button x:Name="standingsLock" Style="{DynamicResource ButtonStyle}" Width="55" Click="standingsLock_Click" Grid.Column="1" >
+                        <Button x:Name="standingsLock" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="standingsLock_Click" Grid.Column="2" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_locked_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="standingsReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="standingsReset_Click" >
+                        <Button x:Name="standingsVisibility" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="standingsVisibility_Click" Grid.Column="1">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource di_view_xaml}" Width="40"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="standingsReset" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="standingsReset_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_reset_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="StandingsOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
-                        <Button x:Name="standingsSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="standingsSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="1">Opacity</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="StandingsOpacity_ValueChanged" TickFrequency="10" Grid.Row="1" Grid.ColumnSpan="1" />
+                        <Button x:Name="standingsSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="standingsSave_Click" Grid.Row="2" Grid.ColumnSpan="3" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="2">Size</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsSize" Width="120" Minimum="0" Maximum="6" ValueChanged="StandingsSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Relative" Style="{DynamicResource TabItemStyle}">
@@ -302,21 +375,25 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button x:Name="relativeReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="relativeReset_Click" >
+                        <Button x:Name="relativeReset" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="relativeReset_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_reset_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="relativeLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="relativeLock_Click" Grid.Column="1" />
-                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.ColumnSpan="2" Grid.Row="1" >Opacity</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="RelativeOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="RelativeOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
-                        <Button x:Name="relativeSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="relativeSave_Click" Grid.ColumnSpan="2" Grid.Row="2"/>
+                        <Button x:Name="relativeVisibility" Content="Visibility" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="relativeVisibility_Click" Grid.Column="1" />
+                        <Button x:Name="relativeLock" Content="Lock" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="relativeLock_Click" Grid.Column="2" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" >Opacity</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="RelativeOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="RelativeOpacity_ValueChanged" TickFrequency="10" Grid.Row="1"  />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="2">Size</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="RelativeSize" Width="120" Minimum="0" Maximum="6" ValueChanged="RelativeSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
+                        <Button x:Name="relativeSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="relativeSave_Click" Grid.ColumnSpan="3" Grid.Row="2"/>
 
                     </Grid>
                 </TabItem>
@@ -325,25 +402,29 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button x:Name="fuelReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="fuelReset_Click" >
+                        <Button x:Name="fuelReset" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="fuelReset_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_reset_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="fuelLock_Click" Grid.Column="1" />
+                        <Button x:Name="fuelVisibility" Content="Visibility" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="fuelVisibility_Click" Grid.Column="1" />
+                        <Button x:Name="fuelLock" Content="Lock" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="fuelLock_Click" Grid.Column="2" />
                         <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" >Opacity</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelOpacity" Width="160" Minimum="0" Maximum="100" ValueChanged="FuelOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" />
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="FuelOpacity_ValueChanged" TickFrequency="10" Grid.Row="1" />
                         <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="1" >Measurement</Label>
                         <Label Style="{StaticResource SliderLabel}" HorizontalAlignment="Left" FontSize="10" Margin="12,42,0,0" Grid.Row="1" Grid.Column="1" >Metric</Label>
                         <Label Style="{StaticResource SliderLabel}" HorizontalAlignment="Right" FontSize="10" Margin="0,42,9,0" Grid.Row="1" Grid.Column="1" >Imperial</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelMeasurement" Width="160" Minimum="0" Maximum="1" ValueChanged="FuelMeasurement_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.Column="1" />
-                        <Button x:Name="fuelSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="fuelSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelMeasurement" Width="40" Minimum="0" Maximum="1" ValueChanged="FuelMeasurement_ValueChanged" Grid.Row="1" Grid.Column="1" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="2">Size</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FuelSize" Width="120" Minimum="0" Maximum="6" ValueChanged="FuelSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
+                        <Button x:Name="fuelSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="fuelSave_Click" Grid.Row="2" Grid.ColumnSpan="3" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Tires" Style="{DynamicResource TabItemStyle}">
@@ -351,20 +432,24 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button x:Name="tiresReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="tiresReset_Click" >
+                        <Button x:Name="tiresReset" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="tiresReset_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_reset_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="tiresLock_Click" Grid.Column="1" />
-                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="TireOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
+                        <Button x:Name="tiresVisibility" Content="Visibility" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="tiresVisibility_Click" Grid.Column="1" />
+                        <Button x:Name="tiresLock" Content="Lock" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="tiresLock_Click" Grid.Column="2" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" >Opacity</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="TireOpacity_ValueChanged" TickFrequency="10" Grid.Row="1" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="2">Size</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="TireSize" Width="120" Minimum="0" Maximum="5" ValueChanged="TireSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
                         <Button x:Name="tiresSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200"  Click="tiresSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
                     </Grid>
                 </TabItem>
@@ -373,27 +458,29 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button x:Name="simpleTrackLock" Style="{DynamicResource ButtonStyle}" Width="55" Click="simpleTrackLock_Click" Grid.Column="1" >
+                        <Button x:Name="simpleTrackLock" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="simpleTrackLock_Click" Grid.Column="2" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_unlocked_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="simpleTrackReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="simpleTrackReset_Click" >
+                        <Button x:Name="simpleTrackVisibility" Content="Visibility" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="simpleTrackVisibility_Click" Grid.Column="1" />
+                        <Button x:Name="simpleTrackReset" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="simpleTrackReset_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_reset_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="1" Grid.Column="1">Opacity</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackOpacity" Width="160" Minimum="0" Maximum="100" ValueChanged="SimpleTrackOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.Column="1" />
-                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="1">Width</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackWidth" Width="160" Maximum="2000" Minimum="600" ValueChanged="SimpleTrackWidth_ValueChanged" TickFrequency="70" Grid.Row="1" />
-                        <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="simpleTrackSave_Click" Grid.Row="2" Grid.ColumnSpan="2" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="1" Grid.Column="0">Opacity</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="SimpleTrackOpacity_ValueChanged" TickFrequency="10" Grid.Row="1" Grid.Column="0" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="1" Grid.Column="2">Width</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="SimpleTrackWidth" Width="120" Maximum="2000" Minimum="600" ValueChanged="SimpleTrackWidth_ValueChanged" TickFrequency="100" Grid.Row="1" Grid.Column="2" />
+                        <Button x:Name="simpleTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="simpleTrackSave_Click" Grid.Row="2" Grid.ColumnSpan="3" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Full Track" Style="{DynamicResource TabItemStyle}">
@@ -401,21 +488,26 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.ColumnSpan="2">Opacity</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FullTrackOpacity" Width="220" Minimum="0" Maximum="100" ValueChanged="FullTrackOpacity_ValueChanged" TickFrequency="5" Grid.Row="1" Grid.ColumnSpan="2" />
-                        <Button x:Name="fullTrackLock" Content="Lock" Style="{DynamicResource ButtonStyle}" Width="55" Click="fullTrackLock_Click" Grid.Column="2" />
-                        <Button x:Name="fullTrackReset" Style="{DynamicResource ButtonStyle}" Width="55" Click="fullTrackReset_Click" >
+                        
+                        <Button x:Name="fullTrackVisibility" Content="Visibility" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="fullTrackVisibility_Click" Grid.Column="1" />
+                        <Button x:Name="fullTrackLock" Content="Lock" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="fullTrackLock_Click" Grid.Column="2" />
+                        <Button x:Name="fullTrackReset" Style="{DynamicResource ImageButtonStyle}" Width="55" Click="fullTrackReset_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{StaticResource di_reset_xaml}"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="fullTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="fullTrackSave_Click" Grid.Row="3" Grid.ColumnSpan="2" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1">Opacity</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FullTrackOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="FullTrackOpacity_ValueChanged" TickFrequency="10" Grid.Row="1" />
+                        <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="2">Size</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="FullTrackSize" Width="120" Minimum="0" Maximum="6" ValueChanged="FullTrackSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
+                        <Button x:Name="fullTrackSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="fullTrackSave_Click" Grid.Row="3" Grid.ColumnSpan="3" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Settings" Style="{DynamicResource TabItemStyle}">
@@ -429,10 +521,8 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Label Style="{StaticResource SliderLabel}" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0">UI Scale</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="uiZoom" Width="120" Maximum="6" Foreground="#8f2865" ValueChanged="uiZoom_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Column="1" />
-                        <Label  Style="{StaticResource SliderLabel}" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="1">Driver Display Count</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="driverDisplayCount" Width="120" Maximum="5" Minimum="3" ValueChanged="driverDisplayCount_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" FontSize="16"/>
+                        <Label  Style="{StaticResource SliderLabel}" FontSize="14" Margin="0 3 0 0" Grid.Row="0" Grid.ColumnSpan="2">Driver Display Count</Label>
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="driverDisplayCount" Width="120" Maximum="8" Minimum="3" ValueChanged="driverDisplayCount_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="0" FontSize="16"/>
                         <Button Style="{DynamicResource ButtonStyle}" Width="200" Grid.ColumnSpan="2" Grid.Row="2" Click="globalSettingsSaveBtn_Click">Save</Button>
                     </Grid>
                 </TabItem>

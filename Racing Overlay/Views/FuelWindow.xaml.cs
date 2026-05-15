@@ -129,8 +129,8 @@ namespace RacingOverlay
 
         private void SetDisplaySettings()
         {
-            Width = _GlobalSettings.UISize.FuelWindowSettings["WindowWidth"];
-            Height = _GlobalSettings.UISize.FuelWindowSettings["WindowHeight"];
+            Width = _GlobalSettings.FuelWindowSettings.WindowWidth;
+            Height = _GlobalSettings.FuelWindowSettings.WindowHeight;
             LeftColDefinition.Width = new GridLength(Width / 2);
             Opacity = double.Parse(_WindowSettings.FuelSettings["Opacity"]);
             Measurement = int.Parse(_WindowSettings.FuelSettings["Measurement"]);
@@ -144,8 +144,8 @@ namespace RacingOverlay
             MeasurementSymbol = Measurement == 0 ? "L" : "gal";
 
             var appResources = Application.Current.Resources;
-            appResources["TitleFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["TitleFontSize"];
-            appResources["DataFontSize"] = (double)_GlobalSettings.UISize.FuelWindowSettings["DataFontSize"];
+            appResources["TitleFontSize"] = (double)_GlobalSettings.FuelWindowSettings.TitleFontSize;
+            appResources["DataFontSize"] = (double)_GlobalSettings.FuelWindowSettings.DataFontSize;
 
             var rowCount = fuelGrid.RowDefinitions.Count;
             foreach (var rowDefinition in fuelGrid.RowDefinitions)
@@ -172,23 +172,6 @@ namespace RacingOverlay
                 SetDisplaySettings();
             });
             _TelemetryData = telemetryData;
-
-            if (_TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.InPitStall
-                || _TelemetryData.FeedTelemetry.CarIdxTrackSurface[(int)_TelemetryData.FeedTelemetry["PlayerCarIdx"]] == TrackLocation.NotInWorld
-                || _TelemetryData.FeedTelemetry.IsReplayPlaying)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    Hide();
-                });
-            }
-            else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    Show();
-                });
-            }
 
             var currentTrackLocation = _TelemetryData.FeedTelemetry.CarIdxTrackSurface[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];
             var lapDistPct = _TelemetryData.FeedTelemetry.CarIdxLapDistPct[_TelemetryData.FeedSessionData.DriverInfo.DriverCarIdx];

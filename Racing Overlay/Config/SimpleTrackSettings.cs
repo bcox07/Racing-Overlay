@@ -1,31 +1,31 @@
 ﻿namespace RacingOverlay.Models
 {
-    public class SimpleTrackSettings
+    public class SimpleTrackSettings : UISize
     {
-        public SimpleTrackSettings(int globalSizePreset, int simpleTrackWidth)
+        public SimpleTrackSettings(int sizePreset, int simpleTrackWidth) : base(sizePreset)
         {
-            switch (globalSizePreset)
+            switch (sizePreset)
             {
                 case 0:
-                    FontSize = 10;
+                    DataFontSize = 10;
                     ContainerHeight = 20;
                     PositionDiameter = 17;
                     PaddingTop = 1;
                     break;
                 case 1:
-                    FontSize = 12;
+                    DataFontSize = 12;
                     ContainerHeight = 25;
                     PositionDiameter = 21;
                     PaddingTop = 2;
                     break;
                 case 2:
-                    FontSize = 14;
+                    DataFontSize = 14;
                     ContainerHeight = 30;
                     PositionDiameter = 25;
                     PaddingTop = 3;
                     break;
                 default:
-                    FontSize = 14;
+                    DataFontSize = 14;
                     ContainerHeight = 30;
                     PositionDiameter = 25;
                     PaddingTop = 3;
@@ -34,8 +34,6 @@
 
             ContainerWidth = simpleTrackWidth;
         }
-
-        public int FontSize { get; set; }
         public int ContainerHeight { get; set; }
         public int ContainerWidth { get; set; }
         public int PositionDiameter { get; set; }

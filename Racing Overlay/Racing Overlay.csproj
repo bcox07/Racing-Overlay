@@ -140,15 +140,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Config\StandingsWindowSettings.cs" />
+    <Compile Include="Config\TireWindowSettings.cs" />
+    <Compile Include="Config\FuelWindowSettings.cs" />
+    <Compile Include="Config\RelativeWindowSettings.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Models\CarLogo.cs" />
     <Compile Include="Models\FuelUse.cs" />
     <Compile Include="Models\Lap.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Models\GlobalSettings.cs" />
+    <Compile Include="Config\GlobalSettings.cs" />
     <Compile Include="Models\MockData.cs" />
-    <Compile Include="Models\FullTrackSettings.cs" />
-    <Compile Include="Models\SimpleTrackSettings.cs" />
+    <Compile Include="Config\FullTrackSettings.cs" />
+    <Compile Include="Config\SimpleTrackSettings.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -252,6 +256,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="assets\images\toyota-logo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="assets\images\view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

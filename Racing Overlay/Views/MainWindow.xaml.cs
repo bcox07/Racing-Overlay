@@ -46,6 +46,8 @@ namespace RacingOverlay
         private bool _Initialized = false;
         DrawingImage UnlockedIcon;
         DrawingImage LockedIcon;
+        DrawingImage VisibleIcon;
+        DrawingImage HiddenIcon;
 
         public MainWindow(Configuration config)
         {
@@ -79,23 +81,53 @@ namespace RacingOverlay
         private void InitializeSettings()
         {
             WindowSettings = new WindowSettings(_configuration.AppSettings);
-            GlobalSettings.UISize = new UISize(int.Parse(WindowSettings.GlobalSettings["UIZoom"]));
             GlobalSettings.DriverDisplay = new DriverDisplay(int.Parse(WindowSettings.GlobalSettings["DriverCount"]));
-            GlobalSettings.SimpleTrackSettings = new SimpleTrackSettings(int.Parse(WindowSettings.GlobalSettings["UIZoom"]), int.Parse(WindowSettings.SimpleTrackSettings["Width"]));
+            GlobalSettings.StandingsSettings = new StandingsWindowSettings(int.Parse(WindowSettings.StandingsSettings["Size"]));
+            GlobalSettings.RelativeWindowSettings = new RelativeWindowSettings(int.Parse(WindowSettings.RelativeSettings["Size"]));
+            GlobalSettings.FuelWindowSettings = new FuelWindowSettings(int.Parse(WindowSettings.FuelSettings["Size"]));
+            GlobalSettings.TireWindowSettings = new TireWindowSettings(int.Parse(WindowSettings.TireSettings["Size"]));
+            GlobalSettings.SimpleTrackSettings = new SimpleTrackSettings(int.Parse(WindowSettings.SimpleTrackSettings["Size"]), int.Parse(WindowSettings.SimpleTrackSettings["Width"]));
+            GlobalSettings.FullTrackSettings = new FullTrackSettings(int.Parse(WindowSettings.FullTrackSettings["Size"]));
 
-            UnlockedIcon = (DrawingImage)FindResource("di_unlocked_xaml");
-            LockedIcon = (DrawingImage)FindResource("di_locked_xaml");
-
-            uiZoom.Value = GlobalSettings.UISize.SizePreset;
             driverDisplayCount.Value = GlobalSettings.DriverDisplay.DisplayCount;
+            StandingsSize.Value = GlobalSettings.StandingsSettings.SizePreset;
+            RelativeSize.Value = GlobalSettings.RelativeWindowSettings.SizePreset;
+            FuelSize.Value = GlobalSettings.FuelWindowSettings.SizePreset;
+            TireSize.Value = GlobalSettings.TireWindowSettings.SizePreset;
             SimpleTrackWidth.Value = GlobalSettings.SimpleTrackSettings.ContainerWidth;
+            FullTrackSize.Value = GlobalSettings.FullTrackSettings.SizePreset;
             double.TryParse(WindowSettings.FuelSettings["Measurement"], out double measurement);
             FuelMeasurement.Value = measurement;
 
+            InitializeIcons();
             InitializeOpacitySettings();
             InitializeLockedSettings();
+            InitializeVisibilitySettings();
         }
 
+        private void InitializeIcons()
+        {
+            UnlockedIcon = (DrawingImage)FindResource("di_unlocked_xaml");
+            LockedIcon = (DrawingImage)FindResource("di_locked_xaml");
+            VisibleIcon = (DrawingImage)FindResource("di_view_xaml");
+            HiddenIcon = VisibleIcon.Clone();
+
+            var visibleIconGroup = ((DrawingGroup)VisibleIcon.Drawing).Children[0];
+            var visibleSclera = (GeometryDrawing)((DrawingGroup)visibleIconGroup).Children[0];
+            var visiblePupil = (GeometryDrawing)((DrawingGroup)visibleIconGroup).Children[1];
+            var visibleBorder = (GeometryDrawing)((DrawingGroup)visibleIconGroup).Children[2];
+            visibleSclera.Brush = GlobalSettings.PrimaryTextColorBrush;
+            visiblePupil.Brush = GlobalSettings.MenuPrimaryColorBrush;
+            visibleBorder.Pen.Brush = GlobalSettings.PrimaryTextColorBrush;
+
+            var hiddenIconGroup = ((DrawingGroup)HiddenIcon.Drawing).Children[0];
+            var hiddenSclera = (GeometryDrawing)((DrawingGroup)hiddenIconGroup).Children[0];
+            var hiddenPupil = (GeometryDrawing)((DrawingGroup)hiddenIconGroup).Children[1];
+            var hiddenBorder = (GeometryDrawing)((DrawingGroup)hiddenIconGroup).Children[2];
+            hiddenSclera.Brush = GlobalSettings.MenuPrimaryColorBrush;
+            hiddenPupil.Brush = GlobalSettings.PrimaryTextColorBrush;
+            hiddenBorder.Pen.Brush = GlobalSettings.PrimaryTextColorBrush;
+        }
         private void InitializeOpacitySettings()
         {
             StandingsOpacity.Value = double.Parse(WindowSettings.StandingsSettings["Opacity"]) * 100;
@@ -114,6 +146,16 @@ namespace RacingOverlay
             fuelLock.Content = bool.Parse(WindowSettings.FuelSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
             simpleTrackLock.Content = bool.Parse(WindowSettings.SimpleTrackSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
             fullTrackLock.Content = bool.Parse(WindowSettings.FullTrackSettings["Locked"]) ? new Image { Source = LockedIcon } : new Image { Source = UnlockedIcon };
+        }
+
+        private void InitializeVisibilitySettings()
+        {
+            standingsVisibility.Content = bool.Parse(WindowSettings.StandingsSettings["Visible"]) ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            relativeVisibility.Content = bool.Parse(WindowSettings.RelativeSettings["Visible"]) ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            tiresVisibility.Content = bool.Parse(WindowSettings.TireSettings["Visible"]) ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            fuelVisibility.Content = bool.Parse(WindowSettings.FuelSettings["Visible"]) ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            simpleTrackVisibility.Content = bool.Parse(WindowSettings.SimpleTrackSettings["Visible"]) ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            fullTrackVisibility.Content = bool.Parse(WindowSettings.FullTrackSettings["Visible"]) ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
         }
 
         private void StartOperation(Action action, Thread thread)
@@ -152,7 +194,9 @@ namespace RacingOverlay
                             }
                     
                             FullTrackWindow = new FullTrackWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
-                            FullTrackWindow.Show();
+
+                            if (bool.Parse(WindowSettings.FullTrackSettings["Visible"]))
+                                FullTrackWindow.Show();
                     
                             Dispatcher.Run();
                                
@@ -172,7 +216,13 @@ namespace RacingOverlay
                         {
                             FullTrackWindow?.Dispatcher.Invoke(() =>
                             {
-                                FullTrackWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                                if (bool.Parse(WindowSettings.FullTrackSettings["Visible"]))
+                                {
+                                    FullTrackWindow.Show();
+                                    FullTrackWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                                }
+                                else
+                                    FullTrackWindow.Hide();
                             });
                         }
                         else
@@ -196,7 +246,9 @@ namespace RacingOverlay
                             if (SimpleTrackWindow == null) 
                             {
                                 SimpleTrackWindow = new SimpleTrackWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
-                                SimpleTrackWindow.Show();
+
+                                if (bool.Parse(WindowSettings.SimpleTrackSettings["Visible"]))
+                                    SimpleTrackWindow.Show();
                     
                                 Dispatcher.Run();
                             }
@@ -212,9 +264,15 @@ namespace RacingOverlay
                             return;
                         }
 
-                        SimpleTrackWindow?.Dispatcher.Invoke(() =>
+                        SimpleTrackWindow?.Dispatcher?.Invoke(() =>
                         {
-                            SimpleTrackWindow.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            if (bool.Parse(WindowSettings.SimpleTrackSettings["Visible"]))
+                            {
+                                SimpleTrackWindow.Show();
+                                SimpleTrackWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            }
+                            else
+                                SimpleTrackWindow.Hide();
                         });
                     }
                     
@@ -228,7 +286,9 @@ namespace RacingOverlay
                             }
                     
                             StandingsWindow = new StandingsWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
-                            StandingsWindow.Show();
+
+                            if (bool.Parse(WindowSettings.StandingsSettings["Visible"]))
+                                StandingsWindow.Show();
                     
                             Dispatcher.Run();
                             
@@ -245,7 +305,13 @@ namespace RacingOverlay
                     
                         StandingsWindow?.Dispatcher.Invoke(() =>
                         {
-                            StandingsWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            if (bool.Parse(WindowSettings.StandingsSettings["Visible"]))
+                            {
+                                StandingsWindow.Show();
+                                StandingsWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            }
+                            else
+                                StandingsWindow.Hide();
                         });
                     }
 
@@ -260,7 +326,9 @@ namespace RacingOverlay
                             }
 
                             RelativeWindow = new RelativeWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
-                            RelativeWindow.Show();
+
+                            if (bool.Parse(WindowSettings.RelativeSettings["Visible"]))
+                                RelativeWindow.Show();
 
                             Dispatcher.Run();
                         });
@@ -276,7 +344,13 @@ namespace RacingOverlay
 
                         RelativeWindow?.Dispatcher.Invoke(() =>
                         {
-                            RelativeWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            if (bool.Parse(WindowSettings.RelativeSettings["Visible"]))
+                            {
+                                RelativeWindow.Show();
+                                RelativeWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            }
+                            else
+                                RelativeWindow.Hide();
                         });
                     }
 
@@ -291,7 +365,9 @@ namespace RacingOverlay
                             }
 
                             FuelWindow = new FuelWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
-                            FuelWindow.Show();
+
+                            if (bool.Parse(WindowSettings.FuelSettings["Visible"]))
+                                FuelWindow.Show();
 
                             Dispatcher.Run();
                         });
@@ -308,7 +384,13 @@ namespace RacingOverlay
 
                         FuelWindow?.Dispatcher.Invoke(() =>
                         {
-                            FuelWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            if (bool.Parse(WindowSettings.FuelSettings["Visible"]))
+                            {
+                                FuelWindow.Show();
+                                FuelWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            }
+                            else
+                                FuelWindow.Hide();
                         });
                     }
 
@@ -323,7 +405,9 @@ namespace RacingOverlay
                             }
 
                             TireWindow = new TireWindow(new TelemetryData(telemetryData), WindowSettings);
-                            TireWindow.Show();
+
+                            if (bool.Parse(WindowSettings.TireSettings["Visible"]))
+                                TireWindow.Show();
 
                             Dispatcher.Run();
                         });
@@ -340,7 +424,13 @@ namespace RacingOverlay
 
                         TireWindow?.Dispatcher.Invoke(() =>
                         {
-                            TireWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            if (bool.Parse(WindowSettings.TireSettings["Visible"]))
+                            {
+                                TireWindow.Show();
+                                TireWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                            }
+                            else
+                                TireWindow.Hide();
                         });
                     }
                 }
@@ -418,32 +508,15 @@ namespace RacingOverlay
             return null;
         }
 
-        #region Standings
-
-        private void StandingsOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (StandingsWindow != null)
-            {
-                WindowSettings.StandingsSettings["Opacity"] = (StandingsOpacity.Value / 100).ToString();
-            }
-        }
-
-        private void standingsLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (StandingsWindow != null)
-            {
-                standingsLock.Content = StandingsWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
-                StandingsWindow.Locked = !StandingsWindow.Locked;
-                WindowSettings.StandingsSettings["Locked"] = (StandingsWindow.Locked).ToString();
-            }
-        }
-
+        #region Save
         private void standingsSave_Click(object sender, RoutedEventArgs e)
         {
             if (StandingsWindow != null)
             {
+                _configuration.AppSettings.Settings["StandingsWindowSize"].Value = ((int)StandingsSize.Value).ToString();
                 StandingsWindow?.Dispatcher.Invoke(() =>
                 {
+                    _configuration.AppSettings.Settings["StandingsWindowVisible"].Value = (StandingsWindow.Visibility == Visibility.Visible).ToString();
                     _configuration.AppSettings.Settings["StandingsWindowOpacity"].Value = StandingsWindow.Opacity.ToString();
                     _configuration.AppSettings.Settings["StandingsWindowLocked"].Value = StandingsWindow.Locked.ToString();
                     _configuration.AppSettings.Settings["StandingsWindowXPos"].Value = StandingsWindow.Left.ToString();
@@ -455,46 +528,14 @@ namespace RacingOverlay
             }
         }
 
-        private void standingsReset_Click(object sender, RoutedEventArgs e)
-        {
-            if (StandingsWindow != null)
-            {
-                StandingsWindow?.Dispatcher.Invoke(() =>
-                {
-                    StandingsWindow.Left = 0;
-                    StandingsWindow.Top = 0;
-                });
-                    
-            }
-        }
-
-        #endregion
-        #region Relative
-
-        private void RelativeOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (RelativeWindow != null)
-            {
-                WindowSettings.RelativeSettings["Opacity"] = (RelativeOpacity.Value / 100).ToString();
-            }
-        }
-
-        private void relativeLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (RelativeWindow != null)
-            {
-                relativeLock.Content = RelativeWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
-                RelativeWindow.Locked = !RelativeWindow.Locked;
-                WindowSettings.RelativeSettings["Locked"] = (RelativeWindow.Locked).ToString();
-            }
-        }
-
         private void relativeSave_Click(object sender, RoutedEventArgs e)
         {
             if (RelativeWindow != null)
             {
+                _configuration.AppSettings.Settings["RelativeWindowSize"].Value = ((int)RelativeSize.Value).ToString();
                 RelativeWindow?.Dispatcher.Invoke(() =>
                 {
+                    _configuration.AppSettings.Settings["RelativeWindowVisible"].Value = (RelativeWindow.Visibility == Visibility.Visible).ToString();
                     _configuration.AppSettings.Settings["RelativeWindowOpacity"].Value = RelativeWindow.Opacity.ToString();
                     _configuration.AppSettings.Settings["RelativeWindowLocked"].Value = RelativeWindow.Locked.ToString();
                     _configuration.AppSettings.Settings["RelativeWindowXPos"].Value = RelativeWindow.Left.ToString();
@@ -506,53 +547,14 @@ namespace RacingOverlay
             }
         }
 
-        private void relativeReset_Click(object sender, RoutedEventArgs e)
-        {
-            if (RelativeWindow != null)
-            {
-                RelativeWindow?.Dispatcher.Invoke(() =>
-                {
-                    RelativeWindow.Left = 0;
-                    RelativeWindow.Top = 0;
-                });   
-            }
-        }
-
-        #endregion
-        #region Fuel
-
-        private void FuelOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (FuelWindow != null)
-            {
-                WindowSettings.FuelSettings["Opacity"] = (FuelOpacity.Value / 100).ToString();
-            }
-        }
-
-        private void FuelMeasurement_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (FuelWindow != null)
-            {
-                WindowSettings.FuelSettings["Measurement"] = FuelMeasurement.Value.ToString();
-            }
-        }
-
-        private void fuelLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (FuelWindow != null)
-            {
-                fuelLock.Content = FuelWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
-                FuelWindow.Locked = !FuelWindow.Locked;
-                WindowSettings.FuelSettings["Locked"] = (FuelWindow.Locked).ToString();
-            }
-        }
-
         private void fuelSave_Click(object sender, RoutedEventArgs e)
         {
             if (FuelWindow != null)
             {
+                _configuration.AppSettings.Settings["FuelWindowSize"].Value = ((int)FuelSize.Value).ToString();
                 FuelWindow?.Dispatcher.Invoke(() =>
                 {
+                    _configuration.AppSettings.Settings["FuelWindowVisible"].Value = (FuelWindow.Visibility == Visibility.Visible).ToString();
                     _configuration.AppSettings.Settings["FuelWindowOpacity"].Value = FuelWindow.Opacity.ToString();
                     _configuration.AppSettings.Settings["FuelWindowLocked"].Value = FuelWindow.Locked.ToString();
                     _configuration.AppSettings.Settings["FuelWindowXPos"].Value = FuelWindow.Left.ToString();
@@ -561,40 +563,6 @@ namespace RacingOverlay
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
-            }
-        }
-
-        private void fuelReset_Click(object sender, RoutedEventArgs e)
-        {
-            if (FuelWindow != null)
-            {
-                FuelWindow?.Dispatcher.Invoke(() =>
-                {
-                    FuelWindow.Left = 0;
-                    FuelWindow.Top = 0;
-                });
-            }
-        }
-
-        #endregion
-        #region Tire
-
-        private void TireOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (TireWindow != null)
-            {
-                WindowSettings.TireSettings["Opacity"] = (TireOpacity.Value / 100).ToString();
-            }
-        }
-
-
-        private void tiresLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (TireWindow != null)
-            {
-                tiresLock.Content = TireWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
-                TireWindow.Locked = !TireWindow.Locked;
-                WindowSettings.TireSettings["Locked"] = (TireWindow.Locked).ToString();
             }
         }
 
@@ -617,39 +585,6 @@ namespace RacingOverlay
             }
         }
 
-        private void tiresReset_Click(object sender, RoutedEventArgs e)
-        {
-            if (TireWindow != null)
-            {
-                TireWindow?.Dispatcher.Invoke(() =>
-                {
-                    TireWindow.Left = 0;
-                    TireWindow.Top = 0;
-                });
-            }
-        }
-
-        #endregion
-        #region SimpleTrack
-
-        private void SimpleTrackOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (SimpleTrackWindow != null)
-            {
-                WindowSettings.SimpleTrackSettings["Opacity"] = (SimpleTrackOpacity.Value / 100).ToString();
-            }
-        }
-
-        private void simpleTrackLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (SimpleTrackWindow != null)
-            {
-                simpleTrackLock.Content = SimpleTrackWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
-                SimpleTrackWindow.Locked = !SimpleTrackWindow.Locked;
-                WindowSettings.SimpleTrackSettings["Locked"] = (SimpleTrackWindow.Locked).ToString();
-            }
-        }
-
         private void simpleTrackSave_Click(object sender, RoutedEventArgs e)
         {
             if (SimpleTrackWindow != null)
@@ -665,39 +600,6 @@ namespace RacingOverlay
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
-            }
-        }
-
-        private void simpleTrackReset_Click(object sender, RoutedEventArgs e)
-        {
-            if (SimpleTrackWindow != null)
-            {
-                SimpleTrackWindow?.Dispatcher.Invoke(() =>
-                {
-                    SimpleTrackWindow.Left = 0;
-                    SimpleTrackWindow.Top = 0;
-                });
-            }
-        }
-
-        #endregion
-        #region FullTrack
-
-        private void FullTrackOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (FullTrackWindow != null)
-            {
-                WindowSettings.FullTrackSettings["Opacity"] = (FullTrackOpacity.Value / 100).ToString();
-            }
-        }
-
-        private void fullTrackLock_Click(object sender, RoutedEventArgs e)
-        {
-            if (FullTrackWindow != null)
-            {
-                fullTrackLock.Content = FullTrackWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
-                FullTrackWindow.Locked = !FullTrackWindow.Locked;
-                WindowSettings.FullTrackSettings["Locked"] = (FullTrackWindow.Locked).ToString();
             }
         }
 
@@ -718,6 +620,298 @@ namespace RacingOverlay
             }
         }
 
+        private void globalSettingsSaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _configuration.AppSettings.Settings["DriverCount"].Value = driverDisplayCount.Value.ToString();
+
+            _configuration.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
+        }
+
+        #endregion
+
+        #region Opacity
+        private void StandingsOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (StandingsWindow != null)
+            {
+                WindowSettings.StandingsSettings["Opacity"] = (StandingsOpacity.Value / 100).ToString();
+            }
+        }
+
+        private void RelativeOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (RelativeWindow != null)
+            {
+                WindowSettings.RelativeSettings["Opacity"] = (RelativeOpacity.Value / 100).ToString();
+            }
+        }
+
+        private void FuelOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (FuelWindow != null)
+            {
+                WindowSettings.FuelSettings["Opacity"] = (FuelOpacity.Value / 100).ToString();
+            }
+        }
+
+        private void TireOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (TireWindow != null)
+            {
+                WindowSettings.TireSettings["Opacity"] = (TireOpacity.Value / 100).ToString();
+            }
+        }
+
+        private void SimpleTrackOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (SimpleTrackWindow != null)
+            {
+                WindowSettings.SimpleTrackSettings["Opacity"] = (SimpleTrackOpacity.Value / 100).ToString();
+            }
+        }
+
+        private void FullTrackOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (FullTrackWindow != null)
+            {
+                WindowSettings.FullTrackSettings["Opacity"] = (FullTrackOpacity.Value / 100).ToString();
+            }
+        }
+        #endregion
+
+        #region Size
+        private void StandingsSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            GlobalSettings.StandingsSettings = new StandingsWindowSettings((int)e.NewValue);
+        }
+
+        private void RelativeSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            GlobalSettings.RelativeWindowSettings = new RelativeWindowSettings((int)e.NewValue);
+        }
+
+        private void FuelSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            GlobalSettings.FuelWindowSettings = new FuelWindowSettings((int)e.NewValue);
+        }
+
+        private void TireSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            GlobalSettings.TireWindowSettings = new TireWindowSettings((int)e.NewValue);
+        }
+
+        private void FullTrackSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            GlobalSettings.FullTrackSettings = new FullTrackSettings((int)e.NewValue);
+        }
+        #endregion
+
+        #region Lock
+        private void standingsLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (StandingsWindow != null)
+            {
+                standingsLock.Content = StandingsWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
+                StandingsWindow.Locked = !StandingsWindow.Locked;
+                WindowSettings.StandingsSettings["Locked"] = (StandingsWindow.Locked).ToString();
+            }
+        }
+
+        private void relativeLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (RelativeWindow != null)
+            {
+                relativeLock.Content = RelativeWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
+                RelativeWindow.Locked = !RelativeWindow.Locked;
+                WindowSettings.RelativeSettings["Locked"] = (RelativeWindow.Locked).ToString();
+            }
+        }
+
+        private void fuelLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (FuelWindow != null)
+            {
+                fuelLock.Content = FuelWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
+                FuelWindow.Locked = !FuelWindow.Locked;
+                WindowSettings.FuelSettings["Locked"] = (FuelWindow.Locked).ToString();
+            }
+        }
+
+        private void tiresLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (TireWindow != null)
+            {
+                tiresLock.Content = TireWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
+                TireWindow.Locked = !TireWindow.Locked;
+                WindowSettings.TireSettings["Locked"] = (TireWindow.Locked).ToString();
+            }
+        }
+
+        private void simpleTrackLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (SimpleTrackWindow != null)
+            {
+                simpleTrackLock.Content = SimpleTrackWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
+                SimpleTrackWindow.Locked = !SimpleTrackWindow.Locked;
+                WindowSettings.SimpleTrackSettings["Locked"] = (SimpleTrackWindow.Locked).ToString();
+            }
+        }
+
+        private void fullTrackLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (FullTrackWindow != null)
+            {
+                fullTrackLock.Content = FullTrackWindow.Locked ? new Image { Source = UnlockedIcon } : new Image { Source = LockedIcon };
+                FullTrackWindow.Locked = !FullTrackWindow.Locked;
+                WindowSettings.FullTrackSettings["Locked"] = (FullTrackWindow.Locked).ToString();
+            }
+        }
+        #endregion
+
+        #region Visibility
+        private void standingsVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            if (StandingsWindow != null)
+            {
+                StandingsWindow?.Dispatcher.Invoke(() =>
+                {
+                    StandingsWindow.Visibility = StandingsWindow.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                    WindowSettings.StandingsSettings["Visible"] = (StandingsWindow.Visibility == Visibility.Visible).ToString();
+                });
+                standingsVisibility.Content = StandingsWindow.Visibility == Visibility.Visible ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            }
+        }
+
+        private void relativeVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            if (RelativeWindow != null)
+            {
+                RelativeWindow?.Dispatcher.Invoke(() =>
+                {
+                    RelativeWindow.Visibility = RelativeWindow.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                    WindowSettings.RelativeSettings["Visible"] = (RelativeWindow.Visibility == Visibility.Visible).ToString();
+                });
+                relativeVisibility.Content = RelativeWindow.Visibility == Visibility.Visible ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            }
+        }
+
+        private void fuelVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            if (FuelWindow != null)
+            {
+                FuelWindow?.Dispatcher.Invoke(() =>
+                {
+                    FuelWindow.Visibility = FuelWindow.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                    WindowSettings.FuelSettings["Visible"] = (FuelWindow.Visibility == Visibility.Visible).ToString();
+                });
+                fuelVisibility.Content = FuelWindow.Visibility == Visibility.Visible ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            }
+        }
+
+        private void tiresVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            if (TireWindow != null)
+            {
+                TireWindow?.Dispatcher.Invoke(() =>
+                {
+                    TireWindow.Visibility = TireWindow.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                    WindowSettings.TireSettings["Visible"] = (TireWindow.Visibility == Visibility.Visible).ToString();
+                });
+                tiresVisibility.Content = TireWindow.Visibility == Visibility.Visible ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            }
+        }
+
+        private void simpleTrackVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            if (simpleTrackVisibility != null)
+            {
+                SimpleTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    SimpleTrackWindow.Visibility = SimpleTrackWindow.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                    WindowSettings.SimpleTrackSettings["Visible"] = (SimpleTrackWindow.Visibility == Visibility.Visible).ToString();
+                });
+                simpleTrackVisibility.Content = SimpleTrackWindow.Visibility == Visibility.Visible ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            }
+        }
+
+        private void fullTrackVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            if (FullTrackWindow != null)
+            {
+                FullTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    FullTrackWindow.Visibility = FullTrackWindow.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                    WindowSettings.FullTrackSettings["Visible"] = (FullTrackWindow.Visibility == Visibility.Visible).ToString();
+                });
+                fullTrackVisibility.Content = FullTrackWindow.Visibility == Visibility.Visible ? new Image { Source = VisibleIcon } : new Image { Source = HiddenIcon };
+            }
+        }
+        #endregion
+
+        #region Reset
+
+        private void standingsReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (StandingsWindow != null)
+            {
+                StandingsWindow?.Dispatcher.Invoke(() =>
+                {
+                    StandingsWindow.Left = 0;
+                    StandingsWindow.Top = 0;
+                });
+                    
+            }
+        }
+
+        private void relativeReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (RelativeWindow != null)
+            {
+                RelativeWindow?.Dispatcher.Invoke(() =>
+                {
+                    RelativeWindow.Left = 0;
+                    RelativeWindow.Top = 0;
+                });
+            }
+        }
+
+        private void fuelReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (FuelWindow != null)
+            {
+                FuelWindow?.Dispatcher.Invoke(() =>
+                {
+                    FuelWindow.Left = 0;
+                    FuelWindow.Top = 0;
+                });
+            }
+        }
+
+        private void tiresReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (TireWindow != null)
+            {
+                TireWindow?.Dispatcher.Invoke(() =>
+                {
+                    TireWindow.Left = 0;
+                    TireWindow.Top = 0;
+                });
+            }
+        }
+
+        private void simpleTrackReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (SimpleTrackWindow != null)
+            {
+                SimpleTrackWindow?.Dispatcher.Invoke(() =>
+                {
+                    SimpleTrackWindow.Left = 0;
+                    SimpleTrackWindow.Top = 0;
+                });
+            }
+        }
+
         private void fullTrackReset_Click(object sender, RoutedEventArgs e)
         {
             if (FullTrackWindow != null)
@@ -731,11 +925,15 @@ namespace RacingOverlay
         }
 
         #endregion
-        #region Global
 
-        private void uiZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        #region Global/Custom
+
+        private void FuelMeasurement_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            GlobalSettings.UISize = new UISize((int)uiZoom.Value);
+            if (FuelWindow != null)
+            {
+                WindowSettings.FuelSettings["Measurement"] = FuelMeasurement.Value.ToString();
+            }
         }
 
         private void driverDisplayCount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -749,16 +947,6 @@ namespace RacingOverlay
                 GlobalSettings.SimpleTrackSettings.ContainerWidth = (int)SimpleTrackWidth.Value;
         }
 
-        private void globalSettingsSaveBtn_Click(object sender, RoutedEventArgs e)
-        {
-            _configuration.AppSettings.Settings["UIZoom"].Value = uiZoom.Value.ToString();
-            _configuration.AppSettings.Settings["DriverCount"].Value = driverDisplayCount.Value.ToString();
-
-            _configuration.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("appSettings");
-        }
-
-
         #endregion
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
@@ -766,5 +954,7 @@ namespace RacingOverlay
             CloseAllWindows();
             Application.Current.Shutdown();
         }
+
+        
     }
 }

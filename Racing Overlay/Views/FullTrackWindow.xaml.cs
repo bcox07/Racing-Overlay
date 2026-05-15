@@ -161,13 +161,13 @@ namespace RacingOverlay.Windows
 
         private void DisplayTrackMap()
         {
-            if (UpdatedWidth != DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
+            if (UpdatedWidth != DefaultWidth * (_GlobalSettings.FullTrackSettings.Percentage / 100.0))
             {
-                UpdatedWidth = DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0);
-                var updatedHeight = 300 * (_GlobalSettings.UISize.Percentage / 100.0);
+                UpdatedWidth = DefaultWidth * (_GlobalSettings.FullTrackSettings.Percentage / 100.0);
+                var updatedHeight = 300 * (_GlobalSettings.FullTrackSettings.Percentage / 100.0);
                 var transformData = GetTrackMapTransformData();
 
-                if (UpdatedWidth > DefaultWidth * (_GlobalSettings.UISize.Percentage / 100.0))
+                if (UpdatedWidth > DefaultWidth * (_GlobalSettings.FullTrackSettings.Percentage / 100.0))
                 {
                     Dispatcher.Invoke(() =>
                     {
@@ -199,13 +199,17 @@ namespace RacingOverlay.Windows
             //GetSamplePoints(_TrackJsonData);
             GetTrackJsonData();
             //var generatedCoordinates = GenerateCoordinates();
+            //GetPointsBetween(3, 1520, 1571, generatedCoordinates);
+            //GetPointsBetween(3, 1622, 1930, generatedCoordinates);
+            //GetPointsBetween(3, 3218, 3254, generatedCoordinates);
+            //GetPointsBetween(3, 3254, 3285, generatedCoordinates);
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
-                //if (driver.Name.StartsWith("Brian D"))
-                //{
-                //    Trace.WriteLine((int)driver.PosOnTrack);
-                //}
+                if (driver.Name.StartsWith("Daniel W"))
+                {
+                    Trace.WriteLine((int)driver.PosOnTrack);
+                }
 
                 if (_TrackJsonData == null)
                 {
@@ -244,8 +248,8 @@ namespace RacingOverlay.Windows
                 
                 Dispatcher.Invoke(() =>
                 {
-                    var basePositionSize = LocalTelemetry.TrackLength > 10000 ? _GlobalSettings.UISize.FullTrackSettings.PositionDiameter * 0.7 : _GlobalSettings.UISize.FullTrackSettings.PositionDiameter;
-                    var baseFontSize = LocalTelemetry.TrackLength > 10000 ? _GlobalSettings.UISize.FullTrackSettings.FontSize * 0.7 : _GlobalSettings.UISize.FullTrackSettings.FontSize;
+                    var basePositionSize = LocalTelemetry.TrackLength > 10000 ? _GlobalSettings.FullTrackSettings.PositionDiameter * 0.7 : _GlobalSettings.FullTrackSettings.PositionDiameter;
+                    var baseFontSize = LocalTelemetry.TrackLength > 10000 ? _GlobalSettings.FullTrackSettings.DataFontSize * 0.7 : _GlobalSettings.FullTrackSettings.DataFontSize;
                     var position = CreatePositionPixel(coordinates,
                     $"{driver.ClassId}-{driver.CarId}",
                     basePositionSize,
@@ -256,10 +260,10 @@ namespace RacingOverlay.Windows
 
                     // For some reason the horizontal placement becomes misaligned as the scale gets larger
                     // This leftOffset re-aligns the placements
-                    var leftOffset = _GlobalSettings.UISize.Percentage - 100 > 0 ? (_GlobalSettings.UISize.Percentage - 100) / 20 : 0;
+                    var leftOffset = _GlobalSettings.FullTrackSettings.Percentage - 100 > 0 ? (_GlobalSettings.FullTrackSettings.Percentage - 100) / 20 : 0;
 
-                    Canvas.SetLeft(position, coordinates[0] * (_GlobalSettings.UISize.Percentage / 100.0) - leftOffset);
-                    Canvas.SetTop(position, coordinates[1] * (_GlobalSettings.UISize.Percentage / 100.0));
+                    Canvas.SetLeft(position, coordinates[0] * (_GlobalSettings.FullTrackSettings.Percentage / 100.0) - leftOffset);
+                    Canvas.SetTop(position, coordinates[1] * (_GlobalSettings.FullTrackSettings.Percentage / 100.0));
                     Canvas.SetZIndex(position, 99 - (driver.OverallPosition ?? 99));
                 
                     if (driver.CarId == LocalTelemetry.FeedTelemetry.CamCarIdx)
@@ -322,10 +326,10 @@ namespace RacingOverlay.Windows
 
             // For some reason the horizontal placement becomes misaligned as the scale gets larger
             // This leftOffset re-aligns the placements
-            var leftOffset = _GlobalSettings.UISize.Percentage - 100 > 0 ? (_GlobalSettings.UISize.Percentage - 100) / 20 : 0;
+            var leftOffset = _GlobalSettings.FullTrackSettings.Percentage - 100 > 0 ? (_GlobalSettings.FullTrackSettings.Percentage - 100) / 20 : 0;
 
-            Canvas.SetLeft(position, coordinate[0] * (_GlobalSettings.UISize.Percentage / 100.0) - leftOffset);
-            Canvas.SetTop(position, coordinate[1] * (_GlobalSettings.UISize.Percentage / 100.0));
+            Canvas.SetLeft(position, coordinate[0] * (_GlobalSettings.FullTrackSettings.Percentage / 100.0) - leftOffset);
+            Canvas.SetTop(position, coordinate[1] * (_GlobalSettings.FullTrackSettings.Percentage / 100.0));
 
             return position;
         }
@@ -337,7 +341,7 @@ namespace RacingOverlay.Windows
             {
                 foreach (var coordinate in _TrackJsonData)
                 {
-                    if (int.Parse(coordinate.Key) % 60 == 0)
+                    if (int.Parse(coordinate.Key) % 10 == 0)
                     {
                         var pixel = CreatePositionPixel(coordinate.Value, 
                             null, 
@@ -364,9 +368,139 @@ namespace RacingOverlay.Windows
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
 
-            points.Add(0, new List<double>    { 138.14, 217.09 });
-            points.Add(25175, new List<double>{ 139.10, 216.09 });
-            
+            points.Add(0, new List<double>    { 175.56, 263.00 });
+
+            points.Add(56, new List<double>  { 192.04, 261.00 }); //
+            points.Add(112, new List<double> { 208.38, 257.88 }); //
+            points.Add(169, new List<double> { 224.53, 254.54 }); //
+            points.Add(225, new List<double> { 240.72, 250.02 }); //
+            points.Add(281, new List<double> { 254.26, 241.79 }); //
+            points.Add(338, new List<double> { 267.86, 231.85 }); //
+            points.Add(394, new List<double> { 281.1 , 221.83 }); //
+
+            points.Add(408, new List<double> { 284.30, 219.21 }); //
+            points.Add(422, new List<double> { 287.47, 216.35 }); //
+            points.Add(436, new List<double> { 290.64, 213.18 }); //
+
+
+
+            points.Add(451, new List<double>  { 292.40, 208.99 });
+
+            points.Add(465, new List<double> { 291.93, 204.95 }); //
+            points.Add(479, new List<double> { 290.01, 201.48 }); //
+            points.Add(493, new List<double> { 287.08, 198.72 }); //
+            points.Add(507, new List<double> { 283.26, 196.66 }); //
+            points.Add(521, new List<double> { 279.33, 196.29 }); //
+
+
+            points.Add(536, new List<double>  { 275.70, 197.09 });
+
+            points.Add(566, new List<double> { 269.36, 203.61 }); //
+            points.Add(597, new List<double> { 264.26, 210.50 }); //
+            points.Add(628, new List<double> { 258.16, 216.96 }); //
+            points.Add(659, new List<double> { 251.16, 222.54 }); //
+            points.Add(689, new List<double> { 243.79, 227.36 }); //
+            points.Add(720, new List<double> { 236.2 , 231.63 }); //
+            points.Add(751, new List<double> { 228.2 , 235.21 }); //
+
+            points.Add(766, new List<double> { 223.96, 236.53 }); //
+
+            points.Add(782, new List<double>  { 219.40, 236.29 });
+
+            points.Add(798, new List<double> { 214.42, 234.37 }); //
+
+            points.Add(814, new List<double> { 211.69, 230.43 });  //
+            points.Add(1009, new List<double> { 188.62, 175.85 }); //
+
+            points.Add(1042, new List<double> { 188.40, 166.09 });
+
+            points.Add(1056, new List<double> { 189.72, 161.96 }); //
+            points.Add(1071, new List<double> { 192.41, 158.35 }); //
+            points.Add(1086, new List<double> { 195.60, 154.93 }); //
+
+            points.Add(1101, new List<double> { 199.19, 151.82 }); //
+            points.Add(1161, new List<double> { 213.50, 139.60 }); //
+            points.Add(1221, new List<double> { 227.81, 128.67 }); //
+            points.Add(1281, new List<double> { 244.01, 120.24 }); //
+            points.Add(1340, new List<double> { 261.57, 113.78 }); //
+            points.Add(1400, new List<double> { 278.88, 107.55 }); //
+            points.Add(1460, new List<double> { 296.18, 101.12 }); //
+
+            points.Add(1475, new List<double> { 300.43, 98.67 }); //
+            points.Add(1490, new List<double> { 303.55, 94.98 }); //
+            points.Add(1505, new List<double> { 305.47, 90.68 }); //
+
+            points.Add(1520, new List<double> { 305.99, 86.09  });
+
+            points.Add(1532, new List<double> { 305.78, 82.70 }); //
+            points.Add(1545, new List<double> { 304.75, 79.64 }); //
+            points.Add(1558, new List<double> { 303.22, 76.57 }); //
+
+            points.Add(1571, new List<double> { 301.29, 73.60 }); //
+            points.Add(1622, new List<double> { 292.24, 63.77 }); //
+
+            points.Add(1699, new List<double> { 277.49, 48.58 }); //
+            points.Add(1776, new List<double> { 262.13, 33.38 }); //
+            points.Add(1853, new List<double> { 246.76, 18.79 }); //
+
+
+            points.Add(1930, new List<double> { 231.20, 4.59   });
+
+            points.Add(1982, new List<double> { 216.25, 5.57  }); //
+            points.Add(2035, new List<double> { 201.57, 8.72  }); //
+            points.Add(2088, new List<double> { 187.29, 14.86 }); //
+            points.Add(2141, new List<double> { 174.41, 23.21 }); //
+            points.Add(2194, new List<double> { 161.83, 31.75 }); //
+            points.Add(2247, new List<double> { 149.16, 40.35 }); //
+            points.Add(2300, new List<double> { 136.58, 49.44 }); //
+
+
+            points.Add(2353, new List<double> { 123.70, 59.69  });
+
+            points.Add(2429, new List<double> { 102.26, 68.30 }); //
+
+
+            points.Add(2440, new List<double> { 100.30, 70.69  });
+
+            points.Add(2450, new List<double> { 99.97 , 73.57 }); //
+            points.Add(2460, new List<double> { 101.06, 76.51 }); //
+            points.Add(2470, new List<double> { 102.15, 79.45 }); //
+
+            points.Add(2481, new List<double> { 102.50, 82.69 });
+
+            points.Add(2511, new List<double> { 98.75, 89.77  }); //
+            points.Add(2542, new List<double> { 92.13, 95.29  }); //
+            points.Add(2572, new List<double> { 85.06, 100.50 }); //
+            points.Add(2603, new List<double> { 77.44, 105.92 }); //
+            points.Add(2634, new List<double> { 70.81, 112.14 }); //
+            points.Add(2664, new List<double> { 65.80, 119.74 }); //
+            points.Add(2695, new List<double> { 63.92, 128.17 }); //
+
+            points.Add(2726, new List<double> { 64.60 , 136.69 });
+
+            points.Add(2756, new List<double> { 69.12, 143.88 }); //
+            points.Add(2938, new List<double> { 111.49, 176.83 }); //
+
+            points.Add(2969, new List<double> { 115.99, 184.19 });
+
+            points.Add(3004, new List<double> { 114.30, 193.90 }); //
+            points.Add(3218, new List<double> { 86.80, 250.39 });  //
+
+            points.Add(3227, new List<double> { 85.58, 252.63 });  //
+            points.Add(3236, new List<double> { 84.52, 255.00 });  //
+            points.Add(3245, new List<double> { 83.85, 257.54 });  //
+
+
+            points.Add(3254, new List<double> { 84.09 , 260.19 });
+
+            points.Add(3261, new List<double> { 85.72, 261.79 }); //
+            points.Add(3269, new List<double> { 87.88, 262.46 }); //
+            points.Add(3277, new List<double> { 90.19, 262.63 }); //
+
+            points.Add(3285, new List<double> { 92.51, 262.61 });  //
+
+
+            points.Add(3564, new List<double> { 174.56, 263.00 });
 
             var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;
@@ -414,7 +548,7 @@ namespace RacingOverlay.Windows
 
             for (double i = a; i <= b; i += step)
             {
-                Console.WriteLine($"{(int)i}: Canvas.Left=\"{coordinates[(int)i].Item1}\"\t\tCanvas.Top=\"{coordinates[(int)i].Item2}\"");
+                Console.WriteLine($"{(int)i}: Canvas.Left=\"{coordinates[(int)i].Item1.ToString("F2")}\"\t\tCanvas.Top=\"{coordinates[(int)i].Item2.ToString("F2")}\"");
             }
             Console.WriteLine();
         }
@@ -423,7 +557,7 @@ namespace RacingOverlay.Windows
         {
             foreach (var point in coordinates.ToDictionary(c => int.Parse(c.Key), c => c.Value))
             {
-                if (point.Key % 50 == 0)
+                if (point.Key % 10 == 0)
                     Console.WriteLine($"points.Add({point.Key}, new List<double> {{{point.Value[0]},{point.Value[1]}}});");
             }
         }

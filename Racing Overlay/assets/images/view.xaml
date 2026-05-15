@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="view_xaml">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,300.0,300.0"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup>
+            <GeometryDrawing Brush="#ffffffff">
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="126.50403" RadiusY="62.510704" Center="150.00003,150.0007"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff000000">
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="30.948215" RadiusY="30.948215" Center="150.00322,150.00322"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing>
+                <GeometryDrawing.Pen>
+                    <Pen Brush="#ff000000" LineJoin="Round" Thickness="6.235" EndLineCap="Square" StartLineCap="Square"/>
+                </GeometryDrawing.Pen>
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="126.50403" RadiusY="62.510704" Center="149.99953,150.0002"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingImage Drawing="{StaticResource view_xaml}" x:Key="di_view_xaml"/>
+</ResourceDictionary>

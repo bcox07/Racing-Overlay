@@ -1,47 +1,55 @@
 ﻿namespace RacingOverlay.Models
 {
-    public class FullTrackSettings
+    public class FullTrackSettings : UISize
     {
-        public FullTrackSettings(int globalSizePreset)
+        public FullTrackSettings(int sizePreset) : base(sizePreset)
         {
-            switch (globalSizePreset)
+            switch (sizePreset)
             {
                 case 0:
-                    FontSize = 8;
+                    DataFontSize = 8;
                     PositionDiameter = 18;
+                    Percentage = 70;
                     break;
                 case 1:
-                    FontSize = 10;
+                    DataFontSize = 10;
                     PositionDiameter = 20;
+                    Percentage = 100;
                     break;
                 case 2:
-                    FontSize = 12;
+                    DataFontSize = 12;
                     PositionDiameter = 22;
+                    Percentage = 130;
                     break;
                 case 3:
-                    FontSize = 13;
+                    DataFontSize = 13;
                     PositionDiameter = 24;
+                    Percentage = 160;
                     break;
                 case 4:
-                    FontSize = 14;
+                    DataFontSize = 14;
                     PositionDiameter = 26;
+                    Percentage = 190;
                     break;
                 case 5:
-                    FontSize = 15;
+                    DataFontSize = 15;
                     PositionDiameter = 28;
+                    Percentage = 220;
                     break;
                 case 6:
-                    FontSize = 16;
+                    DataFontSize = 16;
                     PositionDiameter = 30;
+                    Percentage = 250;
                     break;
                 default:
-                    FontSize = 10;
+                    DataFontSize = 10;
                     PositionDiameter = 20;
+                    Percentage = 70;
                     break;
             }
         }
 
-        public int FontSize { get; set; }
         public int PositionDiameter { get; set; }
+        public int Percentage { get; set; }
     }
 }

@@ -69,6 +69,7 @@
                 </GeometryDrawing.Geometry>
             </GeometryDrawing>
         </DrawingGroup>
+        <ResourceDictionary x:Key="view_icon" Source="/assets/images/view.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="acura-logo" Source="pack://application:,,,/assets/images/acura-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="aston-martin-logo" Source="pack://application:,,,/assets/images/aston-martin-logo.xaml"></ResourceDictionary>
         <ResourceDictionary x:Key="audi-logo" Source="pack://application:,,,/assets/images/audi-logo.xaml"></ResourceDictionary>

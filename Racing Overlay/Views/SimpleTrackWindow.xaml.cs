@@ -68,22 +68,22 @@ namespace RacingOverlay.Windows
                 Dispatcher.Invoke(() =>
                 {
                     Width = _GlobalSettings.SimpleTrackSettings.ContainerWidth;
-                    MainBorder.Height = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter + 2;
-                    MainBorder.Clip = new RectangleGeometry(new Rect(0, 0, Width - 4, _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter + 2), _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter / 2 + 4, _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter / 2 + 2);
-                    TrackCanvas.Height = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter + 2;
-                    CanvasBorder.Height = _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter + 2;
-                    CanvasBorder.Margin = new Thickness(0, (_GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter * -1) - 2, 0, 0);
-                    CanvasBorder.CornerRadius = new CornerRadius(_GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter / 2 + 3);
+                    MainBorder.Height = _GlobalSettings.SimpleTrackSettings.PositionDiameter + 2;
+                    MainBorder.Clip = new RectangleGeometry(new Rect(0, 0, Width - 4, _GlobalSettings.SimpleTrackSettings.PositionDiameter + 2), _GlobalSettings.SimpleTrackSettings.PositionDiameter / 2 + 4, _GlobalSettings.SimpleTrackSettings.PositionDiameter / 2 + 2);
+                    TrackCanvas.Height = _GlobalSettings.SimpleTrackSettings.PositionDiameter + 2;
+                    CanvasBorder.Height = _GlobalSettings.SimpleTrackSettings.PositionDiameter + 2;
+                    CanvasBorder.Margin = new Thickness(0, (_GlobalSettings.SimpleTrackSettings.PositionDiameter * -1) - 2, 0, 0);
+                    CanvasBorder.CornerRadius = new CornerRadius(_GlobalSettings.SimpleTrackSettings.PositionDiameter / 2 + 3);
                     RelativeGeometry.Rect = new Rect(0, 0, Width - 4, 26);
                 });
 
                 var position = CreatePositionPixel(driver.PosOnTrack,
                     $"{driver.ClassId}-{driver.CarId}",
-                    _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter,
-                    _GlobalSettings.UISize.SimpleTrackSettings.PositionDiameter,
+                    _GlobalSettings.SimpleTrackSettings.PositionDiameter,
+                    _GlobalSettings.SimpleTrackSettings.PositionDiameter,
                     driver.ClassPosition.ToString(),
                     (SolidColorBrush)new BrushConverter().ConvertFrom(driver.ClassColor.Replace("0x", "#")),
-                    _GlobalSettings.UISize.SimpleTrackSettings.FontSize);
+                    _GlobalSettings.SimpleTrackSettings.DataFontSize);
 
                 Canvas.SetZIndex(position, 99 - (driver.OverallPosition ?? 99));
 
