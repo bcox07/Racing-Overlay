@@ -39,7 +39,7 @@ namespace RacingOverlay.Helpers
                 grid.Children.Insert(cellIndex, element);
         }
 
-        public static Border DesignSafetyRating(int rowIndex, Driver driver, Thickness? thickness, int fontSize, Brush primaryColor, Brush secondaryColor, bool flip = false)
+        public static Border DesignSafetyRating(int rowIndex, Driver driver, Thickness? thickness, double fontSize, Brush primaryColor, Brush secondaryColor, bool flip = false)
         {
             var outerBorder = new Border();
             Color myShadowColor = Color.FromArgb(0, 0, 0, 0);
@@ -86,7 +86,7 @@ namespace RacingOverlay.Helpers
             return outerBorder;
         }
 
-        private static void FormatSafetyRatingTextBlock(TextBlock textBlock, Driver driver, int fontSize)
+        private static void FormatSafetyRatingTextBlock(TextBlock textBlock, Driver driver, double fontSize)
         {
             textBlock.FontSize = fontSize;
             textBlock.FontWeight = FontWeights.Bold;

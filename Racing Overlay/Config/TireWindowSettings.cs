@@ -9,50 +9,42 @@ namespace RacingOverlay.Models
             switch (sizePreset)
             {
                 case 0:
-                    WindowWidth = 200;
-                    WindowHeight = 100;
+                    WindowWidth = 100;
                     TitleFontSize = 11;
                     DataFontSize = 11;
                     break;
                 case 1:
-                    WindowWidth = 220;
-                    WindowHeight = 100;
-                    TitleFontSize = 12;
-                    DataFontSize = 12;
+                    WindowWidth = 115;
+                    TitleFontSize = 12.5;
+                    DataFontSize = 12.5;
                     break;
                 case 2:
-                    WindowWidth = 240;
-                    WindowHeight = 100;
-                    TitleFontSize = 13;
-                    DataFontSize = 13;
-                    break;
-                case 3:
-                    WindowWidth = 260;
-                    WindowHeight = 100;
-                    TitleFontSize = 14;
+                    WindowWidth = 130;
+                    TitleFontSize = 15;
                     DataFontSize = 14;
                     break;
-                case 4:
-                    WindowWidth = 280;
-                    WindowHeight = 100;
-                    TitleFontSize = 15;
-                    DataFontSize = 15;
-                    break;
-                case 5:
-                    WindowWidth = 300;
-                    WindowHeight = 100;
-                    TitleFontSize = 16;
-                    DataFontSize = 16;
-                    break;
-                case 6:
-                    WindowWidth = 320;
-                    WindowHeight = 100;
+                case 3:
+                    WindowWidth = 145;
                     TitleFontSize = 17;
+                    DataFontSize = 15.5;
+                    break;
+                case 4:
+                    WindowWidth = 160;
+                    TitleFontSize = 19;
                     DataFontSize = 17;
                     break;
+                case 5:
+                    WindowWidth = 175;
+                    TitleFontSize = 21;
+                    DataFontSize = 18.5;
+                    break;
+                case 6:
+                    WindowWidth = 190;
+                    TitleFontSize = 23;
+                    DataFontSize = 20;
+                    break;
                 default:
-                    WindowWidth = 200;
-                    WindowHeight = 100;
+                    WindowWidth = 100;
                     TitleFontSize = 11;
                     DataFontSize = 11;
                     break;

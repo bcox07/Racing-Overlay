@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RacingOverlay.Models;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +15,7 @@ namespace RacingOverlay
     {
         TelemetryData LocalTelemetry;
         public bool Locked = false;
-        public TireWindow(TelemetryData telemetryData, WindowSettings settings)
+        public TireWindow(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
             LocalTelemetry = telemetryData;
             InitializeComponent();
@@ -23,6 +24,8 @@ namespace RacingOverlay
             Locked = bool.Parse(settings.TireSettings["Locked"] ?? "false");
             Left = double.Parse(settings.TireSettings["XPos"] ?? "0");
             Top = double.Parse(settings.TireSettings["YPos"] ?? "0");
+            Width = globalSettings.TireWindowSettings.WindowWidth;
+            Height = globalSettings.TireWindowSettings.WindowWidth * 1.571428;
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -34,9 +37,23 @@ namespace RacingOverlay
             }
         }
 
-        public void UpdateTelemetryData(TelemetryData telemetryData, WindowSettings settings)
+        public void UpdateTelemetryData(TelemetryData telemetryData, GlobalSettings globalSettings, WindowSettings settings)
         {
             Opacity = double.Parse(settings.TireSettings["Opacity"]);
+            Width = globalSettings.TireWindowSettings.WindowWidth;
+            Height = globalSettings.TireWindowSettings.WindowWidth * 1.571428;
+            LFTempBorder.CornerRadius = new CornerRadius(Width * 0.09375);
+            RFTempBorder.CornerRadius = new CornerRadius(Width * 0.09375);
+            LRTempBorder.CornerRadius = new CornerRadius(Width * 0.09375);
+            RRTempBorder.CornerRadius = new CornerRadius(Width * 0.09375);
+            LFTemp.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            RFTemp.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            LRTemp.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            RRTemp.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            LFWear.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            RFWear.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            LRWear.FontSize = globalSettings.TireWindowSettings.DataFontSize;
+            RRWear.FontSize = globalSettings.TireWindowSettings.DataFontSize;
             if (DateTime.UtcNow.Second % 10 == 0)
             {
                 Dispatcher.Invoke(() =>
@@ -92,59 +109,9 @@ namespace RacingOverlay
 
         private void SetTireColor(Border tireBox, TireData tireData)
         {
-            string leftColor;
-            if (tireData.Temp.Item1 < 70)
-            {
-                leftColor = "#35a5f2";
-            }
-            else if (tireData.Temp.Item1 < 95)
-            {
-                leftColor = "#2cd129";
-            }
-            else if (tireData.Temp.Item1 < 105)
-            {
-                leftColor = "#e0ec21";
-            }
-            else
-            {
-                leftColor = "#e02e2e";
-            }
-
-            string middleColor;
-            if (tireData.Temp.Item2 < 70)
-            {
-                middleColor = "#35a5f2";
-            }
-            else if (tireData.Temp.Item2 < 95)
-            {
-                middleColor = "#2cd129";
-            }
-            else if (tireData.Temp.Item2 < 105)
-            {
-                middleColor = "#e0ec21";
-            }
-            else
-            {
-                middleColor = "#e02e2e";
-            }
-
-            string rightColor;
-            if (tireData.Temp.Item3 < 70)
-            {
-                rightColor = "#35a5f2";
-            }
-            else if (tireData.Temp.Item3 < 95)
-            {
-                rightColor = "#2cd129";
-            }
-            else if (tireData.Temp.Item3 < 105)
-            {
-                rightColor = "#e0ec21";
-            }
-            else
-            {
-                rightColor = "#e02e2e";
-            }
+            string leftColor = SetSectionColor(tireData.Temp.Item1);
+            string middleColor = SetSectionColor(tireData.Temp.Item2);
+            string rightColor = SetSectionColor(tireData.Temp.Item3);
 
 
             var gradientStopCollection = new GradientStopCollection
@@ -158,6 +125,20 @@ namespace RacingOverlay
             var gradient = new System.Windows.Media.LinearGradientBrush(gradientStopCollection, 0);
 
             tireBox.Background = gradient;
+        }
+
+        private string SetSectionColor(double temp)
+        {
+            if (temp < 70)
+                return "#35a5f2";
+
+            if (temp < 95)
+                return "#2cd129";
+
+            if (temp < 105)
+                return "#e0ec21";
+
+            return "#e02e2e";
         }
     }
 

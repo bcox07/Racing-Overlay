@@ -8,28 +8,70 @@
         Title="TireWindow" Height="220" Width="140" Background="#00000000" Foreground="#D8000000" Opacity="0.85" WindowStyle="None" AllowsTransparency="True">
     <Grid x:Name="fuelGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="8*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="8*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="110"></RowDefinition>
-            <RowDefinition Height="110"></RowDefinition>
+            <RowDefinition Height="12*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="12*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Border x:Name="LFTempBorder" CornerRadius="15" Background="#FF32A229" Margin="5" Grid.Row="0" Grid.Column="0">
-            <TextBlock x:Name="LFTemp" Text="100°"  Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center"  Padding="0 20 0 0" FontWeight="Bold"/>
+        <Border x:Name="LFTempBorder" CornerRadius="15" Background="#FF32A229" Grid.Row="0" Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="LFTemp" Text="100°" Foreground="#D8FFFFFF" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" FontWeight="Bold"/>
+                <TextBlock x:Name="LFWear" Text="100%" Foreground="#D8FFFFFF" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="3" FontWeight="Bold"/>
+            </Grid>
         </Border>
-        <Border x:Name="LRTempBorder" CornerRadius="15" Margin="5" Grid.Row="1" Grid.Column="0">
-            <TextBlock x:Name="LRTemp" Text="100°"  Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center"  Padding="0 20 0 0" FontWeight="Bold"/>
+        <Border x:Name="LRTempBorder" CornerRadius="15" Background="#FF32A229" Grid.Row="2" Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="LRTemp" Text="100°" Foreground="#D8FFFFFF" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" FontWeight="Bold"/>
+                <TextBlock x:Name="LRWear" Text="100%" Foreground="#D8FFFFFF" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="3" FontWeight="Bold"/>
+            </Grid>
         </Border>
-        <Border x:Name="RFTempBorder" CornerRadius="15" Background="#FF32A229" Margin="5" Grid.Row="0" Grid.Column="1">
-            <TextBlock x:Name="RFTemp" Text="100°"  Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" Grid.Row="0" Grid.Column="1" Padding="0 20 0 0"  FontWeight="Bold"/>
+        <Border x:Name="RFTempBorder" CornerRadius="15" Background="#FF32A229" Grid.Row="0" Grid.Column="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="RFTemp" Text="100°" Foreground="#D8FFFFFF" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" FontWeight="Bold"/>
+                <TextBlock x:Name="RFWear" Text="100%" Foreground="#D8FFFFFF" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="3" FontWeight="Bold"/>
+            </Grid>
         </Border>
-        <Border x:Name="RRTempBorder" CornerRadius="15" Background="#FF32A229" Margin="5" Grid.Row="1" Grid.Column="1">
-            <TextBlock x:Name="RRTemp" Text="100°" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" Grid.Row="1" Grid.Column="1" Padding="0 20 0 0" FontWeight="Bold"/>
+        <Border x:Name="RRTempBorder" CornerRadius="15" Background="#FF32A229" Grid.Row="2" Grid.Column="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="RRTemp" Text="100°" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" FontWeight="Bold"/>
+                <TextBlock x:Name="RRWear" Text="100%" Background="Transparent" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="3" FontWeight="Bold"/>
+            </Grid>
         </Border>
-        <TextBlock x:Name="LFWear" Text="100%" Background="Transparent" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Margin="0 0 0 25" Height="20" Width="44" FontWeight="Bold"/>
-        <TextBlock x:Name="LRWear" Text="100%" Background="Transparent" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Margin="0 0 0 25" Height="20" Width="44" FontWeight="Bold"/>
-        <TextBlock x:Name="RFWear" Text="100%" Background="Transparent" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Margin="0 0 0 25" Height="20" Width="44" FontWeight="Bold"/>
-        <TextBlock x:Name="RRWear" Text="100%" Background="Transparent" Foreground="#D8FFFFFF" FontSize="13" TextAlignment="Center" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="0 0 0 25" Height="20" Width="44" FontWeight="Bold"/>
+        
+        
+        
+        
     </Grid>
 </Window>

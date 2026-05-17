@@ -404,7 +404,7 @@ namespace RacingOverlay
                                 return;
                             }
 
-                            TireWindow = new TireWindow(new TelemetryData(telemetryData), WindowSettings);
+                            TireWindow = new TireWindow(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
 
                             if (bool.Parse(WindowSettings.TireSettings["Visible"]))
                                 TireWindow.Show();
@@ -427,7 +427,7 @@ namespace RacingOverlay
                             if (bool.Parse(WindowSettings.TireSettings["Visible"]))
                             {
                                 TireWindow.Show();
-                                TireWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), WindowSettings);
+                                TireWindow?.UpdateTelemetryData(new TelemetryData(telemetryData), GlobalSettings, WindowSettings);
                             }
                             else
                                 TireWindow.Hide();
@@ -551,7 +551,6 @@ namespace RacingOverlay
         {
             if (FuelWindow != null)
             {
-                _configuration.AppSettings.Settings["FuelWindowSize"].Value = ((int)FuelSize.Value).ToString();
                 FuelWindow?.Dispatcher.Invoke(() =>
                 {
                     _configuration.AppSettings.Settings["FuelWindowVisible"].Value = (FuelWindow.Visibility == Visibility.Visible).ToString();
@@ -560,6 +559,7 @@ namespace RacingOverlay
                     _configuration.AppSettings.Settings["FuelWindowXPos"].Value = FuelWindow.Left.ToString();
                     _configuration.AppSettings.Settings["FuelWindowYPos"].Value = FuelWindow.Top.ToString();
                 });
+                _configuration.AppSettings.Settings["FuelWindowSize"].Value = ((int)FuelSize.Value).ToString();
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
@@ -573,11 +573,13 @@ namespace RacingOverlay
 
                 TireWindow?.Dispatcher.Invoke(() =>
                 {
+                    _configuration.AppSettings.Settings["TireWindowVisible"].Value = (TireWindow.Visibility == Visibility.Visible).ToString();
                     _configuration.AppSettings.Settings["TireWindowOpacity"].Value = TireWindow.Opacity.ToString();
                     _configuration.AppSettings.Settings["TireWindowLocked"].Value = TireWindow.Locked.ToString();
                     _configuration.AppSettings.Settings["TireWindowXPos"].Value = TireWindow.Left.ToString();
                     _configuration.AppSettings.Settings["TireWindowYPos"].Value = TireWindow.Top.ToString();
                 });
+                _configuration.AppSettings.Settings["TireWindowSize"].Value = ((int)TireSize.Value).ToString();
 
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
@@ -591,6 +593,7 @@ namespace RacingOverlay
             {
                 SimpleTrackWindow?.Dispatcher.Invoke(() =>
                 {
+                    _configuration.AppSettings.Settings["SimpleTrackWindowVisible"].Value = (SimpleTrackWindow.Visibility == Visibility.Visible).ToString();
                     _configuration.AppSettings.Settings["SimpleTrackWindowOpacity"].Value = SimpleTrackWindow.Opacity.ToString();
                     _configuration.AppSettings.Settings["SimpleTrackWindowLocked"].Value = SimpleTrackWindow.Locked.ToString();
                     _configuration.AppSettings.Settings["SimpleTrackWindowXPos"].Value = SimpleTrackWindow.Left.ToString();
@@ -609,6 +612,7 @@ namespace RacingOverlay
             {
                 FullTrackWindow?.Dispatcher.Invoke(() =>
                 {
+                    _configuration.AppSettings.Settings["FullTrackWindowVisible"].Value = (FullTrackWindow.Visibility == Visibility.Visible).ToString();
                     _configuration.AppSettings.Settings["FullTrackWindowOpacity"].Value = FullTrackWindow.Opacity.ToString();
                     _configuration.AppSettings.Settings["FullTrackWindowLocked"].Value = FullTrackWindow.Locked.ToString();
                     _configuration.AppSettings.Settings["FullTrackWindowXPos"].Value = FullTrackWindow.Left.ToString();

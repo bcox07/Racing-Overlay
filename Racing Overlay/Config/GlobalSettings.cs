@@ -43,9 +43,9 @@ namespace RacingOverlay.Models
         }
 
         public int SizePreset { get; set; }
-        public virtual int TitleFontSize { get; set; }
-        public virtual int SubtitleFontSize { get; set; }
-        public virtual int DataFontSize { get; set; }
+        public virtual double TitleFontSize { get; set; }
+        public virtual double SubtitleFontSize { get; set; }
+        public virtual double DataFontSize { get; set; }
         public virtual int RowHeight { get; set; }
         public virtual int WindowWidth { get; set; }
         public virtual int WindowHeight { get; set; }
