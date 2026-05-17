@@ -614,6 +614,7 @@ namespace RacingOverlay
                     _configuration.AppSettings.Settings["FullTrackWindowXPos"].Value = FullTrackWindow.Left.ToString();
                     _configuration.AppSettings.Settings["FullTrackWindowYPos"].Value = FullTrackWindow.Top.ToString();
                 });
+                _configuration.AppSettings.Settings["FullTrackWindowSize"].Value = ((int)FullTrackSize.Value).ToString();
 
                 _configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");

@@ -407,7 +407,7 @@ namespace RacingOverlay
                     columnIndex += IRatingWidth;
                     CellIndex++;
 
-                    var border = UIHelper.DesignSafetyRating(rowIndex, position, new Thickness(7, 3, 7, 3), _GlobalSettings.StandingsSettings.DataFontSize, _GlobalSettings.PrimaryColorBrush, _GlobalSettings.SecondaryColorBrush);
+                    var border = UIHelper.DesignSafetyRating(rowIndex, position, new Thickness(7, 3, 7, 3), _GlobalSettings.StandingsSettings.DataFontSize, _GlobalSettings.PrimaryColorBrush, _GlobalSettings.SecondaryColorBrush, true);
                     border.Margin = new Thickness(-1, 0, -1, 0);
                     UIHelper.AddOrInsertChild(StandingsGrid, border, CellIndex);
                     UIHelper.SetCellFormat(border, columnIndex, SafetyRatingWidth, rowIndex);
@@ -505,7 +505,7 @@ namespace RacingOverlay
         {
             if (position.FastestLap != null && position.FastestLap.Value == (classFastestLap ?? 0))
             {
-                textBlock.Foreground = Brushes.Purple;
+                textBlock.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#A040A0");
             }
             else
             {
@@ -534,7 +534,7 @@ namespace RacingOverlay
 
             if ((position.FastestLap ?? 9999.9) == classFastestLap)
             {
-                textBlock.Foreground = position.LastLap == position.FastestLap && DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds <= SecondsForReset * 1000 ? Brushes.Purple : Brushes.White;
+                textBlock.Foreground = position.LastLap == position.FastestLap && DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds <= SecondsForReset * 1000 ? (SolidColorBrush)new BrushConverter().ConvertFrom("#8d1a8d") : Brushes.White;
                 var licenseShadowEffect = new DropShadowEffect();
                 licenseShadowEffect.Color = Color.FromArgb(0, 1, 1, 1);
                 licenseShadowEffect.Direction = 330;

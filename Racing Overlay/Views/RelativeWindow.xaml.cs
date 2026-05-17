@@ -178,7 +178,10 @@ namespace RacingOverlay
                 // incCount.Text = LocalTelemetry.FeedTelemetry["PlayerCarMyIncidentCount"].ToString();
                 var incCount = UIHelper.CreateTextBlock(new Thickness(0, 2, 10, 2), textAlignment: TextAlignment.Right, fontSize: _GlobalSettings.RelativeWindowSettings.DataFontSize - 2);
                 incCount.Tag = "IncCount";
-                incCount.Text = $"{viewedCar.IncidentCount}x";
+                //incCount.Text = $"{viewedCar.IncidentCount}x";
+                incCount.Text = $"{LocalTelemetry.FeedTelemetry["PlayerCarMyIncidentCount"]}x";
+                // incCount.Text = LocalTelemetry.FeedTelemetry["PlayerCarDriverIncidentCount"].ToString();
+                // incCount.Text = LocalTelemetry.FeedTelemetry["PlayerCarMyIncidentCount"].ToString();
                 UpdateHeaderCell(incCount);
                 UIHelper.SetCellFormat(incCount, ColumnIndex, HeaderIncCountWidth, rowIndex);
                 UIHelper.AddOrInsertChild(RelativeGrid, incCount, CellIndex);

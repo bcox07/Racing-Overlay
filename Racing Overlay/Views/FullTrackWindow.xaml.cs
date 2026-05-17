@@ -199,14 +199,19 @@ namespace RacingOverlay.Windows
             //GetSamplePoints(_TrackJsonData);
             GetTrackJsonData();
             //var generatedCoordinates = GenerateCoordinates();
-            //GetPointsBetween(3, 1520, 1571, generatedCoordinates);
-            //GetPointsBetween(3, 1622, 1930, generatedCoordinates);
-            //GetPointsBetween(3, 3218, 3254, generatedCoordinates);
-            //GetPointsBetween(3, 3254, 3285, generatedCoordinates);
+            //
+            //GetPointsBetween(3, 1788, 1839, generatedCoordinates);
+            //GetPointsBetween(3, 991, 1030, generatedCoordinates);
+            //GetPointsBetween(3, 1030, 1080, generatedCoordinates);
+
+            // points.Add(991, new List<double> { 191.48, 131.78 }); //
+            // points.Add(1030, new List<double> { 199.25, 120.11 });
+            // points.Add(1080, new List<double> { 192.97, 105.93 }); //
+
 
             foreach (var driver in LocalTelemetry.AllPositions)
             {
-                if (driver.Name.StartsWith("Daniel W"))
+                if (driver.Name.StartsWith("Brian D"))
                 {
                     Trace.WriteLine((int)driver.PosOnTrack);
                 }
@@ -341,7 +346,7 @@ namespace RacingOverlay.Windows
             {
                 foreach (var coordinate in _TrackJsonData)
                 {
-                    if (int.Parse(coordinate.Key) % 10 == 0)
+                    if (int.Parse(coordinate.Key) % 20 == 0)
                     {
                         var pixel = CreatePositionPixel(coordinate.Value, 
                             null, 
@@ -350,7 +355,7 @@ namespace RacingOverlay.Windows
                             $"{Math.Round(double.Parse(coordinate.Key) / 1000, 1)}", Brushes.Green);
                         Canvas.SetZIndex(pixel, 99);
 
-                        if (int.Parse(coordinate.Key) % 100 == 0)
+                        if (int.Parse(coordinate.Key) % 200 == 0)
                         {
                             var text = (TextBlock)pixel.Children[1];
                             text.Foreground = Brushes.White;
@@ -368,139 +373,133 @@ namespace RacingOverlay.Windows
             var fileLocation = $"..\\..\\trackline.txt";
             var points = new Dictionary<int, List<double>>();
 
-            points.Add(0, new List<double>    { 175.56, 263.00 });
-
-            points.Add(56, new List<double>  { 192.04, 261.00 }); //
-            points.Add(112, new List<double> { 208.38, 257.88 }); //
-            points.Add(169, new List<double> { 224.53, 254.54 }); //
-            points.Add(225, new List<double> { 240.72, 250.02 }); //
-            points.Add(281, new List<double> { 254.26, 241.79 }); //
-            points.Add(338, new List<double> { 267.86, 231.85 }); //
-            points.Add(394, new List<double> { 281.1 , 221.83 }); //
-
-            points.Add(408, new List<double> { 284.30, 219.21 }); //
-            points.Add(422, new List<double> { 287.47, 216.35 }); //
-            points.Add(436, new List<double> { 290.64, 213.18 }); //
+            points.Add(0, new List<double>    { 260.05, 191.41 });
 
 
+            points.Add(410, new List<double> { 129.31, 148.92 });
+            points.Add(456, new List<double>  { 114.05, 145.81 });
 
-            points.Add(451, new List<double>  { 292.40, 208.99 });
+            points.Add(472, new List<double> { 108.54, 147.31 }); //
+            points.Add(489, new List<double> { 103.96, 150.29 }); //
+            points.Add(505, new List<double> { 99.08 , 153.31 }); //
 
-            points.Add(465, new List<double> { 291.93, 204.95 }); //
-            points.Add(479, new List<double> { 290.01, 201.48 }); //
-            points.Add(493, new List<double> { 287.08, 198.72 }); //
-            points.Add(507, new List<double> { 283.26, 196.66 }); //
-            points.Add(521, new List<double> { 279.33, 196.29 }); //
+            points.Add(522, new List<double> { 93.89, 155.99 });
 
+            points.Add(538, new List<double> { 88.07, 156.92 }); //
+            points.Add(555, new List<double> { 82.27, 155.77 }); //
+            points.Add(572, new List<double> { 77.77, 152.82 }); //
+            points.Add(589, new List<double> { 74.17, 148.97 });
+            points.Add(605, new List<double> { 71.8 , 144.24 }); //
+            points.Add(622, new List<double> { 70.72, 139.01 }); //
+            points.Add(639, new List<double> { 71.13, 133.77 }); //
+            points.Add(656, new List<double> { 73.55, 128.54 });
+            points.Add(672, new List<double> { 76.82, 124.36 }); //
+            points.Add(689, new List<double> { 81.97, 121.35 }); //
+            points.Add(706, new List<double> { 87.81, 119.93 }); //
+            points.Add(723, new List<double> { 94.05, 120.01 });
+            points.Add(761, new List<double> { 107.84, 122.11 }); //
+            points.Add(799, new List<double> { 121.67, 124.24 }); //
+            points.Add(838, new List<double> { 135.84, 126.37 }); //
+            points.Add(876, new List<double> { 149.66, 128.57 }); //
+            points.Add(914, new List<double> { 163.49, 130.62 }); //
+            points.Add(953, new List<double> { 177.66, 132.65 }); //
+            points.Add(991, new List<double> { 191.48, 131.78 }); //
 
-            points.Add(536, new List<double>  { 275.70, 197.09 });
+            points.Add(1000, new List<double> { 194.5 , 129.7  }); //
+            points.Add(1010, new List<double> { 196.75, 126.74 }); //
+            points.Add(1020, new List<double> { 198.4 , 123.57 }); //
 
-            points.Add(566, new List<double> { 269.36, 203.61 }); //
-            points.Add(597, new List<double> { 264.26, 210.50 }); //
-            points.Add(628, new List<double> { 258.16, 216.96 }); //
-            points.Add(659, new List<double> { 251.16, 222.54 }); //
-            points.Add(689, new List<double> { 243.79, 227.36 }); //
-            points.Add(720, new List<double> { 236.2 , 231.63 }); //
-            points.Add(751, new List<double> { 228.2 , 235.21 }); //
+            points.Add(1030, new List<double> { 199.25, 120.11 });
 
-            points.Add(766, new List<double> { 223.96, 236.53 }); //
-
-            points.Add(782, new List<double>  { 219.40, 236.29 });
-
-            points.Add(798, new List<double> { 214.42, 234.37 }); //
-
-            points.Add(814, new List<double> { 211.69, 230.43 });  //
-            points.Add(1009, new List<double> { 188.62, 175.85 }); //
-
-            points.Add(1042, new List<double> { 188.40, 166.09 });
-
-            points.Add(1056, new List<double> { 189.72, 161.96 }); //
-            points.Add(1071, new List<double> { 192.41, 158.35 }); //
-            points.Add(1086, new List<double> { 195.60, 154.93 }); //
-
-            points.Add(1101, new List<double> { 199.19, 151.82 }); //
-            points.Add(1161, new List<double> { 213.50, 139.60 }); //
-            points.Add(1221, new List<double> { 227.81, 128.67 }); //
-            points.Add(1281, new List<double> { 244.01, 120.24 }); //
-            points.Add(1340, new List<double> { 261.57, 113.78 }); //
-            points.Add(1400, new List<double> { 278.88, 107.55 }); //
-            points.Add(1460, new List<double> { 296.18, 101.12 }); //
-
-            points.Add(1475, new List<double> { 300.43, 98.67 }); //
-            points.Add(1490, new List<double> { 303.55, 94.98 }); //
-            points.Add(1505, new List<double> { 305.47, 90.68 }); //
-
-            points.Add(1520, new List<double> { 305.99, 86.09  });
-
-            points.Add(1532, new List<double> { 305.78, 82.70 }); //
-            points.Add(1545, new List<double> { 304.75, 79.64 }); //
-            points.Add(1558, new List<double> { 303.22, 76.57 }); //
-
-            points.Add(1571, new List<double> { 301.29, 73.60 }); //
-            points.Add(1622, new List<double> { 292.24, 63.77 }); //
-
-            points.Add(1699, new List<double> { 277.49, 48.58 }); //
-            points.Add(1776, new List<double> { 262.13, 33.38 }); //
-            points.Add(1853, new List<double> { 246.76, 18.79 }); //
+            points.Add(1042, new List<double> { 199.39, 116.09 }); //
+            points.Add(1055, new List<double> { 198.37, 112.21 }); //
+            points.Add(1067, new List<double> { 196.19, 108.61 }); //
 
 
-            points.Add(1930, new List<double> { 231.20, 4.59   });
+            points.Add(1080, new List<double> { 192.97, 105.93 }); //
+            points.Add(1131, new List<double> { 176.14, 100.66 }); //
+            points.Add(1181, new List<double> { 159.61, 97.08  }); //
+            points.Add(1232, new List<double> { 142.77, 93.31  }); //
+            points.Add(1282, new List<double> { 126.25, 89.83  }); //
+            points.Add(1333, new List<double> { 109.41, 86.06  }); //
+            points.Add(1383, new List<double> { 92.88 , 82.58  }); //
+            points.Add(1434, new List<double> { 76.05 , 80.01  });
+            points.Add(1459, new List<double> { 66.63, 83.23 }); //
+            points.Add(1509, new List<double> { 50.4, 93.25  }); //
+            points.Add(1535, new List<double> { 42.85 , 99.41  });
+            points.Add(1560, new List<double> { 40.56, 107.72 }); //
+            points.Add(1610, new List<double> { 37.42, 124.62 }); //
+            points.Add(1636, new List<double> { 36.85 , 133.41 });
+            points.Add(1648, new List<double> { 38.26, 137.26 }); //
+            points.Add(1661, new List<double> { 40.56, 140.76 }); //
+            points.Add(1673, new List<double> { 42.32, 144.27 }); //
+            points.Add(1686, new List<double> { 43.22, 148.07 }); //
+            points.Add(1698, new List<double> { 43.05, 152.18 }); //
+            points.Add(1711, new List<double> { 42.04, 156.38 }); //
+            points.Add(1724, new List<double> { 40.12, 159.99 }); //
+            points.Add(1737, new List<double> { 37.63, 162.99 }); //
+            points.Add(1749, new List<double> { 33.89, 165.69  }); //
+            points.Add(1762, new List<double> { 29.48, 167.13  }); //
+            points.Add(1775, new List<double> { 24.66, 167.36  }); //
+            points.Add(1788, new List<double> { 20.14, 166.50 }); //
+            points.Add(1800, new List<double> { 15.95, 164.44 }); //
+            points.Add(1813, new List<double> { 12.59, 161.1  }); //
+            points.Add(1826, new List<double> { 10.22, 156.95 }); //
+            points.Add(1839, new List<double> { 9.15  , 152.41 });
 
-            points.Add(1982, new List<double> { 216.25, 5.57  }); //
-            points.Add(2035, new List<double> { 201.57, 8.72  }); //
-            points.Add(2088, new List<double> { 187.29, 14.86 }); //
-            points.Add(2141, new List<double> { 174.41, 23.21 }); //
-            points.Add(2194, new List<double> { 161.83, 31.75 }); //
-            points.Add(2247, new List<double> { 149.16, 40.35 }); //
-            points.Add(2300, new List<double> { 136.58, 49.44 }); //
-
-
-            points.Add(2353, new List<double> { 123.70, 59.69  });
-
-            points.Add(2429, new List<double> { 102.26, 68.30 }); //
-
-
-            points.Add(2440, new List<double> { 100.30, 70.69  });
-
-            points.Add(2450, new List<double> { 99.97 , 73.57 }); //
-            points.Add(2460, new List<double> { 101.06, 76.51 }); //
-            points.Add(2470, new List<double> { 102.15, 79.45 }); //
-
-            points.Add(2481, new List<double> { 102.50, 82.69 });
-
-            points.Add(2511, new List<double> { 98.75, 89.77  }); //
-            points.Add(2542, new List<double> { 92.13, 95.29  }); //
-            points.Add(2572, new List<double> { 85.06, 100.50 }); //
-            points.Add(2603, new List<double> { 77.44, 105.92 }); //
-            points.Add(2634, new List<double> { 70.81, 112.14 }); //
-            points.Add(2664, new List<double> { 65.80, 119.74 }); //
-            points.Add(2695, new List<double> { 63.92, 128.17 }); //
-
-            points.Add(2726, new List<double> { 64.60 , 136.69 });
-
-            points.Add(2756, new List<double> { 69.12, 143.88 }); //
-            points.Add(2938, new List<double> { 111.49, 176.83 }); //
-
-            points.Add(2969, new List<double> { 115.99, 184.19 });
-
-            points.Add(3004, new List<double> { 114.30, 193.90 }); //
-            points.Add(3218, new List<double> { 86.80, 250.39 });  //
-
-            points.Add(3227, new List<double> { 85.58, 252.63 });  //
-            points.Add(3236, new List<double> { 84.52, 255.00 });  //
-            points.Add(3245, new List<double> { 83.85, 257.54 });  //
+            points.Add(1879, new List<double> { 9.01, 138.4 }); //
 
 
-            points.Add(3254, new List<double> { 84.09 , 260.19 });
+            points.Add(1999, new List<double> { 12.25 , 95.01  });
 
-            points.Add(3261, new List<double> { 85.72, 261.79 }); //
-            points.Add(3269, new List<double> { 87.88, 262.46 }); //
-            points.Add(3277, new List<double> { 90.19, 262.63 }); //
-
-            points.Add(3285, new List<double> { 92.51, 262.61 });  //
+            points.Add(2009, new List<double> { 14.33, 92.03 }); //
+            points.Add(2019, new List<double> { 17.25, 89.55 }); //
+            points.Add(2029, new List<double> { 20.67, 87.26 }); //
 
 
-            points.Add(3564, new List<double> { 174.56, 263.00 });
+            points.Add(2040, new List<double> { 22.75 , 83.91  });
+
+            points.Add(2077, new List<double> { 23.86, 71.75 }); //
+            points.Add(2115, new List<double> { 30.02, 60.14 }); //
+            points.Add(2153, new List<double> { 40.49, 52.92 }); //
+
+            points.Add(2191, new List<double> { 54.05 , 52.01 });
+
+            points.Add(2676, new List<double> { 215.33, 88.03 }); //
+
+            points.Add(2746, new List<double> { 238.05, 94.41  });
+
+            points.Add(2771, new List<double> { 243.95, 102.3 }); //
+            points.Add(2796, new List<double> { 247.59, 111.45 }); //
+            points.Add(2821, new List<double> { 250.69, 120.81 }); //
+
+            points.Add(2847, new List<double> { 255.55, 129.11 });
+
+            points.Add(2889, new List<double> { 268.82, 132.87 }); //
+            points.Add(3060, new List<double> { 328.2, 142.33  }); //
+
+
+            points.Add(3103, new List<double> { 342.05, 147.11 });
+
+            points.Add(3111, new List<double> { 344.11, 149.46 }); //
+            points.Add(3120, new List<double> { 345.66, 152.34 }); //
+            points.Add(3129, new List<double> { 346.71, 155.22 }); //
+
+            points.Add(3280, new List<double> { 360.94, 203.49 }); //
+
+
+            points.Add(3316, new List<double> { 356.90, 215.01 });
+
+            points.Add(3334, new List<double> { 352.15, 218.29 }); //
+            points.Add(3352, new List<double> { 346.01, 218.95 }); //
+            points.Add(3370, new List<double> { 340.17, 217.51 }); //
+
+            points.Add(3389, new List<double> { 334.22, 215.57 }); //
+
+
+
+            points.Add(3610, new List<double>{ 261.55, 191.91 });
+            
 
             var coordinatesDictionary = new Dictionary<int, (double, double)>();
             var locationOnTrack = 0;

@@ -48,21 +48,6 @@ namespace RacingOverlay
 
             LocalTelemetry = telemetryData;
 
-            if (LocalTelemetry.FeedTelemetry.IsReplayPlaying)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    Hide();
-                });
-            }
-            else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    Show();
-                });
-            }
-
             if (LocalTelemetry != null && LocalTelemetry.IsReady)
             {
                 DisplayTireData();
