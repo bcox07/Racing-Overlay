@@ -696,7 +696,10 @@ namespace RacingOverlay
             sampleTelemetryData.FeedTelemetry.Add("RRwearL", (float)0.98);
             sampleTelemetryData.FeedTelemetry.Add("RRwearM", (float)0.98);
             sampleTelemetryData.FeedTelemetry.Add("RRwearR", (float)0.98);
+            sampleTelemetryData.FeedTelemetry.Add("TrackTemp", (float)40.98);
+            sampleTelemetryData.FeedTelemetry.Add("PlayerCarMyIncidentCount", (float)3);
 
+            
             sampleTelemetryData.FeedTelemetry.SessionData = new SessionData
             {
                 SessionInfo = new SessionData._SessionInfo
