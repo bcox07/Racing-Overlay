@@ -367,7 +367,7 @@
                         <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsOpacity" Width="120" Minimum="0" Maximum="100" ValueChanged="StandingsOpacity_ValueChanged" TickFrequency="10" Grid.Row="1" Grid.ColumnSpan="1" />
                         <Button x:Name="standingsSave" Content="Save" Style="{DynamicResource ButtonStyle}" Width="200" Click="standingsSave_Click" Grid.Row="2" Grid.ColumnSpan="3" />
                         <Label Style="{StaticResource SliderLabel}" FontSize="14" Margin="0,3,0,0" Grid.Row="1" Grid.Column="2">Size</Label>
-                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsSize" Width="120" Minimum="0" Maximum="6" ValueChanged="StandingsSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
+                        <Slider Style="{StaticResource Horizontal_Slider}" x:Name="StandingsSize" Width="120" Minimum="0" Maximum="8" ValueChanged="StandingsSize_ValueChanged" TickFrequency="1" Grid.Row="1" Grid.Column="2" />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Relative" Style="{DynamicResource TabItemStyle}">

@@ -39,19 +39,17 @@ namespace RacingOverlay.Helpers
                 grid.Children.Insert(cellIndex, element);
         }
 
-        public static Border DesignSafetyRating(int rowIndex, Driver driver, Thickness? thickness, double fontSize, Brush primaryColor, Brush secondaryColor, bool flip = false)
+        public static Border DesignSafetyRating(int rowIndex, Driver driver, Thickness? thickness, double fontSize, Brush primaryColor, Brush secondaryColor)
         {
             var outerBorder = new Border();
             Color myShadowColor = Color.FromArgb(0, 0, 0, 0);
 
-            if (!flip)
-                outerBorder.Background = rowIndex % 2 == 0 ? primaryColor : secondaryColor;
-            else
-                outerBorder.Background = rowIndex % 2 == 1 ? primaryColor : secondaryColor;
-
+            outerBorder.Background = rowIndex % 2 == 0 ? primaryColor : secondaryColor;
             outerBorder.HorizontalAlignment = HorizontalAlignment.Stretch;
             outerBorder.VerticalAlignment = VerticalAlignment.Stretch;
-            outerBorder.Padding = thickness ?? new Thickness(3);
+            outerBorder.Padding = thickness ?? new Thickness(0);
+            outerBorder.MaxWidth = 50;
+            outerBorder.BorderThickness = new Thickness(0);
 
             var licenseShadowEffect = new DropShadowEffect();
             licenseShadowEffect.Color = myShadowColor;

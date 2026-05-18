@@ -23,7 +23,6 @@ namespace RacingOverlay
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public Thread thread;
-        private int CellIndex = 0;
         public TelemetryData _TelemetryData;
         private const double SecondsForReset = 30;
         public bool Locked = false;
@@ -37,6 +36,8 @@ namespace RacingOverlay
         private int LastLapWidth = 7;
         private int CarLogoWidth = 2;
         private int ColumnsWidth = 0;
+        private int CurrentSize;
+        private int CellIndex = 0;
 
         private GlobalSettings _GlobalSettings;
 
@@ -79,7 +80,6 @@ namespace RacingOverlay
             ColumnsWidth = PosNumberWidth + CarNumberWidth + CarLogoWidth + DriverNameWidth + IRatingWidth + SafetyRatingWidth + DeltaWidth + FastestLapWidth + LastLapWidth;
             Dispatcher.Invoke(() =>
             {
-
                 StandingsGrid.Background = Brushes.Transparent;
                 for (var i = 0; i < ColumnsWidth; i++)
                 {
@@ -120,7 +120,7 @@ namespace RacingOverlay
             var sessionType = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionType;
             var sessionTime = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum]._SessionTime;
             var viewedCar = telemetryData.AllPositions.Where(p => p.CarId == telemetryData.FeedTelemetry.CamCarIdx).FirstOrDefault() ?? telemetryData.AllPositions.FirstOrDefault() ?? new Driver();
-            var sessionLapsTotal = telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps == "unlimited" ? 0 : long.Parse(telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps);
+            var sessionLapsTotal = (double) (telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps == "unlimited" ? 0 : long.Parse(telemetryData.FeedSessionData.SessionInfo.Sessions[telemetryData.FeedTelemetry.Session.SessionNum].SessionLaps));
             var viewedCarPosition = telemetryData.AllResultsPositions?.FirstOrDefault(r => r.CarIdx == viewedCar.CarId) ?? telemetryData.AllResultsPositions.FirstOrDefault() ?? new SessionData._SessionInfo._Sessions._ResultsPositions();
             var sessionLapCurrent = viewedCar.LapsComplete;
 
@@ -142,10 +142,18 @@ namespace RacingOverlay
                     rowDefinition.Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
                     StandingsGrid.RowDefinitions.Add(rowDefinition);
                 }
-                else if (StandingsGrid.RowDefinitions[rowIndex].Name != "SessionTitle")
+                else if (StandingsGrid.RowDefinitions[rowIndex].Name != "SessionTitle" || CurrentSize != _GlobalSettings.StandingsSettings.SizePreset)
                 {
                     StandingsGrid.RowDefinitions[rowIndex].Name = "SessionTitle";
                     StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
+                }
+
+                var subGrid = new Grid();
+                subGrid.Background = _GlobalSettings.PrimaryColorBrush;
+                for (int i = 0; i < ColumnsWidth - LastLapWidth - FastestLapWidth - DeltaWidth; i++)
+                {
+                    var colDef = new ColumnDefinition();
+                    subGrid.ColumnDefinitions.Add(colDef);
                 }
 
                 var title = new TextBlock();
@@ -157,7 +165,6 @@ namespace RacingOverlay
                 if (sessionType.ToUpper() == "RACE" && sessionState == SessionState.Racing && PrevSessionState == SessionState.ParadeLaps && RaceStartOffset == null)
                     RaceStartOffset = elapsedTime;
 
-
                 // IsReplayPlaying value is always set to true, so we shouldn't use it
                 var sessionTimeString = StringHelper.GetTimeString(sessionTime, false);
                 var elapsedTimeString = StringHelper.GetTimeString(elapsedTime, false);
@@ -165,48 +172,43 @@ namespace RacingOverlay
                 title.Text = $"{sessionType}";
                 title.FontSize = _GlobalSettings.StandingsSettings.TitleFontSize;
                 title.Foreground = Brushes.White;
-                title.Background = _GlobalSettings.PrimaryColorBrush;
-
-                title.FontWeight = FontWeights.Black;
-                title.Padding = new Thickness(5);
-                title.Margin = new Thickness(0, 0, -1, 0);
+                title.FontWeight = FontWeights.Bold;
+                title.Padding = new Thickness(5, 0, 0, 0);
                 title.VerticalAlignment = VerticalAlignment.Center;
 
-                UIHelper.SetCellFormat(title, 0, 12, rowIndex);
-                UIHelper.AddOrInsertChild(StandingsGrid, title, CellIndex);
-                CellIndex++;
+                UIHelper.SetCellFormat(title, 0, 10, rowIndex);
+                subGrid.Children.Add(title);
 
                 var timeTitle = new TextBlock();
                 timeTitle.Text = $"{elapsedTimeString} / {sessionTimeString}";
                 timeTitle.FontSize = _GlobalSettings.StandingsSettings.SubtitleFontSize;
-                timeTitle.FontWeight = FontWeights.Bold;
+                timeTitle.FontWeight = FontWeights.SemiBold;
                 timeTitle.TextAlignment = TextAlignment.Right;
                 timeTitle.VerticalAlignment = VerticalAlignment.Center;
-                timeTitle.Padding = new Thickness(5);
-                timeTitle.Margin = new Thickness(0, 0, -1, 0);
                 timeTitle.Foreground = Brushes.White;
-                timeTitle.Background = title.Background;
+                timeTitle.Padding = new Thickness(0, 0, 6, 0);
 
-                UIHelper.SetCellFormat(timeTitle, 12, 14, rowIndex);
-                UIHelper.AddOrInsertChild(StandingsGrid, timeTitle, CellIndex);
-                CellIndex++;
+                UIHelper.SetCellFormat(timeTitle, 10, 11, rowIndex);
+                subGrid.Children.Add(timeTitle);
 
                 var lapsTitle = new TextBlock();
                 lapsTitle.Text = $"{sessionLapCurrent} / {sessionLapsTotal}";
                 lapsTitle.FontSize = _GlobalSettings.StandingsSettings.SubtitleFontSize;
-                lapsTitle.FontWeight = FontWeights.Bold;
+                lapsTitle.FontWeight = FontWeights.SemiBold;
                 lapsTitle.TextAlignment = TextAlignment.Right;
                 lapsTitle.VerticalAlignment = VerticalAlignment.Center;
-                lapsTitle.Padding = new Thickness(5);
                 lapsTitle.Foreground = Brushes.White;
-                lapsTitle.Background = title.Background;
+                lapsTitle.Padding = new Thickness(0, 0, 6, 0);
 
-                UIHelper.SetCellFormat(lapsTitle, 26, 11, rowIndex);
-                UIHelper.AddOrInsertChild(StandingsGrid, lapsTitle, CellIndex);
+                UIHelper.SetCellFormat(lapsTitle, 21, 6, rowIndex);
+                subGrid.Children.Add(lapsTitle);
+
+                UIHelper.SetCellFormat(subGrid, 0, ColumnsWidth - LastLapWidth - FastestLapWidth - DeltaWidth, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, subGrid, CellIndex);
+                CellIndex++;
             });
 
             rowIndex++;
-            CellIndex++;
 
             foreach (var driverClassGroup in telemetryData.SortedPositions)
             {
@@ -237,6 +239,7 @@ namespace RacingOverlay
             });
 
             PrevSessionState = _TelemetryData.FeedTelemetry.SessionState;
+            CurrentSize = _GlobalSettings.StandingsSettings.SizePreset;
         }
 
         private int UpdateRow(KeyValuePair<int, List<Driver>> driverClassGroup, Driver viewedCar, int rowIndex)
@@ -281,7 +284,7 @@ namespace RacingOverlay
                     titleDef.Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
                     StandingsGrid.RowDefinitions.Add(titleDef);
                 }
-                else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != "ClassTitle")
+                else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != "ClassTitle" || CurrentSize != _GlobalSettings.StandingsSettings.SizePreset)
                 {
                     StandingsGrid.RowDefinitions[rowIndex].Name = "ClassTitle";
                     StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
@@ -292,18 +295,22 @@ namespace RacingOverlay
             var carClassName = _TelemetryData.AllDrivers.Where(d => d != null && d.CarClassID == driverClassGroup.Key).ToList().First().CarClassShortName;
             Dispatcher.Invoke(() =>
             {
-
+                var subGrid = new Grid();
+                subGrid.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
+                for (int i = 0; i < 23; i ++)
+                {
+                    var colDef = new ColumnDefinition();
+                    subGrid.ColumnDefinitions.Add(colDef);
+                }
+                
                 var classTitle = UIHelper.CreateTextBlock(new Thickness(5, 0, 0, 0), TextAlignment.Left, fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                 classTitle.Text = _TelemetryData.AllDrivers.Where(d => d.CarClassID == driverClassGroup.Key).First().CarClassShortName;
-                classTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 classTitle.Foreground = Brushes.Black;
                 classTitle.FontWeight = FontWeights.Bold;
-                classTitle.Margin = new Thickness(0, 0, -1, 0);
-                classTitle.Padding = new Thickness(6);
+                classTitle.Padding = new Thickness(6, 0, 0, 0);
 
-                UIHelper.AddOrInsertChild(StandingsGrid, classTitle, CellIndex);
-                UIHelper.SetCellFormat(classTitle, 0, ColumnsWidth - FastestLapWidth - 20, rowIndex);
-                CellIndex++;
+                UIHelper.SetCellFormat(classTitle, 0, 9, rowIndex);
+                subGrid.Children.Add(classTitle);
 
                 var sof = (int)driverClassGroup.Value.Average(d => d.iRating);
                 var carCount = (int)driverClassGroup.Value.Count;
@@ -312,32 +319,31 @@ namespace RacingOverlay
                 carCountTitle.Text = $"Cars: {carCount}";
                 carCountTitle.FontWeight = FontWeights.Bold;
                 carCountTitle.Foreground = Brushes.Black;
-                carCountTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
-                carCountTitle.Margin = new Thickness(0, 0, -1, 0);
-                carCountTitle.Padding = new Thickness(6);
 
-                UIHelper.AddOrInsertChild(StandingsGrid, carCountTitle, CellIndex);
-                UIHelper.SetCellFormat(carCountTitle, ColumnsWidth - FastestLapWidth - 20, 10, rowIndex);
-                CellIndex++;
+                UIHelper.SetCellFormat(carCountTitle, 9, 6, rowIndex);
+                subGrid.Children.Add(carCountTitle);
 
                 var sofTitle = UIHelper.CreateTextBlock(new Thickness(0, 0, 5, 0), TextAlignment.Right, fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                 sofTitle.Text = $"SoF: {sof}";
-                sofTitle.Background = (SolidColorBrush)new BrushConverter().ConvertFrom(classColor);
                 sofTitle.Foreground = Brushes.Black;
                 sofTitle.FontWeight = FontWeights.Bold;
-                sofTitle.Padding = new Thickness(6);
+                sofTitle.Padding = new Thickness(0, 0, 6, 0);
 
-                UIHelper.AddOrInsertChild(StandingsGrid, sofTitle, CellIndex);
-                UIHelper.SetCellFormat(sofTitle, ColumnsWidth - FastestLapWidth - 10, 10, rowIndex);
+                UIHelper.SetCellFormat(sofTitle, 15, 8, rowIndex);
+                subGrid.Children.Add(sofTitle);
+
+                UIHelper.SetCellFormat(subGrid, 0, 23, rowIndex);
+                UIHelper.AddOrInsertChild(StandingsGrid, subGrid, CellIndex);
                 CellIndex++;
                 rowIndex++;
             });
 
+            var dataRowIndex = 0;
             foreach (var position in surroundingPositions.ToList())
             {
                 var columnIndex = 0;
 
-                Dispatcher.Invoke((Action)delegate
+                Dispatcher.Invoke(() =>
                 {
                     if (rowIndex >= StandingsGrid.RowDefinitions.Count)
                     {
@@ -346,7 +352,7 @@ namespace RacingOverlay
                         rowDef.Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
                         StandingsGrid.RowDefinitions.Add(rowDef);
                     }
-                    else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != $"Driver{position.CarId}")
+                    else if (StandingsGrid.RowDefinitions[rowIndex]?.Name != $"Driver{position.CarId}" || CurrentSize != _GlobalSettings.StandingsSettings.SizePreset)
                     {
                         StandingsGrid.RowDefinitions[rowIndex].Name = $"Driver{position.CarId}";
                         StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
@@ -355,12 +361,30 @@ namespace RacingOverlay
                     if (StandingsGrid.RowDefinitions[rowIndex]?.Height.Value != _GlobalSettings.StandingsSettings.RowHeight)
                         StandingsGrid.RowDefinitions[rowIndex].Height = new GridLength(_GlobalSettings.StandingsSettings.RowHeight);
 
+                    var subGrid = new Grid();
+                    subGrid.Background = dataRowIndex % 2 == 0 ? _GlobalSettings.PrimaryColorBrush : _GlobalSettings.SecondaryColorBrush;
+                    subGrid.VerticalAlignment = VerticalAlignment.Center;
+
+                    for (int i = 0; i < ColumnsWidth - LastLapWidth; i++)
+                    {
+                        var colDef = new ColumnDefinition();
+                        subGrid.ColumnDefinitions.Add(colDef);
+                    }
+
+                    var secondarySubGrid = new Grid();
+                    secondarySubGrid.Background = dataRowIndex % 2 == 0 ? _GlobalSettings.PrimaryColorBrush : _GlobalSettings.SecondaryColorBrush;
+
+                    for (int i = 0; i < LastLapWidth; i++)
+                    {
+                        var colDef = new ColumnDefinition();
+                        secondarySubGrid.ColumnDefinitions.Add(colDef);
+                    }
+
                     var posNumber = UIHelper.CreateTextBlock(new Thickness(4, 4, 4, 4), fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                     UpdateCell(posNumber, "PosNumber", position.ClassPosition.ToString(), rowIndex, position, viewedCar, null);
-                    UIHelper.AddOrInsertChild(StandingsGrid, posNumber, CellIndex);
                     UIHelper.SetCellFormat(posNumber, columnIndex, PosNumberWidth, rowIndex);
+                    subGrid.Children.Add(posNumber);
                     columnIndex += PosNumberWidth;
-                    CellIndex++;
 
                     HasBadge(position.CarPath, out DrawingImage badge);
                     Image carLogo = new Image();
@@ -371,70 +395,69 @@ namespace RacingOverlay
                     carLogo.Source.Freeze();
 
                     var carLogoBorder = new Border();
-                    carLogoBorder.Background = rowIndex % 2 == 1 ? _GlobalSettings.PrimaryColorBrush : _GlobalSettings.SecondaryColorBrush;
                     carLogoBorder.HorizontalAlignment = HorizontalAlignment.Center;
-                    carLogoBorder.Padding = new Thickness(2);
-                    carLogoBorder.Margin = new Thickness(-2, 0, -2, 0);
+                    carLogoBorder.Padding = new Thickness(2.5);
                     carLogoBorder.Width = CarLogoWidth * (Width / ColumnsWidth);
                     carLogoBorder.Child = carLogo;
-                    UIHelper.AddOrInsertChild(StandingsGrid, carLogoBorder, CellIndex);
                     UIHelper.SetCellFormat(carLogoBorder, columnIndex, CarLogoWidth, rowIndex);
+                    subGrid.Children.Add(carLogoBorder);
                     columnIndex += CarLogoWidth;
-                    CellIndex++;
 
                     var carNumber = UIHelper.CreateTextBlock(new Thickness(0, 4, 3, 4), fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                     UpdateCell(carNumber, "CarNumber", $"#{position.CarNumber}", rowIndex, position, viewedCar, FontWeights.SemiBold);
                     carNumber.FontStyle = FontStyles.Oblique;
-                    UIHelper.AddOrInsertChild(StandingsGrid, carNumber, CellIndex);
                     UIHelper.SetCellFormat(carNumber, columnIndex, CarNumberWidth, rowIndex);
+                    subGrid.Children.Add(carNumber);
                     columnIndex += CarNumberWidth;
-                    CellIndex++;
-
-
 
                     var driverName = UIHelper.CreateTextBlock(new Thickness(7, 3.5, 0, 3.5), TextAlignment.Left, fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                     driverName.TextTrimming = TextTrimming.CharacterEllipsis;
                     UpdateCell(driverName, "DriverName", position.TeamName ?? Regex.Replace(position.Name, @"( .+ )", " "), rowIndex, position, viewedCar, null);
-                    UIHelper.AddOrInsertChild(StandingsGrid, driverName, CellIndex);
                     UIHelper.SetCellFormat(driverName, columnIndex, DriverNameWidth, rowIndex);
+                    subGrid.Children.Add(driverName);
                     columnIndex += DriverNameWidth;
-                    CellIndex++;
 
                     var iRating = UIHelper.CreateTextBlock(new Thickness(4), fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                     UpdateCell(iRating, "IRating", $"{position.iRating / 1000}.{position.iRating % 1000 / 100}k", rowIndex, position, viewedCar, null);
-                    UIHelper.AddOrInsertChild(StandingsGrid, iRating, CellIndex);
                     UIHelper.SetCellFormat(iRating, columnIndex, IRatingWidth, rowIndex);
+                    subGrid.Children.Add(iRating);
                     columnIndex += IRatingWidth;
-                    CellIndex++;
 
-                    var border = UIHelper.DesignSafetyRating(rowIndex, position, new Thickness(7, 3, 7, 3), _GlobalSettings.StandingsSettings.DataFontSize, _GlobalSettings.PrimaryColorBrush, _GlobalSettings.SecondaryColorBrush, true);
-                    border.Margin = new Thickness(-1, 0, -1, 0);
-                    UIHelper.AddOrInsertChild(StandingsGrid, border, CellIndex);
+                    var border = UIHelper.DesignSafetyRating(dataRowIndex, position, new Thickness(7, 3, 7, 3), _GlobalSettings.StandingsSettings.DataFontSize, _GlobalSettings.PrimaryColorBrush, _GlobalSettings.SecondaryColorBrush);
                     UIHelper.SetCellFormat(border, columnIndex, SafetyRatingWidth, rowIndex);
+                    subGrid.Children.Add(border);
                     columnIndex += SafetyRatingWidth;
-                    CellIndex++;
 
                     var deltaFromLeader = UIHelper.CreateTextBlock(new Thickness(0, 4, 0, 4), TextAlignment.Right, fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                     UpdateDeltaCell(deltaFromLeader, position, driverClassGroup.Value.First(), viewedCar, rowIndex);
-                    UIHelper.AddOrInsertChild(StandingsGrid, deltaFromLeader, CellIndex);
                     UIHelper.SetCellFormat(deltaFromLeader, columnIndex, DeltaWidth, rowIndex);
+                    subGrid.Children.Add(deltaFromLeader);
                     columnIndex += DeltaWidth;
-                    CellIndex++;
 
                     var fastestLap = UIHelper.CreateTextBlock(new Thickness(6, 4, 6, 4), TextAlignment.Right, fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
                     UpdateFastestLapCell(fastestLap, position, classFastestDriver.FastestLap, viewedCar, rowIndex);
-                    UIHelper.AddOrInsertChild(StandingsGrid, fastestLap, CellIndex);
                     UIHelper.SetCellFormat(fastestLap, columnIndex, FastestLapWidth, rowIndex);
+                    subGrid.Children.Add(fastestLap);
                     columnIndex += FastestLapWidth;
-                    CellIndex++;
 
                     var lastLap = UIHelper.CreateTextBlock(new Thickness(6, 4, 6, 4), TextAlignment.Right, HorizontalAlignment.Left, fontSize: _GlobalSettings.StandingsSettings.DataFontSize);
-                    UpdateLastLapCell(lastLap, position, classFastestDriver.FastestLap, viewedCar, rowIndex);
-                    UIHelper.AddOrInsertChild(StandingsGrid, lastLap, CellIndex);
-                    UIHelper.SetCellFormat(lastLap, columnIndex, LastLapWidth, rowIndex);
+                    UpdateLastLapCell(lastLap, position, classFastestDriver.FastestLap, viewedCar, dataRowIndex);
+                    UIHelper.SetCellFormat(lastLap, 0, LastLapWidth, rowIndex);
+                    secondarySubGrid.Children.Add(lastLap);
                     columnIndex += LastLapWidth;
+
+                    UIHelper.SetCellFormat(subGrid, 0, ColumnsWidth - LastLapWidth, rowIndex);
+                    UIHelper.AddOrInsertChild(StandingsGrid, subGrid, CellIndex);
                     CellIndex++;
+
+                    if (position.LastLap != null && DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds < SecondsForReset * 1000)
+                    {
+                        UIHelper.SetCellFormat(secondarySubGrid, ColumnsWidth - LastLapWidth, LastLapWidth, rowIndex);
+                        UIHelper.AddOrInsertChild(StandingsGrid, secondarySubGrid, CellIndex);
+                        CellIndex++;
+                    }
                 });
+                dataRowIndex++;
                 rowIndex++;
             }
             return rowIndex;
@@ -452,15 +475,10 @@ namespace RacingOverlay
         {
             textBlock.Text = text;
             textBlock.Tag = tag;
-            textBlock.Margin = new Thickness(-0.5, 0, -0.5, 0);
 
             textBlock.FontWeight = fontWeight ?? FontWeights.Bold;
             if (tag != "LastLap" && tag != "FastestLap" && tag != "SafetyRating")
                 textBlock.Foreground = Brushes.White;
-
-            if (tag != "LastLap")
-                textBlock.Background = rowIndex % 2 == 1 ? _GlobalSettings.PrimaryColorBrush : _GlobalSettings.SecondaryColorBrush;
-
 
             switch (tag)
             {
@@ -548,19 +566,11 @@ namespace RacingOverlay
                 textBlock.Foreground = position.LastLap == position.FastestLap && DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds <= SecondsForReset * 1000 ? Brushes.LimeGreen : Brushes.White;
             }
 
-            if (position.LastLap == null || DateTime.UtcNow.Subtract(position.LapChangeTime).TotalMilliseconds > SecondsForReset * 1000)
+            var timeText = StringHelper.GetTimeString(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000, true);
+            textBlock.Background = rowIndex % 2 == 0 ? _GlobalSettings.PrimaryColorBrush : _GlobalSettings.SecondaryColorBrush;
+            if (textBlock.Text != timeText)
             {
-                textBlock.Foreground = Brushes.Transparent;
-                textBlock.Background = Brushes.Transparent;
-            }
-            else
-            {
-                var timeText = StringHelper.GetTimeString(Math.Truncate((position.LastLap ?? 0) * 1000) / 1000, true);
-                textBlock.Background = rowIndex % 2 == 1 ? _GlobalSettings.PrimaryColorBrush : _GlobalSettings.SecondaryColorBrush;
-                if (textBlock.Text != timeText)
-                {
-                    text = timeText;
-                }
+                text = timeText;
             }
 
             UpdateCell(textBlock, "LastLap", text, rowIndex, position, viewedPosition, null);
